@@ -1,0 +1,1016 @@
+
+
+
+1. printing all the subarray + substring:  n(n+1)/2
+2. counting the total number of subarrays
+3. counting the number of subarray at a perticular length k: n-k+1
+4. from any given index(i) or character the number of substring will be: n-i
+5. finding the largest palindromic substring count
+6. printing all the subarray and its sum.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+arr = [1,2,3,4,5];
+
+length1: [1], [2], [3], [4], [5]    :5
+length2: [1,2], [2,3], [3,4], [4,5] :4
+length3: [1,2,3], [2,3,4], [3,4,5]  :3
+length4: [1,2,3,4], [2,3,4,5]       :2
+length5: [1,2,3,4,5]                :1
+ 
+
+arr length =20;
+
+total number of subarray of length 4
+
+20-4+1 = 17
+
+
+masai: 
+
+index = 2
+5-2 = 3
+
+s
+sa
+sai
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3. counting the number of subarray at a perticular length k: (formula: n-k+1)
+
+
+
+  vector<int> arr={1,2,3,4,5};
+
+  int k=3;
+
+
+
+
+  int count=arr.size()-k+1;
+
+  cout<<"Number of subarray of length " <<k <<" is: "<<count <<endl;
+
+  //printing the subarray
+    for(int i=0;i<count;i++){
+
+        for(int j=i;j<i+k;j++){
+
+            cout<<arr[j] <<" ";
+
+        }
+        cout<<endl;
+
+
+    }
+
+
+
+
+
+
+
+
+4. Number of Substrings from a Given Index in a String.
+
+
+    string s = "abcde";
+
+
+
+    int index=2;
+
+
+
+     int count= s.size()-index;
+
+b
+bc
+bcd
+bcde
+
+
+
+
+
+    // n-i= 3
+      int count = s.size()-index;
+            
+      cout<<"Total number of substring from the index" <<index <<" will be "<<count <<endl;
+
+    
+    //printing the substring
+    for(int i=index; i<s.size();i++){
+
+        cout<<s.substr(index, i-index+1) <<endl;
+    }
+
+
+
+
+
+
+
+6. printing all the subarray and its sum.
+-----------------------------------------
+ vector<int> arr = {1, 2, 3, 4, 5};
+
+
+
+
+
+
+
+
+    for(int i=0;i<arr.size();i++){
+
+        int sum=0;
+	
+
+        for(int j=i;j<arr.size();j++){
+
+            sum+=arr[j];
+
+            //printing all the subarray
+            for(int k=i;k<=j;k++){
+                cout<<arr[k] <<" ";
+            }
+
+            cout<<"==> sum: " <<sum <<endl;
+
+        }
+
+ }
+
+
+7. finding only subarrays with sum <=x
+
+lets say x=7
+
+
+if(sum <=k){
+
+put the printing all the subarray and thier sum logic inside this block
+
+}
+
+
+8. Find longest subarray where sum ≤ k
+
+lets say k=7
+
+
+
+
+
+solution:
+---------
+
+ vector<int> arr = {1, 2, 3, 4, 5};
+    int k=7;
+
+    int maxlen=0;
+
+    for(int i=0;i<arr.size();i++){
+        
+        int sum=0;
+        for(int j=i;j<arr.size();j++){
+            sum+=arr[j];
+
+            if(sum<=k){
+                int length = j-i+1;
+                if(length > maxlen)
+                    maxlen=length;
+            }
+            
+
+        }
+    }
+
+
+    cout<<maxlen;
+
+TC: O(n^2)
+
+Note: we can optamise this using sliding window...
+
+
+8. with those subarray also:
+
+--we can store the starting and ending indices whenever you update maxlen.
+
+
+
+vector<int> arr = {1, 2, 3, 4, 5};
+    int k=0;
+
+    int maxlen=0;
+    int start=0;
+    int end=0;
+
+    for(int i=0;i<arr.size();i++){
+        
+        int sum=0;
+        for(int j=i;j<arr.size();j++){
+            sum+=arr[j];
+
+            if(sum<=k){
+                int length = j-i+1;
+                if(length > maxlen){
+                    maxlen=length;
+                    start=i;
+                    end=j;
+                }
+                    
+            }else{
+                break; // No need to continue if sum > k
+            }
+            
+
+        }
+    }
+
+
+   cout<<"Maximum length subarray with sum <= "<<k <<" is: ";
+   for(int i=start;i<=end;i++){
+    cout<<arr[i] <<" ";
+   }
+
+   cout<<endl;
+
+   cout<<"Length: "<<maxlen <<endl;
+
+
+
+
+
+
+Problem: Maximum subarray:
+===========================
+
+Given an integer array nums, find the subarray with the largest sum and print its sum.
+
+
+Example1:
+
+Input:
+
+nums= { -2, 1, -3, 4, -1, 2, 1, -5, 4}
+
+
+output: 6
+
+
+Explaination: The subarray [4, -1, 2, 1] has the largest sum 6
+
+
+
+Example2:
+
+Input:
+
+nums= [1]
+
+output: 1
+
+Explaination: The subarray [1] has the largest sum 1
+
+
+Example3:
+
+Input:
+
+nums= [5, 4, -1, 7, 8]
+
+output: 23
+
+
+Length1: [5] [4] [-1] [7] [8] : 8
+length2: [5,4], [4,-1], [-1,7], [7,8]: 15
+length3: [5,4,-1],[4,-1,7],[-1,7,8] : 14
+length4: [5,4,-1,7], [4,-1,7,8]: 18
+lenght5: [5,4,-1,7,8] : 23
+
+
+
+
+
+
+Explaination: The subarray [5, 4, -1, 7, 8] has the largest sum 23
+
+
+
+Approach
+----------
+
+lets take the 3rd example:
+
+nums= [5, 4, -1. 7, 8]
+
+here n= 5 so total subarray will be 15
+
+length 1 sub array: [5] [4] [-1] [7] [8] here max is 8
+
+length 2 sub array: [5,4] [4,-1] [-1,7] [7,8] here max is 15 ==> sum of 7+8
+
+like that we need to first find the each lenght subarray max value 
+and then among all the max value find out which is the max
+
+
+final solution:
+---------------
+
+
+int findSum(vector<int> arr){
+
+    int sum=0;
+
+    for(int i=0;i<arr.size();i++){
+        sum+=arr[i];
+    }
+
+    return sum;
+
+}
+
+
+
+
+int findMax(vector<int>& arr){
+
+int result =0;
+
+for(int i=0;i<arr.size();i++){
+
+    vector<int> v;
+
+    for(int j=i;j<arr.size();j++){
+
+        v.push_back(arr[j]);
+
+        int sum= findSum(v);
+        if(sum > result)
+            result=sum;
+
+    }
+
+
+
+}
+
+return result;
+
+}
+
+
+Time Complexity = O(N³)
+
+Outer loop O(N)
+
+Inner loop O(N)
+
+findSum() = O(N)
+
+Space Complexity = O(N) (temporary vector v)
+
+
+
+
+Optamize solution:
+------------------
+
+Kadane’s Algorithm solves this in:
+
+--Kadane’s Algorithm is specifically designed to work when the array contains a mix of positive and negative integers.
+
+Time Complexity = O(N) 
+
+Space Complexity = O(1) 
+
+
+Kadane’s Algorithm is used to find the maximum sum of a contiguous subarray in a array of integers.
+
+Steps:
+
+
+1. Initialize currentSum = 0, maxSum = INT_MIN
+
+2. Traverse the array from left to right:
+
+3. Add current element to currentSum
+
+4. Update maxSum if currentSum > maxSum
+
+5. If currentSum < 0, reset currentSum = 0 (because it won’t help in future)
+
+
+
+nums= { -2, 1, -3, 4, -1, 2, 1, -5, 4}
+
+output: 6
+
+
+
+
+
+
+
+solution:
+
+
+int findMaxSum(vector<int>& arr){
+
+    int result=INT_MIN;
+
+    int currentSum=0;
+
+    for(int i=0; i<arr.size();i++){
+
+        currentSum+=arr[i];
+
+        if(currentSum > result){
+            result=currentSum;
+        }
+
+        if(currentSum <0 ){
+            currentSum=0;
+        }
+
+    }
+
+    return result;
+
+}
+
+
+Kadane’s Algorithm to Track Subarray:
+===================================
+
+
+
+int findMaxSum(vector<int>& arr){
+
+    int result = INT_MIN;
+
+    int currentSum=0;
+
+    int x=0;
+    int start=0;
+    int end=0;
+
+
+    for(int i=0;i<arr.size();i++){
+
+        currentSum+= arr[i];
+
+        if(currentSum > result){
+            result =currentSum;
+            start=x;
+            end=i;
+        }
+
+        if(currentSum <0){
+            currentSum =0;
+            x= i+1; // next subarray starts here.
+        }
+
+
+    }
+
+    //printing the subarray
+    for(int i=start;i<=end;i++){
+        cout<<arr[i] <<" ";
+    }
+
+    cout<<endl;
+
+    return result;
+
+}
+
+
+Sliding window
+================
+
+
+--sliding window tecnique is applicable for the subarray or substring related problems.
+
+--like finding max/min or longest from the subarray or substring, we can think of sliding window technique.
+
+--Sliding window are of 2 types :
+
+1. fixed size window (if in the problem the size= k is given, like largest sub array whose size is k, or need to find out the max or min value)
+
+2. variable size window(if the size is not given, then we need to find the size, we should know the starting and ending index (size= end-start+1))
+
+
+Example1: fixed sized window
+
+Q/- print the maximum sum of all the sub array of size k?
+
+
+arr[]= {1,4,2,10,2,3,1,0,20}
+
+k = 4
+
+
+here length of the array is: 9
+
+Brute force :
+
+1st try to print all the subarray of size k:
+---------------------------------------------
+
+ vector<int> arr = { 2, 3, 4, 5,6};
+    int k=4;
+    
+    int count = arr.size()-k+1;
+    
+    for(int i=0;i<count;i++){
+        for(int j=i;j<i+k;j++){
+            cout<<arr[j]<<" ";
+        }
+
+        cout<<endl;
+     }
+
+
+now try to get the sum of all the subarray of size k:
+------------------------------------------------------
+
+
+vector<int> arr = { 2, 3, 4, 5,6};
+    int k=2;
+    
+    for(int i=0;i<arr.size()-k+1;i++){
+        int sum=0;
+        for(int j=i;j<i+k;j++){
+            sum+=arr[j];
+            cout<<arr[j]<<" ";
+        }
+        cout<<" The sum is: " <<sum ;
+        cout<<endl;
+    }
+
+find out the the maximum sum:
+-----------------------------
+
+
+    vector<int> arr = { 2, 3, 4, 5,6};
+    int k=2;
+    int maxsum=0;    
+    for(int i=0;i<arr.size()-k+1;i++){
+        int sum=0;
+        for(int j=i;j<i+k;j++){
+            sum+=arr[j];
+            cout<<arr[j]<<" ";
+           
+        }
+	 if(sum > maxsum)
+                maxsum=sum;
+        
+	cout<<" The sum is: " <<sum ;
+        cout<<endl;
+      }
+
+        cout<<"the maximum sum is: "<<maxsum;
+
+
+here the TC will be: O(n*k) and SC: O(1)
+
+
+
+Using the sliding window:
+--------------------------
+vector<int> arr = { 2, 3, 4, 5, 6, 1, 2, 3};
+
+lets assume: k=4
+
+to the subarray sum will be:
+
+s1: 2+3+4+5 = 14
+s2: 3+4+5+6 = 18
+s3: 4+5+6+1 = 16
+s4: 5+6+1+2 = 14
+s5: 6+1+2+3 = 12
+
+here in s2: we already computed 3+4+5 (here just 3 is removed and 6 is added)
+similarly for each iteration one prev element is removed from the window and one new element is added inside the window
+
+
+so to implement the sliding window:
+
+vector<int> arr = { 2, 3, 4, 5, 6, 1, 2, 3};
+
+lets assume: k=4
+
+
+step1: take the windowsum as the sum of initial 4 elements.
+
+windowsum = 2+3+4+5 = 14
+
+and assign this windowsum value to the maxsum
+
+maxsum= 14
+
+step2: 
+
+to the windowsum add the next element and remove the previous element.
+
+
+solution:
+--------
+ vector<int> arr = {2, 3, 4, 5, 6};
+    int k = 2;
+
+    int window_sum = 0;
+    for (int i = 0; i < k; i++) {
+        window_sum += arr[i];
+    }
+
+    int maxsum = window_sum;
+
+    for (int i = k; i < arr.size(); i++) {
+        window_sum += arr[i] - arr[i - k];  // Slide the window (adding next and removing last)
+        maxsum = max(maxsum, window_sum);
+    }
+
+    cout << "Maximum sum of subarray of size " << k << " is: " << maxsum << endl;
+
+
+
+Here the TC: O(n) 
+
+
+
+Q2/- Minimum Sum Subarray of Size k
+
+
+--just use the minsum with min() funciton
+
+********
+
+Q3/- Count of Distinct Elements in Every Window of Size k
+
+
+--Given an array, count distinct elements in every window of size k.
+
+arr = {1, 2, 1, 3, 4, 2, 3};
+k = 4;
+
+s1: [1,2,1,3] : count=3 {1,2,3}
+s1: [2,1,3,4] : count=4 {2,1,3,4}
+s3: [1,3,4,2] : count=4 {1,3,4,2}
+s4: [3,4,2,3] : count=3 {3,4,2}
+
+
+// Output: 3 4 4 3
+
+
+using Brute force:
+------------------
+
+vector<int> arr = {1, 2, 1, 3, 4, 2, 3};
+    
+    int k=4;
+
+    for(int i=0;i<arr.size()-k+1;i++){
+
+        unordered_set<int> s;
+
+        for(int j=i; j<i+k;j++){
+            s.insert(arr[j]);
+        }
+
+        cout<<s.size() <<" ";
+
+    }
+
+TC: 
+
+Outer loop: n - k + 1 windows
+
+Inner loop: k insertions per window
+
+Total: O(n * k)
+
+SC: O(k)
+
+
+
+Optamized approach : using sliding window:
+------------------------------------------
+
+1. Use unordered_map to track frequency of elements in the current window.
+
+2. When the window moves out of an element, we decrement its count and erase if it drops to zero.
+
+3. When a new element enters, we increment its count.
+
+4. Distinct count = freq.size() at each step.
+
+
+solution:
+--------
+
+vector<int> arr = {1, 2, 1, 3, 4, 2, 3};
+    int k=4;
+
+    unordered_map<int,int> m;
+
+    //step1 fill the first window
+    for(int i=0;i<k;i++){
+        m[arr[i]]++;
+    }
+
+    //print the unique count for the first window
+    cout<<m.size() <<" ";
+
+    //step2: slide the window
+
+    for(int i=k;i<arr.size();i++){
+
+        //remove the element going out of the window
+        m[arr[i-k]]--;
+
+        if(m[arr[i-k]] ==0){
+            m.erase(arr[i-k]);
+        }
+
+        //add the new element coming into the window
+        m[arr[i]]++;
+
+        //print the current window unique count
+        cout<<m.size() <<" ";
+
+    }
+
+
+TC: O(n)
+SC: O(k)
+
+
+   
+
+
+
+variable size sliding window:
+==============================
+
+steps:
+
+1. Start both pointers at the beginning.
+
+2. Expand the window by moving the right pointer (or end).
+
+3. If the condition is violated, shrink the window by moving the left pointer (or start).
+
+4. While doing this, keep track of the answer (like max length, or subarray sum).
+
+
+
+
+
+Q1/ Find the largest subarray whose sum is x?
+
+
+
+vector<int> arr={10,5,2,7,1,9};
+
+x=15
+
+
+so here 
+
+[10,5] = 15
+
+[5,2,7,1] = 15 
+
+so the largest subarray length =4
+
+using brute force: 
+------------------
+
+--we can find the sum of all the subarray and then compare it with x and then find the maxlength subarray.
+here TC will go as O(n^3)
+
+using sliding window:
+-----------------------
+
+here we don't have the fixed sized window, we need to use the variable sized window
+
+1. Two pointers: start and end
+
+2. Use a variable currSum to store sum between start and end
+
+3. Move end to right and add value to currSum
+
+4. If currSum > x, shrink the window from start
+
+5. If currSum == x, calculate and store max length
+
+
+solution:
+----------
+
+ vector<int> arr = {10, 5, 2, 7, 1, 9};
+   
+    int k=15;
+
+    int start=0;
+    int currentsum=0;
+    int maxlen=0;
+
+    for(int i=0;i<arr.size();i++){
+
+        currentsum+=arr[i];
+
+        //shrink the window until the currentSum <=x
+        while(currentsum > k && start <= i){
+            currentsum -= arr[start];
+            start++;
+        }
+
+        //check the match
+        if(currentsum == k){
+            maxlen = max(maxlen, i-start+1);
+        }
+
+    }
+
+  cout<<maxlen;
+
+
+
+
+
+Q2/- Find the size of the largest substring which does not contains any repeated charecters  ?
+
+
+--here also it is not given the k value, which means we need to use the variable length sliding window
+
+string s= "abbcdeabb";
+
+
+answer should be : cdeab ==> 5
+
+brute force:
+------------
+
+step1: get all the substring
+step2: check each substring whether it contains duplicate or not 
+step3: find out the largest one.
+
+
+sliding window:
+---------------
+
+
+string s= "abbcdeabb";
+
+    unordered_set<char> set;
+
+    int left=0;
+    int right=0;
+    int max_len=0;
+
+    while(right <s.size()){
+
+        if(set.find(s[right]) == set.end()){
+
+            set.insert(s[right]);
+            right++;
+
+            max_len= max(max_len, right-left);
+
+
+        }else{
+            //shrink the window
+            set.erase(s[left]);
+            left++;
+        }
+
+
+    }
+   
+    cout<<max_len;
+
+printing the string also:
+--------------------------
+
+ string s= "abbcdeabb";
+
+    unordered_set<char> set;
+
+    int left=0;
+    int right=0;
+    int max_len=0;
+    int start=0;
+
+    while(right <s.size()){
+
+        if(set.find(s[right]) == set.end()){
+
+            set.insert(s[right]);
+            right++;
+
+            // Update max_len and start index if new longer substring is found
+            if (right - left > max_len) {
+                max_len = right - left;
+                start = left;
+            }
+
+
+        }else{
+            //shrink the window
+            set.erase(s[left]);
+            left++;
+        }
+
+
+    }
+   
+
+    cout<<"Longest substring "<<s.substr(start, max_len) <<endl;
+    cout<<max_len;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
