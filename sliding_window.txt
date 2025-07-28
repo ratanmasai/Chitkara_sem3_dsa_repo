@@ -232,7 +232,7 @@ Note: we can optamise this using sliding window...
 
 
 vector<int> arr = {1, 2, 3, 4, 5};
-    int k=0;
+    int k=7;
 
     int maxlen=0;
     int start=0;
@@ -641,7 +641,7 @@ windowsum = 2+3+4+5 = 14
 
 and assign this windowsum value to the maxsum
 
-maxsum= 14
+maxsum= windowsum
 
 step2: 
 
@@ -654,6 +654,7 @@ solution:
     int k = 2;
 
     int window_sum = 0;
+
     for (int i = 0; i < k; i++) {
         window_sum += arr[i];
     }
@@ -673,12 +674,17 @@ Here the TC: O(n)
 
 
 
+
+
+
 Q2/- Minimum Sum Subarray of Size k
 
 
 --just use the minsum with min() funciton
 
-********
+
+
+
 
 Q3/- Count of Distinct Elements in Every Window of Size k
 
@@ -840,6 +846,8 @@ here we don't have the fixed sized window, we need to use the variable sized win
 5. If currSum == x, calculate and store max length
 
 
+
+
 solution:
 ----------
 
@@ -847,29 +855,54 @@ solution:
    
     int k=15;
 
-    int start=0;
     int currentsum=0;
     int maxlen=0;
 
-    for(int i=0;i<arr.size();i++){
+    
+    int start=0;
+   
 
-        currentsum+=arr[i];
+    for(int end=0;i<arr.size();end++){
+
+        currentsum+=arr[end];
 
         //shrink the window until the currentSum <=x
-        while(currentsum > k && start <= i){
+        while(currentsum > k && start <= end){
             currentsum -= arr[start];
             start++;
         }
 
         //check the match
         if(currentsum == k){
-            maxlen = max(maxlen, i-start+1);
+            maxlen = max(maxlen, end-start+1);
         }
 
     }
 
   cout<<maxlen;
 
+
+
+General template of variable sized sliding window:
+--------------------------------------------------
+
+int i = 0, 
+int j = 0;
+
+while (j < n) {
+    // 1. Expand the window using j
+    // Do work like adding arr[j] to sum, updating frequency map, etc.
+
+    // 2. Check: Is the condition satisfied?
+    while (condition) {
+        // 3. If the condition fails, shrink the window from the left → i++
+        // For example, subtract arr[i] from sum, update frequency, etc.
+        i++;
+    }
+
+    // 4. Update the answer here if required
+    j++;
+}
 
 
 

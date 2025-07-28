@@ -78,7 +78,7 @@ here we need to take 3 pointers:
 
 so,
 
-Case1: if the target element matches with the mid index element then simply returns it.
+Case1: if the mid index element matches with the target element then simply returns it.
 
 Case2: if the mid index element is less than the target element then we no need to search the left side of the mid index element. i.e(element should be there at right side)
 
