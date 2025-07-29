@@ -51,6 +51,65 @@ Worst Case: O(n)
 Best Case: O(1) (if the element is at the beginning)
 
 
+Divide and conquer strategy:
+---------------------------
+
+--It is a strategy to solve a problem. It is a one kind of approach or desing to solve a problem.
+
+--if a problem p of some size(input) n is given, and if we say the problem p is large, then we can divide this large problem into smaller sub problems (p1, p2, p3,...pk) as many as sub problems.
+
+--Now solve these sub problems individually (often recursively) and obtains their solution. (If the sub problem is still large then divide it again into the another sub problems)
+
+--once we have the solution of all the sub problems individually, then we can combine(merge) all the solutions to get the solution of the main problem.
+
+
+Step-by-Step Process:
+---------------------
+
+1. Divide the problem into smaller sub-problems.
+
+2. Conquer each sub-problem by solving it recursively. If a sub-problem is still too large, divide it again.
+
+3. Combine the solutions of the sub-problems to form the final answer.
+
+
+
+Important rule:
+----------------
+
+1. Sub-problems must be of the same type as the original problem.
+
+For example:
+
+	If the main problem is sorting, sub-problems must also be sorting tasks.
+
+	If the main problem is searching, sub-problems must also involve searching.
+
+
+--Non-similar sub-tasks are not considered divide and conquer. 
+Example: Organizing a workshop (making posters, inviting guests) – these are unrelated tasks.
+
+
+2. You must have a way to combine the solutions of the sub-problems into the solution of the main problem.
+--If you can't combine the solutions, this strategy won't work.
+
+3. Divide and Conquer is recursive in nature.
+
+
+
+
+Common problems to solve using divide and conquer:
+--------------------------------------------------
+
+1. Binary search
+2. Find Min and Max in Array
+3. merge sort
+4. quick sort
+5. Matrix Multiplication
+..
+
+   
+
 2. Binary Search
 -----------------
 
@@ -61,12 +120,17 @@ Logic:
 --the time complexity of the binary search will be less than O(n) ?
 
 
+Note: the binary search algorithm is based on divide and conquer strategy.
+
+
+
 Example:
 
 
 vector<int> arr={1,3,4,7,9,11,14,16,19,21,23,27,31,45};
 
 int target = 16;
+int n=arr.size(); //14
 
 here we need to take 3 pointers:
 
@@ -187,15 +251,15 @@ At iteration 1: elements left = n
 
 At iteration 2: elements left = n / 2
 
-At iteration 3: elements left = n / (2 × 2) = n / 2^2
+At iteration 3: elements left = n / (2 × 2) => n / 2^2
 
-At iteration 4: elements left = n / (2 × 2 × 2) = n / 2^4
+At iteration 4: elements left = n / (2 × 2 × 2) => n / 2^4
 
 ...
 
 At iteration k: elements left = n / (2 × 2 × ... × 2) (k times)
 
- = n / (2 × 2 × ... × 2) = n / (2ᵏ)
+ = n / (2 × 2 × ... × 2) => n / (2ᵏ)
 
 The loop stops when only 1 element is left:
 
@@ -294,9 +358,9 @@ Counting the number of occurance of duplicate elements using binary search:
 
 To count the number of duplicate occurrences of a target element in a sorted array, you can use binary search to find:
 
---x= The first occurrence index of the target.
+x= The first occurrence index of the target.
 
---y = The last occurrence index of the target.
+y = The last occurrence index of the target.
 
 count = y - x + 1
 
@@ -312,7 +376,7 @@ return count;
 
 
 
-or we can merge both function in only (first occurrence of the target)
+or we can merge both function in only (first occurrence of the target function)
 
 
 int findOccurrence(vector<int>& arr, int target, bool findFirst) {
@@ -339,9 +403,6 @@ int findOccurrence(vector<int>& arr, int target, bool findFirst) {
 
 int countOccurrences(vector<int>& arr, int target) {
     int first = findOccurrence(arr, target, true);
-    if (first == -1)
-        return 0;
-
     int last = findOccurrence(arr, target, false);
     return last - first + 1;
 }
@@ -382,6 +443,7 @@ i = 2 → 4
 i = 3 → 9
 
 i = 4 → 16  → stop
+
 Return 4 - 1 = 3.
 
 
@@ -401,7 +463,7 @@ int floorSquareRoot(int num){
 }
 
 
-Here TC: O(√n) – because the loop runs until i*i > n.
+Here TC: O(√n) – because the loop runs until i*i > num.
 
 
 if the n=625, then it will take 25 iteration.
@@ -535,10 +597,137 @@ the right half is unsorted in the global view, and that’s where the minimum is
 
 
 
+recursion:
+=========
+
+
+--Recursion means a function calling itself to solve smaller versions of the same problem.
+
+
+Structure of a Recursive Function:
+
+void function() {
+    // 1. Base Case (stopping condition)
+    if (condition) return;
+
+    // 2. Recursive Case (function calls itself)
+    function();
+}
+
+
+Important Terms:
+
+1. Base Case → When to stop calling the function.
+2. Recursive Case → When the function calls itself with a smaller/simpler input.
+
+
+Example:
+
+void fun(int num){
+
+if(num == 0)
+	return;
+
+cout<<num <<" ";
+
+fun(num-1);
+
+}
 
 
 
+output: 5,4,3,2,1
 
+
+
+Example:2
+
+void fun(int num){
+
+if(num == 0)
+	return;
+
+fun(num-1);
+
+cout<<num <<" ";
+
+
+}
+
+}
+
+
+gues the output:
+
+
+
+Binary serach using recursion:
+------------------------------
+
+Idea:
+------
+
+At each step:
+
+1. Find the middle of the array.
+
+2. If middle element == key → return index
+
+3. If key < middle → search in left half
+
+4. If key > middle → search in right half
+
+
+
+code:
+-----
+
+int binarySearch(vector<int>& arr, int low, int high, int key) {
+
+    if (low > high) 
+	return -1;  // Base Case: Not found
+
+    int mid = (low + high) / 2;
+
+    if (arr[mid] == key)
+        return mid;  // Found
+    else if (key < arr[mid])
+        return binarySearch(arr, low, mid - 1, key);  // Search left half
+    else
+        return binarySearch(arr, mid + 1, high, key); // Search right half
+}
+
+int main(){
+
+
+vector<int> arr = {2, 4, 6, 8, 10, 12, 14};
+int key = 10;
+
+int index = binarySearch(arr, 0, arr.size()-1, key);
+
+cout<<"Index is: "<<index;
+
+return 0;
+
+}
+
+
+
+Task: 
+------
+
+
+Using recursion find out:
+
+1. factorial of a number
+
+2. Sum of First N Natural Numbers
+
+3. Find the nth Fibonacci number using recursion.
+Fibonacci Sequence: 0, 1, 1, 2, 3, 5, 8, 13...
+
+4. find out the power of a number
+Find a^b using recursion.
 
 
 
