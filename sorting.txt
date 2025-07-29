@@ -1,0 +1,664 @@
+Sorting:
+=========
+
+
+--Sorting is the process of arranging data (typically in arrays or lists) in a particular order—ascending or descending.
+
+
+Sorting helps to:
+
+--Improve searching efficiency (e.g., binary search).
+
+--Present data in a meaningful format.
+
+--Optimize data-related algorithms like merging, searching, and duplicate detection.
+
+
+
+Types of Sorting Techniques:
+----------------------------
+
+Sorting algorithms are broadly categorized into 2 types:
+
+1. Comparison-based sorting:
+
+	--Bubble Sort 
+	--Selection Sort 
+	--Insertion Sort 
+	--Merge Sort 
+	--Quick Sort
+	--Heap Sort
+
+2. Non-comparison-based sorting:
+
+	--Counting Sort
+	--Radix Sort 
+	--Bucket Sort
+
+
+
+Bubble Sort:
+============
+
+Concept:
+--------
+
+--Bubble Sort compares adjacent elements and swaps them if they are in the wrong order. 
+--This process is repeated until the array is sorted.
+-- Larger elements (bubbles) move to the end of the array with each pass, like bubbles floating up.
+
+
+Step-by-Step Procedure:
+-----------------------
+
+1. Start from the first element and compare with the next.
+
+2. If the current element is greater, swap them. (e.g. arr[j] > arr[j+1] for ascending order)
+
+3. Move to the next pair and repeat until the end.
+
+4. After one complete pass, the largest element is at the end.
+
+Repeat the process for remaining unsorted part.
+
+
+Example:
+---------
+
+Let’s sort: arr = [5, 3, 1, 4] in acsending order
+
+
+Pass1:
+
+[5, 3, 1, 4] => compare 5 and 3 => swap => [3, 5, 1, 4]
+[3, 5, 1, 4] => compare 5 and 1 => swap => [3, 1, 5, 4]
+[3, 1, 5, 4] => compare 5 and 4 => swap => [3, 1, 4, 5]
+
+at the end of pass 1 the last element get its sorted position
+
+Pass2: 
+
+[3, 1, 4, 5] => compare 3 and 1 => swap => [1, 3, 4, 5]
+[1, 3, 4, 5] => compare 3 and 4 => no swap
+[1, 3, 4, 5] => compare 4 and 5 => no swap
+
+
+Pass3:
+[1, 3, 4, 5] => already sorted
+
+
+
+
+Code:
+------
+
+
+void bubbleSort(vector<int>& arr){
+
+    //outer loop for each pass
+    for(int i=0;i<arr.size()-1;i++){
+
+        //inner loop for compare adjacent elements
+        for(int j=0;j<arr.size()-i-1;j++){
+
+            //if elements are in wrong order, swap them
+            if(arr[j] > arr[j+1]){
+
+                swap(arr[j], arr[j+1]);
+
+            }
+
+        }
+
+    }
+}
+
+
+Note: (arr.size() - i - 1) is used to avoid comparing already sorted elements at the end.
+
+
+To sort in descending order:
+---------------------------
+
+Just change the condition (arr[j] > arr[j+1]) to (arr[j] < arr[j+1])
+
+Time Complexity:  wrost and avg case: O(n^2)
+Space complexity: O(1)
+
+
+If supplied array is already sorted, the above approach will take O(n^2), it still perform multiple pass.
+In this case to optamise the above code, we need to skip the inner loop and then we can get the time complexity at best case O(n)
+
+
+
+void bubbleSort(vector<int>& arr){
+
+
+    //outer loop for each pass
+    for(int i=0;i<arr.size()-1;i++){
+
+
+        // Flag to check if any swap happened in this pass
+        bool swapped = false;
+
+        //inner loop for compare adjacent elements
+        for(int j=0;j<arr.size()-i-1;j++){
+
+            //if elements are in wrong order, swap them
+            if(arr[j] > arr[j+1]){
+
+                swap(arr[j], arr[j+1]);
+                swapped = true;
+            }
+
+        }
+
+        // If no elements were swapped, array is already sorted
+        if (!swapped)
+            break;
+
+    }
+
+
+}
+
+
+Advantage:
+----------
+
+1. Simple to understand and implement:
+
+--It’s one of the easiest sorting algorithms to learn.
+--Great for beginners to understand the basics of sorting.
+
+2. In-place algorithm:
+
+–-No extra space is required. Sorting is done using the original array.
+–-Space complexity is O(1) (constant space).
+
+3. Stable sort:
+
+--It preserves the relative order of equal elements.
+--Example: If you have two 5, the one that came first will still come first after sorting.
+
+
+Disadvantage:
+--------------
+
+1. Very inefficient for large data:
+
+--Worst and average case time complexity is O(n²).
+--Not suitable for large datasets.
+
+2. Rarely used in practice due to poor performance.
+
+
+
+
+
+Selection Sort:
+================
+
+Concept:
+--------
+
+--In Selection Sort, we find the smallest (or largest) element from the unsorted part of the array and swap it with the element at the beginning of the unsorted part.
+
+--This process continues until the array is completely sorted.
+
+--It always "selects" the minimum (or maximum) and puts it in its correct position, one at a time.
+
+
+Step-by-Step Procedure:
+-----------------------
+
+1. Start from the 0th index (let’s call it the current index).
+
+2. Find the smallest element in the subarray from the current index to the end.
+
+3. Swap the found minimum with the element at the current index.
+
+4. Move to the next index and repeat steps 2–3 until the end.
+
+
+Analogy:
+---------
+Imagine you're picking players for a team:
+--You scan the group to find the shortest player and place them first.
+--Then, from the remaining players, find the next shortest and place them second, and so on.
+
+
+ 
+Example:
+--------
+
+Let’s sort: arr = [5, 3, 1, 4] (ascending order)
+
+
+Step 1:
+
+--Find min in [5, 3, 1, 4] => 1
+--Swap 1 with arr[0] → [1, 3, 5, 4]
+
+Step 2:
+
+--Find min in [3, 5, 4] => 3
+--Swap 3 with arr[1] → [1, 3, 5, 4] (already in position)
+
+Step 3:
+
+--Find min in [5, 4] => 4
+--Swap 4 with arr[2] → [1, 3, 4, 5]
+ 
+Step 4:
+
+--Last element is already in correct place
+
+Final result: [1, 3, 4, 5]
+
+
+
+Code:
+-----
+
+
+void selectionSort(vector<int>& arr){
+
+    //Outer loop for each position
+    for(int i=0;i<arr.size()-1;i++){
+
+        //assume the current index is the minindex
+        int minindex= i; 
+
+        //inner loop to find the actual minindex
+        for(int j=i+1; j< arr.size();j++){
+
+            if(arr[j] < arr[minindex]){
+                minindex = j;
+            }
+
+        }
+
+        //swap the found minimum with the element at i
+        if(minindex != i){
+            swap(arr[i], arr[minindex]);
+        }
+    }
+
+}
+
+
+--Here the outer loop will run total n-1 times, because at each iteration we place one element in the correct place, so after (n-1) iterations, the last element (arr[n-1]) is automatically placed in the correct place, so there is no need to compare it anymore.
+
+
+--At the last we checked if(minindex != i), it checks:
+
+Is the current element already the minimum?
+If yes, then no need to swap — just skip it.
+
+Without this if condition, still our code will work but it's wastefull. so for better optamization checked this condition. 
+
+swap(arr[0], arr[])//// Useless operation
+
+
+For descending order: just revese the following condition:
+if (arr[j] < arr[minIndex]) 
+
+to
+
+(arr[j] > arr[minIndex]) //descending order
+
+And rename minIndex to maxIndex (for clarity).
+
+Time complexity:  for the best and worst case will be O(n^2)
+for the best case(if array is already sorted) still scan all the elements for min.
+
+Space Complexity: O(1)
+
+
+
+
+
+Advantage:
+----------
+
+1. Simple to understand and easy to implement:
+
+--Like Bubble Sort, it's very easy to code and explain.
+--Good for learning the concept of sorting.
+
+2. Good for small arrays (n ≤ 50).
+
+3. In-place sorting (no extra memory).
+
+
+
+
+Disadvantage:
+-------------
+
+1. Inefficient for large arrays:
+
+--Time complexity is O(n²) for all cases (best, average, and worst).
+--Not practical for sorting large datasets.
+
+
+2. Unstable sort:
+
+--Relative order of equal elements is not preserved.
+--Example: If you have two 5, their order might change after sorting.
+
+
+3. No early stopping:
+
+--Unlike Bubble Sort, it doesn’t detect if the array is already sorted.
+--It always goes through all elements even if the array is already sorted.
+
+
+
+
+
+
+
+Insertion Sort:
+===============
+
+
+Concept:
+--------
+
+--Insertion Sort builds the sorted array one element at a time.
+
+--It picks the current element and inserts it into its correct position among the already sorted part of the array (on the left).
+
+
+Analogy:
+--------
+
+Arranging playing cards in hand:
+
+1. Take one card at a time from the deck.
+
+2. Compare it with cards already in your hand (which are sorted).
+
+3. Insert it into the correct position by shifting other cards.
+
+
+
+Step-by-Step Procedure:
+------------------------
+
+1. Assume the first element (index 0) is already sorted.
+
+2. Start from index 1.
+
+3. Take arr[i] as the key.
+
+4. Compare key with previous elements.
+
+5. Shift all greater elements to the right.
+
+6. Insert the key in its correct place.
+
+
+
+Example:
+---------
+
+Let’s sort: arr = [5, 2, 4, 6] (ascending order)
+
+Step 1: 
+
+Start the index i with 1 and store its value in a variable called "key".
+
+key=arr[1] => 2
+
+Now compare 2 with the previous elements to find the correct position.
+
+--compare 2 with 5 => 2 is smaller => shift one step to the right
+--Now insert 2 in the empty spot (at index 0)
+
+result: [2,5,4,6]
+
+Step 2:
+
+i = 2, key = 4
+
+We compare 4 with the previous elements (5 and 2)
+
+--compare 4 with 5 => 4 is smaller => shift 5
+--compare 4 with 2 => 4 is bigger  => stop and insert 4 here (after 2)
+
+result: [2,4,5,6]
+
+
+Step 3: 
+
+i = 3, key = 6
+
+We compare 6 with previous elements (5, 4, 2)
+
+--6 is greater than all of them, so it's already in the right place
+
+Final Sorted Array: [2, 4, 5, 6]
+
+
+
+Code:
+-----
+
+
+void insertionSort(vector<int>& arr){
+
+
+    for(int i=1; i<arr.size(); i++){
+
+        //store the second element as key
+        int key = arr[i];
+
+        //points to the prev element
+        int j=i-1;
+
+        // Shift elements that are greater than key
+        while(j>=0 && arr[j] > key){
+
+            // Shift the larger elements
+            arr[j+1] = arr[j];
+            j--;
+        }
+
+
+        //insert the key to the empty spot (at the correct position)
+        arr[j+1] = key;
+
+    }
+
+
+}
+
+
+For Descending order: Just reverse the following comparison:
+
+while (j >= 0 && arr[j] < key)
+
+
+Time complexity: 
+--Wrost case: O(n^2): maximum number of shifts.
+--Best case: If array is already sorted, Only one comparision per element: O(n)
+
+Space complexity: O(1)
+
+
+
+Advantage:
+----------
+
+1. Simple and easy to understand:
+
+--The logic is intuitive and easy to implement for beginners.
+
+2. Efficient for small or nearly sorted arrays:
+
+--Time complexity can be as good as O(n) if the array is already sorted or nearly sorted.
+--Faster than Bubble Sort and Selection Sort in such cases.
+
+3. In-place sorting:
+
+--It doesn’t use any extra space.
+--Space complexity is O(1).
+
+4. Stable Sort:
+
+--It maintains the relative order of equal elements.
+--This is useful when sorting data with multiple fields (e.g., sorting by name and age).
+
+
+Disadvantage:
+-------------
+
+1. Slow for large datasets
+
+--Time complexity is O(n²) in the worst case (e.g., reverse sorted array).
+--Not suitable for large datasets.
+
+
+
+Merging the 2 sorted arrays:
+=============================
+
+vector<int> arr1= {4,6,8,12,15};
+
+vector<int> arr2= {3,4,9,18,20};
+
+
+Using Brute force:
+------------------
+
+Steps:
+------
+
+1. Create a new array.
+
+2. Add all elements from the first array to it.
+
+3. Add all elements from the second array to it.
+
+4. Sort the final array.
+
+5. Done!
+
+
+Time complexity:
+----------------
+
+1. Copying arr1 and arr2 into result array:
+
+Time: O(n + m)
+
+2. Sorting the combined array of size (n + m):
+
+Time: O((n + m) * log(n + m))
+
+
+Final Time complexity: O((n + m) * log(n + m))
+
+Space Complexity: O(n + m) for merged array
+
+
+Optamized approach:
+--------------------
+
+Step-by-Step Logic (Two-Pointer Approach):
+
+1. Create an empty result array to store the merged values.
+
+2. Use two pointers: i for arr1, and j for arr2.
+
+3. While both pointers are within bounds of their arrays:
+
+	--Compare arr1[i] and arr2[j].
+
+	--Insert the smaller value into the result array.
+
+	--Move the pointer of the array from which the smaller value was taken.
+
+4. After the loop, one of the arrays might still have leftover elements.
+
+5. Add the remaining elements from arr1 (if any) to the result.
+
+6. Add the remaining elements from arr2 (if any) to the result.
+
+7. Done– you now have one merged sorted array.
+
+
+code:
+-----
+
+
+vector<int> getMergedArray(vector<int> arr1, vector<int> arr2){
+
+vector<int> result;
+
+int i=0;
+int j=0;
+
+
+//step1: compare and merge
+while(i < arr1.size() && j < arr2.size()){
+
+    if(arr1[i] < arr2[j]){
+        result.push_back(arr1[i]);
+        i++;
+    }else{
+
+        result.push_back(arr2[j]);
+        j++;
+    }
+}
+
+
+//step2: add the remaining elements if any from arr1
+while(i < arr1.size()){
+    result.push_back(arr1[i]);
+    i++;
+}
+
+//step3: add the remaining elements if any from arr2
+while(j < arr2.size()){
+    result.push_back(arr2[j]);
+    j++;
+}
+
+return result;
+
+}
+
+
+
+Time Complexity: O(n + m) (where n and m are lengths of the arrays)
+
+Space Complexity: O(n + m) (for storing merged array)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
