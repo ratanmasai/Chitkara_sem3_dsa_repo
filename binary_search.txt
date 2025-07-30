@@ -598,6 +598,7 @@ int findMin(vector<int>& arr) {
     }
 
     return arr[low];
+    //return arr[high]; //at the end of the loop,  both low and high are pointing to the same index, which is the index of the minimum element.
 }
 
 
