@@ -117,6 +117,27 @@ void bubbleSort(vector<int>& arr){
 Note: (arr.size() - i - 1) is used to avoid comparing already sorted elements at the end.
 
 
+DRY RUN:
+--------
+
+Let's say arr = {5, 3, 1, 4}
+
+Size n = 4
+
+Pass (i)	j range					Explanation
+
+i = 0		j = 0 to 2 (0 to n - i - 2)		Compare first 3 elements, bubble max to end
+
+i = 1		j = 0 to 1				Last element is sorted, so check first 2 only
+
+i = 2		j = 0					Only need to compare first 2 elements
+
+i = 3		Done					All sorted, loop ends
+
+
+
+
+
 To sort in descending order:
 ---------------------------
 
