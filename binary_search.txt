@@ -583,6 +583,7 @@ code:
 
 
 int findMin(vector<int>& arr) {
+
     int low = 0;
     int high = arr.size() - 1;
 
@@ -686,6 +687,9 @@ fun(num-1);
 
 }
 
+fun(5);
+
+
 
 
 
@@ -712,6 +716,10 @@ cout<<num <<" ";
 
 
 }
+
+
+
+
 
 }
 
@@ -790,6 +798,27 @@ Fibonacci Sequence: 0, 1, 1, 2, 3, 5, 8, 13...
 
 4. find out the power of a number
 Find a^b using recursion.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

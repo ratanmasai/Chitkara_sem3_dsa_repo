@@ -148,7 +148,7 @@ Space complexity: O(1)
 
 
 If supplied array is already sorted, the above approach will take O(n^2), it still perform multiple pass.
-In this case to optamise the above code, we need to skip the inner loop and then we can get the time complexity at best case O(n)
+In this case to optamise the above code, we need to skip the outer loop and then we can get the time complexity at best case O(n)
 
 
 
@@ -223,7 +223,7 @@ Selection Sort:
 Concept:
 --------
 
---In Selection Sort, we find the smallest (or largest) element from the unsorted part of the array and swap it with the element at the beginning of the unsorted part.
+--In Selection Sort, we find the smallest (or largest) element from the unsorted part of the array and swap it with the element at the beginning of the sorted part.
 
 --This process continues until the array is completely sorted.
 
@@ -319,7 +319,7 @@ If yes, then no need to swap — just skip it.
 
 Without this if condition, still our code will work but it's wastefull. so for better optamization checked this condition. 
 
-swap(arr[0], arr[])//// Useless operation
+swap(arr[0], arr[min])//// Useless operation
 
 
 For descending order: just revese the following condition:
@@ -543,6 +543,22 @@ Disadvantage:
 --Not suitable for large datasets.
 
 
+vector<int> merge(vector<int>& arr1, vector<int>& arr2){
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 Merging the 2 sorted arrays:
 =============================
@@ -586,16 +602,16 @@ Final Time complexity: O((n + m) * log(n + m))
 Space Complexity: O(n + m) for merged array
 
 
-Optamized approach:
+Optamized  approach:
 --------------------
 
 Step-by-Step Logic (Two-Pointer Approach):
 
 1. Create an empty result array to store the merged values.
 
-2. Use two pointers: i for arr1, and j for arr2.
+2. Use two pointers: i=0 for arr1, and j=0 for arr2.
 
-3. While both pointers are within bounds of their arrays:
+3. While both pointers are within bounds of their arrays: while(i< arr1.size() && j< arr2.size())
 
 	--Compare arr1[i] and arr2[j].
 
@@ -616,7 +632,7 @@ code:
 -----
 
 
-vector<int> getMergedArray(vector<int> arr1, vector<int> arr2){
+vector<int> getMergedArray(vector<int>& arr1, vector<int>& arr2){
 
 vector<int> result;
 
@@ -659,6 +675,318 @@ return result;
 Time Complexity: O(n + m) (where n and m are lengths of the arrays)
 
 Space Complexity: O(n + m) (for storing merged array)
+
+
+
+
+Merge Sort:
+============
+
+
+--Merge sort also uses the divide and conquer approach.
+
+Divide: Split the array into 2 halves
+conquer: sort each half recursively.
+combine: Merge the two sorted halves into one.
+
+
+Analogy:
+-------
+
+Imagine you're sorting a deck of cards. You:
+
+--Split the deck in half again and again until each pile has 1 card.
+
+--Then, merge two small sorted piles into one sorted pile.
+
+--Continue until all cards are in one sorted pile.
+
+
+
+Steps:
+-------
+
+1. If the array has 1 element, it is already sorted.
+2. Otherwise:
+
+--find the middle of the array
+--split the array into left half and right half.
+--recursively apply Merge sort to both halves.
+--merge the both sorted halves.
+
+
+
+Example Step by step process:
+-----------------------------
+
+Let’s say arr = [5, 2, 8, 3]:
+
+It splits into [5, 2] and [8, 3]
+
+Then further into [5] [2] and [8] [3]
+
+Then merges [5] [2] → [2, 5] and [8] [3] → [3, 8]
+
+Final merge: [2, 5] and [3, 8] → [2, 3, 5, 8]
+
+
+
+Code: (Not In-place version)
+------
+
+//Merge function
+vector<int> merge(vector<int> arr1, vector<int> arr2){
+
+vector<int> result;
+
+int i=0;
+int j=0;
+
+
+while(i< arr1.size() && j< arr2.size()){
+
+if(arr1[i] < arr2[j]){
+
+    result.push_back(arr1[i]);
+    i++;
+
+}else{
+    result.push_back(arr2[j]);
+    j++;
+}
+
+}
+
+
+while(i < arr1.size()){
+    result.push_back(arr1[i]);
+    i++;
+}
+
+while(j < arr2.size()){
+    result.push_back(arr2[j]);
+    j++;
+}
+
+
+return result;
+
+}
+
+
+//Merge sort function
+vector<int> mergeSort(vector<int> arr){
+
+    //base condition
+    if(arr.size() <= 1){
+        return arr;
+    }
+
+    //find the middle
+    int mid = arr.size()/2;
+
+
+    //split the array into two halves
+    vector<int> left;
+    vector<int> right;
+
+    for(int i=0; i< mid;i++){
+        left.push_back(arr[i]);
+    }
+
+    for(int i=mid; i< arr.size();i++){
+        right.push_back(arr[i]);
+    }
+
+    //vector<int> left(arr.begin(), arr.begin()+mid);
+    //vector<int> right(arr.begin()+mid, arr.end());
+
+
+    //recursivly sort both halves
+    left = mergeSort(left);
+    right = mergeSort(right);
+
+
+    //merge the sorted halves
+    return merge(left, right);
+
+}
+
+
+
+
+Time Complexity:
+----------------
+
+1. Divide step:
+
+--Each time we split the array into two halves.
+--It takes O(1) time to divide
+--But how many times we divide ?
+
+	--if array has n elements, we can divide it logn times.
+	--Why?, Because every time we divide it into 2, like:
+		n => n/2 => n/4, --- => 1
+		This gives logn levels.
+
+
+
+2. Merge step:
+
+--After dividing, we merge the elements back
+--Merging two halves takes O(n) time at each level.
+
+so,
+
+Time per level: O(n)
+Number of levels: O(log n)
+
+Total time = O(n log n)
+
+ 
+Space complexity:
+-----------------
+
+--Merge Sort needs extra space to store temporary arrays during the merge step.
+
+--If the input size is n, then: Temporary arrays might take up to O(n) space.
+
+
+Space complexity: O(n)
+
+
+
+
+
+
+Modify the above example: In-place index Merge Sort (Modify the original array instead of returning new one)
+--------------------------
+
+
+
+// Merge function to merge two sorted halves in-place
+void merge(vector<int>& arr, int start, int end){
+
+    vector<int> temp;
+
+    int mid= (start+end)/2;
+
+    int i=start;
+    int j= mid+1;
+
+    //compare and merge elements
+    while(i <= mid && j<=end){
+
+        if(arr[i] < arr[j]){
+            temp.push_back(arr[i]);
+            i++;
+        }else{
+            temp.push_back(arr[j]);
+            j++;
+        }
+    }
+
+    //copy remaning elements from left half
+    while(i <= mid){
+        temp.push_back(arr[i]);
+        i++;
+    }
+
+    //copy remaining elements from right half
+    while( j<= end){
+        temp.push_back(arr[j]);
+        j++;
+    }
+
+    //copy merged elements back to the original array
+    for (int k = 0; k < temp.size(); k++) {
+        arr[start + k] = temp[k];
+    }
+
+
+
+}
+
+void mergeSort(vector<int>& arr, int start, int end){
+
+    if(start >= end)
+        return;
+
+    int mid= (start+end) /2;
+
+    //recursivly sort the left and right halves
+    mergeSort(arr, start, mid);
+    mergeSort(arr, mid+1, end);
+
+    //Merge the sorted halves
+    merge(arr, start, end);
+
+
+}
+
+
+
+
+int main(){
+
+    vector<int> arr={10,2,5,8,7,0,-1,5};
+
+    mergeSort(arr,0, arr.size()-1);
+
+    for(int i: arr){
+        cout<<i <<" ";
+    }
+    
+    
+    
+    return 0;
+    
+}
+
+
+Explanation:
+--------------
+
+1. the merge function will break the array into the two halves.
+
+2. merge(arr, start, end): at recursive call the start will point to the different location,   
+
+3. 'start' will maintain the original array index while copying from temp array.
+
+
+
+
+
+
+
+Advantages of Merge Sort:
+------------------------
+
+1. Fast and Efficient: Always runs in O(n log n) time — better than Bubble, Insertion, and Selection Sort for large datasets.
+
+2.  Stable Sort: Maintains the original order of equal elements (important for sorting complex data).
+
+3. Good for Linked Lists:	Works very well with linked lists (unlike quicksort which requires random access).
+
+4.  Predictable Performance: Performance does not degrade in worst-case (unlike Quick Sort).
+
+
+Disadvantage:
+-------------
+
+1.  Uses Extra Space: Requires O(n) extra memory for merging arrays, which is a big drawback in memory-constrained environments.
+
+2. Not In-Place: In version 1.
+
+3. Slower for Small Arrays: For very small arrays, simpler algorithms like Insertion Sort can be faster.
+
+4. More Complex to Code: Slightly harder to implement than simpler sorts like Bubble or Selection Sort.
+
+
+
+
+
+
 
 
 
