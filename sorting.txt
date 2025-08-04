@@ -546,8 +546,8 @@ Disadvantage:
 vector<int> merge(vector<int>& arr1, vector<int>& arr2){
 
 
-
 }
+
 
 
 
@@ -814,6 +814,147 @@ vector<int> mergeSort(vector<int> arr){
 
 
 
+Above example with debug:
+===========================
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Merge two sorted arrays
+vector<int> merge(vector<int> arr1, vector<int> arr2) {
+    vector<int> result;
+    int i = 0, j = 0;
+
+    cout << "Merging: [";
+    for (int a : arr1) cout << a << " ";
+    cout << "] and [";
+    for (int b : arr2) cout << b << " ";
+    cout << "]\n";
+
+    // Merge process
+    while (i < arr1.size() && j < arr2.size()) {
+        if (arr1[i] < arr2[j]) {
+            result.push_back(arr1[i]);
+            i++;
+        } else {
+            result.push_back(arr2[j]);
+            j++;
+        }
+    }
+
+    // Append remaining elements
+    while (i < arr1.size()) {
+        result.push_back(arr1[i]);
+        i++;
+    }
+
+    while (j < arr2.size()) {
+        result.push_back(arr2[j]);
+        j++;
+    }
+
+    // Print merged result
+    cout << "Merged Result: [";
+    for (int x : result) cout << x << " ";
+    cout << "]\n\n";
+
+    return result;
+}
+
+// Merge Sort function
+vector<int> mergeSort(vector<int> arr) {
+    // Base case
+    if (arr.size() <= 1) {
+        return arr;
+    }
+
+    int mid = arr.size() / 2;
+
+    // Split into left and right
+    vector<int> left(arr.begin(), arr.begin() + mid);
+    vector<int> right(arr.begin() + mid, arr.end());
+
+    // Debug: Show current split
+    cout << "Splitting: [";
+    for (int x : arr) cout << x << " ";
+    cout << "] into\n   Left: [";
+    for (int x : left) cout << x << " ";
+    cout << "] and Right: [";
+    for (int x : right) cout << x << " ";
+    cout << "]\n\n";
+
+    // Recursive sort
+    left = mergeSort(left);
+    right = mergeSort(right);
+
+    // Merge sorted halves
+    return merge(left, right);
+}
+
+// Driver code
+int main() {
+    vector<int> arr = {10, 3, 5, 2, 8, 7, 1, 6, 4, 9};
+
+    cout << "Original Array: [";
+    for (int x : arr) cout << x << " ";
+    cout << "]\n\n";
+
+    vector<int> sorted = mergeSort(arr);
+
+    cout << "\nSorted Array: [";
+    for (int x : sorted) cout << x << " ";
+    cout << "]\n";
+
+    return 0;
+}
+
+
+
+
+
+DRY RUN: Merge sort
+====================
+
+Input arr: {6, 3, 8, 5, 2}
+
+
+Step by step Reccursive spliting:
+
+			[6,3,8,5,2]
+			      |
+	-------------------------------------------------
+	|						|	
+      [6,3]					     [8,5,2]
+        |						|
+------------------			-------------------------
+ |		|			|			|	
+[6]	       [3]		       [8]		      [5,2]
+								|
+							------------------
+							|		 |
+						       [5]		[2]	
+
+
+
+
+
+Then merging happens bottom up:
+
+[6] + [3] => [3,6]
+[5] + [2] => [2,5]
+[8] + [2,5] => [2,5,8]
+[3,6] + [2,5,8] => [2,3,5,6,8]
+
+
+
+
+
+
+
+
+
 
 Time Complexity:
 ----------------
@@ -828,13 +969,16 @@ Time Complexity:
 	--Why?, Because every time we divide it into 2, like:
 		n => n/2 => n/4, --- => 1
 		This gives logn levels.
+		for n = 5, log(5) =~ 2.3 around 3 level deep.
+
+
 
 
 
 2. Merge step:
 
 --After dividing, we merge the elements back
---Merging two halves takes O(n) time at each level.
+--At each level,  we merge  n  elements total.
 
 so,
 
@@ -856,11 +1000,11 @@ Space complexity: O(n)
 
 
 
-
-
-
 Modify the above example: In-place index Merge Sort (Modify the original array instead of returning new one)
 --------------------------
+
+
+
 
 
 
@@ -900,7 +1044,7 @@ void merge(vector<int>& arr, int start, int end){
 
     //copy merged elements back to the original array
     for (int k = 0; k < temp.size(); k++) {
-        arr[start + k] = temp[k];
+        arr[start+k] = temp[k];
     }
 
 
@@ -931,7 +1075,11 @@ int main(){
 
     vector<int> arr={10,2,5,8,7,0,-1,5};
 
-    mergeSort(arr,0, arr.size()-1);
+    int start =0;
+    int end= arr.size()-1;
+
+    // call the mergeSort by passing arr, start index and end index
+    mergeSort(arr,start, end);
 
     for(int i: arr){
         cout<<i <<" ";
@@ -949,9 +1097,9 @@ Explanation:
 
 1. the merge function will break the array into the two halves.
 
-2. merge(arr, start, end): at recursive call the start will point to the different location,   
+2. merge(arr, start, end): The start and end values change in each recursive call and represent the part of the array currently being sorted.
 
-3. 'start' will maintain the original array index while copying from temp array.
+3. 'start' will maintain the original array index while copying from temp array in each recursive call.
 
 
 
@@ -983,6 +1131,508 @@ Disadvantage:
 4. More Complex to Code: Slightly harder to implement than simpler sorts like Bubble or Selection Sort.
 
 
+
+Quick Sort:
+============
+
+
+--Quick Sort is called “quick” because, on average, it performs faster than most other sorting algorithms like bubble sort, insertion sort, or even merge sort in practical scenarios for large datasets with less memory overhead.
+
+--Here Name is quick, but it is not the fastest method for sorting.
+
+
+--Quick sort is a "Divide and conquer" algorithm that picks a pivot element, partitions the array around it, and recursively sorts the subarrays. 
+
+Divide and conquer: Split the problem into smaller sub-problems and conquer it by solving the smaller sub-problems.
+
+
+
+--The main key concept in the merge sort is the "merging" procedure.
+--similarly the key concept for the quick sort is the "partition" procedure.
+
+
+Partition: 
+-----------
+
+--In this procedure we choose one element from an array as a 'pivot' element and perform partition around this pivot element
+(arranging the smaller element to the left side of this pivot and bigger element to the right side of this pivot element).
+
+
+--And need to repeat this process recursively on the both side untill the whole array is sorted.
+
+
+--we can choose the pivot element as any element from an array, but generally we take the pivot as either first or last or a middle or any random element.
+
+--most of the quick sort algorithm follows either first or last element.
+
+
+
+Analogy:
+---------
+
+--Imagine you're arranging books of different sizes on a shelf.
+
+--You pick one random book (say, the pivot) and want to rearrange such that:
+
+--->All smaller books go to its left.
+
+--->All bigger books go to its right.
+
+--Then you repeat the same process recursively on the left side and right side until all the books are sorted.
+ 
+ 
+**Note: Quick sort works on the idea for, if for an element all the smaller elements are on its left side and bigger elements are on its right side then that element is called as a sorted element.
+
+
+
+Example:
+
+        0   1  2   3  4   5  6  7  8
+arr = {10, 16, 8, 12, 15, 6, 3, 9, 5}
+
+
+lets take the first element arr[0] = 10 as pivot
+
+--Now we need to find the sortest position of this pivot(10) element, such that all the smaller element moves its left side and all the bigger elements should moves its right side.
+
+
+here we take 2 pointers
+
+i = start+1; (points to where the next smaller element should go)
+j = start+1; (traverse the array)
+
+
+--whenever we find arr[j] < pivot, we swap arr[i] and arr[j] and move i forward.
+
+--finally, we swap pivot(arr[start] with arr[i-1]) to put it in the right position.
+
+
+
+code for partition: (Hoare Partition, named after Tony Hoare who invented Quick Sort itself)
+--------------------
+
+//simplification of Hoare's logic.
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int partition(vector<int>& arr, int start, int end){
+
+    int pivot = arr[start];
+
+    int i=start+1;
+
+    for(int j=start+1; j<=end;j++){
+
+        if(arr[j] < pivot){
+            swap(arr[i], arr[j]);
+            i++;
+        }
+
+    }
+
+    swap(arr[start], arr[i-1]);
+    return i-1; //pivot's correct position
+
+
+}
+
+
+int main(){
+
+    vector<int> arr={10, 16, 8, 12, 15, 6, 3, 9, 5};
+    
+    int start=0;
+    int end=arr.size()-1;
+
+    cout<<partition(arr, start, end);
+    cout<<endl;
+
+    cout<<"After partitition the element" <<arr[start] <<"placed to the correct position" <<endl;
+    for(int i:arr){
+        cout<<i <<" ";
+    }
+
+    
+    
+    return 0;
+    
+}
+
+
+
+--once we done the first partition, we will receive the correct index position for the first pivot element.
+--now we need to recursively perform the same operation of the left and right side of the result index
+
+left part:  start, pivotIndex-1;
+right part: pivotIndex+1, end
+
+till the start >= end
+
+
+code for quick sort:
+-----
+
+void quickSort(vector<int>& arr, int start, int end){
+
+//Base condition
+if(start >= end)
+	return;
+
+int pivotIndex = partition(arr, start, end);
+
+
+//recursive call
+quickSort(arr, start, pivotIndex-1);
+quickSort(arr,pivotIndex+1, end);
+
+
+}
+
+
+final code:
+-----------
+
+ 
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int partition(vector<int>& arr, int start, int end){
+
+    int pivot = arr[start];
+
+    int i=start+1;
+
+    for(int j=start+1; j<=end;j++){
+
+        if(arr[j] < pivot){
+            swap(arr[i], arr[j]);
+            i++;
+        }
+
+    }
+
+    swap(arr[start], arr[i-1]);
+    return i-1; //pivot's correct position
+
+
+}
+
+
+void quickSort(vector<int>& arr, int start, int end){
+
+//Base condition
+if(start >= end)
+	return;
+
+int pivotIndex = partition(arr, start, end);
+
+
+//recursive call
+quickSort(arr, start, pivotIndex-1);
+quickSort(arr,pivotIndex+1, end);
+
+
+}
+
+
+int main(){
+
+    vector<int> arr={10, 16, 8, 12, 15, 6, 3, 9, 5};
+    
+    int start=0;
+    int end=arr.size()-1;
+
+    quickSort(arr, start,end);
+
+    //printing the result
+    for(int i:arr){
+        cout<<i <<" ";
+    }    
+    
+    return 0;
+    
+}
+
+
+
+Time complexity:
+-------------------
+
+1. Partition function:
+
+--The partition function runs a single loop from start+1 to end, so: O(n)
+
+
+2. Quick Sort function:
+
+--here 2 recursive calls are made after each partition 
+
+a. subarray before the pivot: start to pivotIndex-1
+b. subarray after the pivot: pivotIndex+1 to end
+
+Best case: 
+
+--pivot always splits into 2 equal halves.
+
+--each one with n/2, n/4,... O(logn) + O(logn) => O(2logn) => O(logn)
+
+--so the total time complexity for the Best case will be:
+
+O(n) for partition * O(logn) for quick sort => O(n* logn)
+
+
+Wrost case: (Already sorted or reverse-sorted array, pivot is always smallest/largest)
+
+In this case:
+
+--one side of the partition has size n-1 and the other side will be 0.
+
+--in this case the total time complexity for the quick sort will be:
+O(n) for partition * O(n) for recursive call => O(n^2)
+
+Space complexity for the Quick sort:
+------------------------------------
+
+For Partition:
+
+--No extra space or vector is used for merging (Unlike merge sort)
+so, O(1) (In-place partitioning)
+
+For Quick sort:
+
+--At each level, recursive calls are added to the function call stack.
+--so the depth of the recursion:
+
+Best case: O(logn)
+Wrost case: O(n)
+
+
+Note: we can minimize the risk the wrost case Time and Space complexity by avoiding to choosing the pivot element as first or last element, and taking it as Random element.
+
+
+
+Randomized Pivot (Best in Most Cases):
+--------------------------------------
+
+Idea: Pick a random index between start and end, and use that element as the pivot.
+
+Why: This helps reduce the chance of worst-case performance (O(n²)), especially for sorted or nearly sorted arrays.
+
+Performance: Average time complexity remains O(n log n) in most scenarios.
+
+Recommended when:
+
+--The input array is large
+
+--You want consistent average performance
+
+
+steps:
+
+step 1: choose the random pivot:
+
+int randomIndex = rand() % (end - start + 1) + start;
+
+step2: swap this randomIndex element with the first index element
+
+step3: perform the same as above code.
+
+
+
+Final Code for randomized pivot:
+--------------------------------
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int partition(vector<int>& arr, int start, int end){
+
+    //get the random index
+    int randomIndex= rand() % (end-start+1)+start;
+    //cout<<"Random index is: "<<randomIndex <<endl;
+
+    //swaping it with the first index element
+    swap(arr[start], arr[randomIndex]);
+
+
+    int pivot = arr[start];
+
+    int i=start+1;
+
+    for(int j=start+1; j<=end;j++){
+
+        if(arr[j] < pivot){
+            swap(arr[i], arr[j]);
+            i++;
+        }
+
+    }
+
+    swap(arr[start], arr[i-1]);
+    return i-1; //pivot's correct position
+
+
+}
+
+
+void quickSort(vector<int>& arr, int start, int end){
+
+//Base condition
+if(start >= end)
+	return;
+
+int pivotIndex = partition(arr, start, end);
+
+
+//recursive call
+quickSort(arr, start, pivotIndex-1);
+quickSort(arr,pivotIndex+1, end);
+
+
+}
+
+
+int main(){
+
+    vector<int> arr={10, 16, 8, 12, 15, 6, 3, 9, 5};
+    
+    int start=0;
+    int end=arr.size()-1;
+
+    quickSort(arr, start,end);
+
+    for(int i:arr){
+        cout<<i <<" ";
+    }
+    
+    return 0;
+    
+}
+
+
+Choosing partition as last index: 
+---------------------------------
+
+we can also use the similar strategy in "Hoare Partition", like taking the last index element as pivot and swap it with the first index element and perform the similar operation on partition.
+
+
+
+
+Lomuto Partition:
+------------------
+
+
+Note: For choosing the last index we can also perform "Lomuto Partition". It was introduced by Nico Lomuto, a computer scientist.
+
+--It was popularized through the book "Programming Pearls" by Jon Bentley, where it was used to explain how Quick Sort works.
+
+--It always picks the last element as the pivot.
+
+--Good for learning and understanding how quick sort divides arrays.
+
+--Can perform more swaps than Hoare, so not the most efficient.
+
+
+Code:
+-------
+
+int partition(vector<int>& arr, int start, int end) {
+    int pivot = arr[end];  // pivot as last element
+    int i = start - 1; //invalid position before first element
+
+    for (int j = start; j < end; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            swap(arr[i], arr[j]);
+        }
+    }
+
+    swap(arr[i + 1], arr[end]);  // place pivot at correct position
+    return i + 1;
+}
+
+
+
+
+Choosing a random pivot + Hoare partition (starting from first element) is usually better than using Lomuto with the last element.
+
+
+Quick Sort vs Merge Sort:
+=========================
+
+Feature					Quick Sort				Merge Sort
+
+1. Time complexity:Best and avg case:	O(n log n)				O(n log n)
+
+2. Time complexity:Wrost:		O(n^2) if pivot in badly choosen	O(n log n) always
+
+3. Space complexity:			O(log n) (in-place)			O(n) extra space is needed for merging
+
+4. Stable ?				Not stable				Stable
+
+
+
+
+
+Quick Sort is better when:
+--------------------------
+
+--You're sorting in-memory (array in RAM).
+--You want faster average-case performance.
+--You want in-place sorting (less memory).
+Example: Sorting huge array of integers in RAM (like in competitive coding or game engines).	
+
+
+Merge Sort is better when:
+--------------------------
+
+--You need stable sorting (equal elements remain in order).
+--You're dealing with linked lists.
+--You're working with external sorting (e.g., large files on disk).
+--You want predictable performance regardless of input.
+Example: Sorting huge files on disk, or sorting based on multiple criteria (like stable name sorting in contacts).
+
+
+
+Analogy:
+--------
+
+--Quick Sort is like a fast but moody chef — when they get it right (good pivot), they’re super fast! But a bad mood (bad pivot) slows everything down.
+
+--Merge Sort is like a robot — consistent and stable, but needs more space to work.
+
+so, finally:
+
+--If you care about speed and space → Go for Quick Sort (with randomized pivot for safety).
+--If you care about stability and consistency → Use Merge Sort.
+
+
+
+Note: The C++ Standard Library std::sort() does not use pure Quick Sort or Merge Sort.
+
+Instead, it uses a hybrid sorting algorithm called: IntroSort (Introspective Sort)
+
+What is IntroSort?
+
+--It starts with Quick Sort (for speed).
+--If recursion goes too deep (i.e., pivot is bad → worst-case O(n²)), it switches to Heap Sort.
+--For small parts (like fewer than 16 elements), it may use Insertion Sort (super-fast for tiny arrays).
+
+
+
+
+
+
+
+
+
+
+
+ 
 
 
 
