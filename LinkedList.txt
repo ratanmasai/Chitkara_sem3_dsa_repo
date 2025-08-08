@@ -1,0 +1,1034 @@
+LinkedList:
+===========
+
+A Linked List is a linear data structure where elements (called nodes) are not stored in contiguous memory like arrays.
+
+Each node contains:
+
+1. Data
+
+2. Pointer (or reference) to the next node
+
+Unlike arrays, linked lists do not have fixed size and do not require elements to be stored next to each other in memory.
+
+
+
+
+Basic Node Structure:
+=====================
+
+structure based Node:
+---------------------
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+
+class based Node:
+-----------------
+
+class Node {
+public:
+    int data;
+    Node* next;
+
+    //constructor
+    Node(int data) {
+        this -> data = data;
+        this -> next = NULL;
+    }
+};
+
+
+
+Types of Linked Lists:
+======================
+
+Linked List are of 3 types:
+---------------------------
+
+1. Singly Linked List:
+
+--Each node has data + pointer to next node.
+
+--One-directional.
+
+Example:
+
+A → B → C → NULL
+
+
+2. Doubly Linked List: 
+
+--Each node has:
+
+a. Data
+
+b. Pointer to next
+
+c. Pointer to previous
+
+--Two-directional
+
+
+Example:
+
+NULL ← A ⇄ B ⇄ C → NULL
+
+
+
+3. Circular Linked List:
+
+--Last node points back to the first node
+
+--Can be singly or doubly circular
+
+Example:
+
+A → B → C
+  <-  <-
+↑       ↓
+←←←←←←←←←
+
+
+
+
+
+Characteristics of Linked Lists:
+---------------------------------
+
+1. Dynamic size: Can grow/shrink at runtime
+
+2. Efficient insertions/deletions: Especially at beginning/middle
+
+3. No direct access: Must traverse from head to find a node
+
+4. Memory-efficient: Allocates memory as needed
+
+5. Useful for implementing stacks, queues, graphs, hash maps, etc.
+
+
+
+
+
+
+
+Array vs Linked List:
+=======================
+
+
+Feature				Array/Vector				Linked List
+
+1. Size				Fixed(array), auto(vector)		Dynamic, no need to define in advance
+
+2. Memory Allocation		Contiguous				Non-Contiguous(Nodes will be created in Heap)
+
+3. Insertion/Deletion		Costly (shift elements)			Fast(no shifting, just change the pointers)
+
+4. Access time			Fast (O(1) via index)			Slow, O(n), no index.
+
+5. Memory Efficiency		Can waste memory			Efficient if many insertion/deletions
+
+6. Random Access		Yes					No
+
+
+
+Advantages Over Arrays:
+-----------------------
+
+--Dynamic resizing (add/remove nodes easily).
+--Efficient insertions/deletions (O(1) if position is known).
+--No memory waste (only allocate needed nodes).
+
+Disadvantages:
+---------------
+
+--No random access (O(n) to access nth element).
+--Extra memory for pointers.
+--Not cache-friendly (non-contiguous memory).
+
+
+
+Real-Life Analogy
+-----------------
+
+--Imagine a train:
+
+--Each bogie (coach) is like a node.
+
+--Every bogie is connected to the next one via a connector.
+
+--You can move coach to coach, but you don’t know the exact position unless you traverse from the start.
+
+Just like:
+
+Node = bogie
+
+next = connector to next bogie
+
+head = engine (starting point)
+
+
+
+Head Node:
+-----------
+
+--It is a pointer which points to the first node only inside the Linked List, with this Head pointer only we traverse the entire LinkedList, we can also maintain a Tail Pointer as well to point the last element.
+
+
+
+
+
+LinkedList class Defination:
+===========================
+
+class LinkedList{
+
+private:
+
+	Node* head;
+
+
+public:
+
+	//constructor 
+	LinkedList(){
+
+		//empty LinkedList
+		head = NULL;
+
+	}
+
+
+//All operations will go here..
+
+}
+
+
+
+
+Traversing a Linked List:
+-------------------------
+
+--Traversal means visiting each node in the linked list, typically to process or display data, starting from the head and following the next pointers.
+
+Steps:
+
+1. Start at the head node.
+2. While the current node is not nullptr:
+	--Process the node’s data (e.g., print it).
+	--Move to the next node using the next pointer.
+3. Stop when reaching nullptr.
+
+Traversal Analogy:
+------------------
+
+Walking through a treasure hunt:
+
+--Start at the first clue (head).
+--Read each clue (data) and follow the arrow (next pointer) to the next clue.
+--Stop when there’s no more clues (nullptr).
+
+
+
+
+
+
+
+
+
+Basic Operations: Insert at begining and display(traverse over each nodes)
+==================
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Node{
+
+public:
+    int data;
+    Node* next;
+
+    //constructor
+    Node(int data){
+        this -> data = data;
+        this -> next= NULL;
+    }
+
+
+};
+
+
+class LinkedList{
+
+private:
+
+    //head stores the address of the first node.
+    Node* head;
+
+public:
+
+    //constructor 
+    LinkedList(){
+
+	//empty list
+        head= NULL;
+    }
+
+    //insertion at the begining
+    void insertAtBegining(int value){
+
+        //creating a new node object with the data
+        Node* newNode = new Node(value);
+
+	//if the list is empty
+	if(head == NULL){
+		head = newNode;
+	}else{
+
+        	//linking the existing node with the new node
+	        newNode->next = head;
+
+        	//making the newNode as head
+        	head=newNode;
+	}
+
+    }
+
+    //display the LinkedList
+    //Prints all elements from head to the end.
+    void display(){
+
+	if(head == NULL){
+      		cout << "Linked List is empty." << endl;
+        	return;
+    	}
+
+        Node* temp = head;
+        while(temp != NULL){
+            //getting the data from the node
+            cout<<temp->data <<" -> ";
+            //moving to the next node.
+            temp=temp->next;
+        }
+	cout << "NULL" << endl;
+
+    }
+
+
+
+
+};
+
+
+int main(){
+
+
+    LinkedList ll;
+
+    ll.insertAtBegining(10);
+    ll.insertAtBegining(5);
+    ll.insertAtBegining(2);
+    ll.insertAtBegining(1);
+
+    ll.display();
+
+
+    return 0;
+    
+}
+
+
+
+
+The time complexity for adding a new Node at the begining is: O(1)
+and for the traversing all the nodes for display is: O(n)
+
+
+Note: Adding a destructor to your LinkedList class is an excellent practice. It ensures that when a LinkedList object goes out of scope, all dynamically allocated memory (the nodes) is properly released, preventing memory leaks.
+
+
+Q/- Why Destructor?
+
+At the time of:
+
+Node* newNode = new Node(value);
+
+--We allocate memory on the heap. This memory must be manually deallocated using delete. Otherwise, it will create a memory leak.
+
+Add Destructor to the above Class:
+
+
+
+    //Destructor to free up heap memory and prevent memory leaks
+    ~LinkedList(){
+
+        Node* currentNode = head;
+        while(currentNode != NULL){
+
+            //store the next node into the temp Node.
+            Node* nextNode= currentNode->next;
+            //Free memory of the current node
+            delete currentNode;
+            //move to the next node
+            currentNode = nextNode;
+
+
+        }
+	//reset the head and tail(if any) to NULL (good practice)
+	head = NULL;
+
+
+    }
+
+
+--When the program ends or the LinkedList object goes out of scope, the destructor is automatically called. Without it, the new keyword will keep memory on the heap, causing memory leaks, especially if thousands of nodes are created during runtime.
+
+
+
+
+
+Inserting at Last/end:
+======================
+
+
+Logic :
+
+
+1. Create a new Node with the given value
+2. If the list is empty (head == NULL), set the head = newNode
+3. Otherwise:
+	--Traverse to the last node (temp -> next != NULL)
+	--Set the last node's next to point to the new node.
+
+
+Code:
+------
+
+
+  void insertAtLast(int value){
+
+            //creating new Node
+            Node* newNode = new Node(value);
+
+     //Case1: Empty List
+            if(head == NULL){
+                head = newNode;
+             
+            }else{
+
+	
+     //Case2: Traverse to the end
+            Node* temp= head;
+            while(temp->next != NULL){
+                temp= temp->next;
+            }
+
+     //Link the Last node to newNode
+            temp->next = newNode;
+    }
+     }
+
+
+
+
+Note: For the adding new Node to the end the Worst case Time complexity will be O(n), To optamize this time complexity to O(1), we can make use of 2 pointers initially:
+
+head node: points to the first Node
+tail node: points to the last Node
+
+
+
+So, when we insert at the end:
+
+--Instead of looping to the end each time,
+
+--we just connect tail->next = newNode and update tail = newNode.
+
+
+
+Example:
+
+
+class LinkedList{
+
+    private:
+
+        Node* head;
+        Node* tail;
+
+	int size;
+
+    public:
+
+        //constructor
+        LinkedList(){
+            head= NULL;
+            tail= NULL;
+	    size=0;
+        }
+
+        void insertAtBegining(int value){
+            Node* newNode = new Node(value);
+           
+            if(head == NULL){
+                head= newNode;
+                tail = newNode;
+            }
+            else{
+                newNode -> next = head;
+                head = newNode;
+            }
+
+	     size++;
+        }
+
+        void display(){
+
+            Node* temp= head;
+
+            while(temp != NULL){
+                cout<<temp->data <<" -> ";
+                temp= temp->next;
+            }
+            cout<<"NULL" <<endl;
+
+        }
+
+        void insertAtLast(int value){
+
+            //creating new Node
+            Node* newNode = new Node(value);
+
+            if(head == NULL){
+                head = newNode;
+                tail = newNode; 
+            }else{
+                    
+                tail->next= newNode;
+                tail = newNode;
+
+            }
+	
+	    size++;
+
+        }
+
+
+};
+
+
+
+Note: With the 2 pointers like head and tail we can improve the functionality of inserting and deleting an element from beginning or from end(Using doubly linked list) to the O(1) from the O(n).
+
+
+
+Counting the elements:
+======================
+
+int getSize():
+
+    return size;
+}
+
+
+
+
+Getting index of an item:
+==========================
+
+int indexOf(int val){
+
+	int index=0;
+
+	Node* current =head;
+
+	while(current != NULL){
+
+		if(current-> data == val){
+			return index;
+		}
+
+		current =current-> next;
+		index++;
+	}
+
+	return -1;
+
+}
+
+
+
+Check If LinkedList contains item:
+---------------------------------
+
+
+bool contains(int val){
+
+	return indexOf(val) != -1;
+}
+
+
+
+
+
+
+Removing the first Item:
+------------------------
+
+
+void removeFirst(){
+
+	if(head == NULL){
+
+		cout<<"Linked List is empty \n ";
+		return;
+	}
+
+	if(head == tail){
+
+		delete head;
+		head=tail = NULL;
+	}else{
+
+		Node* temp= head;
+		head =head->next;
+		delete temp; 
+	}	
+	
+	size--;
+
+}
+
+
+
+
+To find the previous Node: (helper function)
+---------------------------------------------
+
+Node* getPrevious(Node* node){
+
+	Node* current= head;
+
+	while(current != NULL && current-> next != node){
+		
+		current = current -> next;
+	}
+	
+	return current;
+
+
+}
+
+
+
+
+
+
+
+Remove the last item:
+---------------------
+
+void removeLast(){
+
+
+	if(head == NULL){
+
+		cout<<"Linked List is empty \n";
+		return;
+	}
+
+
+	if(head == tail){
+
+		delete head;
+		head =tail = NULL;
+
+	}else{
+
+		Node* prev = getPrevious(tail);
+
+		delete tail;
+		tail= prev;
+		tail->next = NULL;
+	}	
+	
+	size--;
+}
+
+
+
+Getting array from a LinkedList:
+--------------------------------
+
+
+int* toArray(){
+
+	int* arr = new int[size];
+
+	Node* current = head;
+
+	int i=0;
+
+	while(current != NULL){
+
+		arr[i++] =current ->data;
+		current = current ->next;
+	}
+
+	return arr;
+}
+
+
+
+Inserting at any position:
+--------------------------
+
+
+Rules:
+
+1. If index is 0, it's same as insertAtBegining:
+
+2. If index is equal to size, its same as insertAtLast
+
+3. If index is invalid (negetive or > size), print error.
+
+
+
+void insertAt(int index, int value){
+
+
+	if(index < 0 || index > size){
+
+		cout<<"Error, Invalid index \n";
+		return;
+	}
+	
+	if(index == 0){
+
+		insertAtBegining(value);
+		return;
+	}
+
+	if(index == size){
+
+		insertAtLast(value);
+		return;
+	}
+
+	
+	Node* newNode = new Node(value);
+	Node* current = head;
+
+	for(int i=0;i<index-1;i++){
+
+		current = current -> next;
+	}
+
+	newNode -> next = current ->next;
+
+	current-> next = newNode;
+
+	size++;
+
+}	
+
+
+
+
+Delete from any position:
+-------------------------
+
+Rules:
+
+
+1. If index is 0, call removeFirst()
+
+2. If index is size-1, call removeLast()
+
+3. If index is invalid (negetive or >= size), print error
+
+
+
+
+void deleteAt(int index){
+
+if (index < 0 || index >= size) {
+        cout << "Error: Invalid index\n";
+        return;
+    }
+
+    if (index == 0) {
+        removeFirst();
+        return;
+    }
+
+    if (index == size - 1) {
+        removeLast();
+        return;
+    }
+
+    Node* current = head;
+
+    for (int i = 0; i < index - 1; i++) {
+        current = current -> next;
+    }
+
+    Node* temp = current -> next;
+    current -> next = temp-> next;
+    delete temp;
+
+    size--;
+
+
+} 
+
+
+
+
+
+Sorting a Linked List:
+======================
+
+Note: Since a Linked List is not indexed like an array, sorting it is not as straightforward. You can’t just use sort() like in arrays,
+you must traverse, compare, and swap nodes or rebuild the list in sorted order.
+
+
+Steps: Easiest way: 
+-------------------
+
+1. Convert a Linked List to an array
+
+2. Sort the array using sort() inbuilt function
+
+3. Clear the LinkedList
+
+4. Re-insert elements from the sorted array
+
+
+void sortLinkedList(){
+
+	//if the LinkedList is empty or it has only one element.
+	if(head == NULL || head->next ==NULL){
+		return;
+	}
+
+
+	//step1: convert to array
+	int* arr = toArray();
+
+
+	//step2: sort the array
+	sort(arr, arr+size);
+
+	//Rebuild the LinkedList
+
+	Node* current = head;
+
+	int i=0;
+
+	while(current != NULL){
+
+		current->data = arr[i++];
+		current = current-> next;
+	}
+
+	//free the heap memory
+	delete[] arr;
+
+}
+
+
+Insertion in sorted LinkedList:
+==============================
+
+--In a sorted Linked List, we must insert elements while maintaining the sorted order (ascending or descending).
+
+Example:
+
+--If the list is: 10 → 20 → 30,
+
+--and you insert 25, the new list becomes:
+
+10 → 20 → 25 → 30
+
+
+
+
+code:
+-----
+
+
+void insertSorted(int value) {
+    Node* newNode = new Node(value);
+
+    // Case 1: Empty list
+    if (head == NULL) {
+        head = tail = newNode;
+    }
+
+    // Case 2: New node should be inserted at beginning
+    else if (value <= head->data) {
+        newNode->next = head;
+        head = newNode;
+    }
+
+    // Case 3: Insert somewhere in the middle or end
+    else {
+        Node* current = head;
+        while (current->next != NULL && current->next->data < value) {
+            current = current->next;
+        }
+
+        newNode->next = current->next;
+        current->next = newNode;
+
+        // Update tail if new node is inserted at the end
+        if (newNode->next == NULL) {
+            tail = newNode;
+        }
+    }
+
+    size++;
+}
+
+
+
+
+
+
+Reversing a LinkedList:
+========================
+
+
+If your Linked List is:
+
+10 → 20 → 30 → 40 → NULL
+
+
+After reversing, it becomes:
+
+40 → 30 → 20 → 10 → NULL
+
+
+Logic:
+
+--We maintain 3 pointers:
+
+--prev → initially NULL
+
+--curr → starts at head
+
+--next → temporarily stores curr->next
+
+
+
+
+code:
+------
+
+
+void reverse() {
+    Node* prev = NULL;
+    Node* current = head;
+    Node* next = NULL;
+
+    tail = head; // The current head will become tail
+
+    while (current != NULL) {
+        next = current->next;     // Step 1: Store next
+        current->next = prev;     // Step 2: Reverse the pointer
+        prev = current;           // Step 3: Move prev one step forward
+        current = next;           // Step 4: Move current one step forward
+    }
+
+    head = prev; // Finally, update head
+}
+
+
+
+
+
+
+
+
+Final Time complexity of LinkedList:
+====================================
+
+1. Insert at beginning :   O(1)
+
+2. Insert at end (w/o tail):  O(n)
+
+3. Insert at end (with tail):  O(1)
+
+4. Insert at any index:  O(n)
+
+5. Delete from beginning:  O(1)
+
+6. Delete from end: O(n):  need to traverse the prev of end element
+
+7. Delete from index: O(n):
+
+8. Search/indexOf:  O(n)
+
+9. Display/traverse: O(n)
+
+10. Reverse :  O(n)
+
+11. Sort (via array):  O(n log n)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

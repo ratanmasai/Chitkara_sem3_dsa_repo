@@ -998,6 +998,9 @@ Space complexity:
 --If the input size is n, then: Temporary arrays might take up to O(n) space.
 
 
+
+
+
 Space complexity: O(n)
 
 
@@ -1005,6 +1008,8 @@ Space complexity: O(n)
 Modify the above example: In-place index Merge Sort (Modify the original array instead of returning new one)
 --------------------------
 
+
+arr = [10,20,30,40,12,25,38,68];
 
 
 
@@ -1043,6 +1048,7 @@ void merge(vector<int>& arr, int start, int end, int mid){
 
     //copy merged elements back to the original array
     for (int k = 0; k < temp.size(); k++) {
+	
         arr[start+k] = temp[k];
     }
 
@@ -1113,9 +1119,9 @@ Advantages of Merge Sort:
 
 2.  Stable Sort: Maintains the original order of equal elements (important for sorting complex data).
 
-3. Good for Linked Lists:	Works very well with linked lists (unlike quicksort which requires random access).
+3. Good for Linked Lists: Works very well with linked lists (unlike quicksort which requires random access).
 
-4.  Predictable Performance: Performance does not degrade in worst-case (unlike Quick Sort).
+4. Predictable Performance: Performance does not degrade in worst-case (unlike Quick Sort).
 
 
 Disadvantage:
@@ -1195,6 +1201,13 @@ lets take the first element arr[0] = 10 as pivot
 --Now we need to find the sorted position of this pivot(10) element, such that all the smaller element moves its left side and all the bigger elements should moves its right side.
 
 
+int partition(vector<int>& arr){
+
+
+}
+
+
+
 here we take 2 pointers
 
 i = start+1; (points to where the next smaller element should go)
@@ -1267,6 +1280,7 @@ left part:  start, pivotIndex-1;
 right part: pivotIndex+1, end
 
 till the start >= end
+
 
 
 code for quick sort:
@@ -1400,7 +1414,7 @@ Space complexity for the Quick sort:
 
 For Partition:
 
---No extra space or vector is used for merging (Unlike merge sort)
+--No extra space or vector is used for partitioning (Unlike merge sort)
 so, O(1) (In-place partitioning)
 
 For Quick sort:
@@ -1622,7 +1636,6 @@ What is IntroSort?
 --It starts with Quick Sort (for speed).
 --If recursion goes too deep (i.e., pivot is bad → worst-case O(n²)), it switches to Heap Sort.
 --For small parts (like fewer than 16 elements), it may use Insertion Sort (super-fast for tiny arrays).
-
 
 
 
