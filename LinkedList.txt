@@ -661,6 +661,32 @@ void removeLast(){
 
 
 
+Getting the value at index:
+---------------------------
+
+
+    //getting the value at index
+    int getValue(int index){
+
+        if(index < 0 || index>size-1){
+            cout<<"Invalid index \n";
+            return -1;
+        }
+
+        Node* current= head;
+        for(int i=0;i<index;i++){
+            current = current->next;
+        }
+
+        return current->data;
+
+
+    }
+
+
+
+
+
 Getting array from a LinkedList:
 --------------------------------
 
