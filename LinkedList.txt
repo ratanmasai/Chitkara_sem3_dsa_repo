@@ -939,6 +939,12 @@ After reversing, it becomes:
 
 40 → 30 → 20 → 10 → NULL
 
+or
+
+NULL <- 10 <- 20 <- 30 <- 40  // here 40 will become head
+
+
+
 
 Logic:
 
@@ -1008,37 +1014,762 @@ Final Time complexity of LinkedList:
 
 
 
+Slow and Fast Pointer in Linked List:
+==================================
+
+
+--The Slow and Fast Pointer technique (also called Tortoise and Hare) is one of the most powerful approaches to solving linked list problems efficiently.
+
+--It uses two pointers:
+
+1. Slow pointer → moves one step at a time.
+
+2. Fast pointer → moves two steps at a time.
+
+
+Why Use Slow and Fast Pointers?
+----------------------------
+
+--Instead of traversing the list multiple times or using extra memory, the slow–fast approach lets us solve problems in a single pass with O(1) extra space.
+
+
+
+Applications of Slow–Fast Pointer:
+---------------------------------
+
+1. Finding the Middle of a Linked List:
+
+--When the fast pointer reaches the end, the slow pointer will be at the middle.
+--Useful in algorithms like splitting a list or merge sort.
+
+2. Checking if a Linked List is a Palindrome:
+
+--Move slow to the middle using slow–fast logic.
+--Reverse the second half and compare with the first half.
+--More efficient than using extra space.
+
+3. Splitting a Linked List into Two Halves:
+
+--The slow pointer ends up at the middle, dividing the list into two equal halves.
+--Used in problems like Merge Sort on linked lists.
+
+4. Detecting a Cycle in a Linked List (Floyd’s Algorithm):
+
+--If there is a loop, the fast pointer will eventually meet the slow pointer.
+--If no loop exists, the fast pointer will reach NULL.
+--Used for detecting infinite loops before operations.
+
+
+
+Example : Finding the Middle of a Linked List:
+----------------------------------------
+
+
+Method 1: Using size (Two-pass solution):
+
+Idea:
+
+--First calculate the total size of the linked list.
+
+--Middle index = size / 2
+
+--If size is even, this gives the second middle node (depends on implementation).
+
+--Traverse again until that index and return the node.
+
+code:
+-----
+
+Node* findMiddle() {
+    int mid = size / 2;   // pre-maintained size variable
+    Node* current = head;
+
+    for (int i = 0; i < mid; i++) {
+        current = current->next;
+    }
+    return current;
+}
+
+
+
+
+Method 2: Using Slow and Fast Pointers (One-pass solution):
+
+Idea:
+
+-Use two pointers:
+
+--slow moves 1 step at a time.
+--fast moves 2 steps at a time.
+
+-When fast reaches the end:
+
+--slow will be at the middle node.
+
+--Since fast moves twice as fast, when it has traveled the whole list, slow has traveled only half the list → exactly the middle.
+
+Step1: Initialize:
+
+Node* slow = head
+Node* fast = head
+
+Step2: Traverse:
+
+Move slow = slow->next
+Move fast = fast->next->next
+
+Step3: Stop when:
+
+fast == NULL (even length list), OR
+
+fast->next == NULL (odd length list).
+
+At this point, slow is at the middle node.
+
+Step4: return the slow.
+
+
+code:
+------
+
+
+Node* findMiddle() {
+    if (head == NULL) {
+        return NULL;
+    }
+
+    Node* slow = head;
+    Node* fast = head;
+
+    while (fast != NULL && fast->next != NULL) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    return slow;  // middle node
+}
 
 
 
 
 
 
+Example: Checking if a Linked List is Palindrome:
+---------------------------------------------------------
+
+
+--A Palindrome means a sequence that reads the same forward and backward.
+
+Example: 1 → 2 → 3 → 2 → 1 is a palindrome, 
+but 1 → 2 → 3 → 4 is not.
+
+
+
+Approach1:
+----------
+
+Using extra space(array)
+
+--convert the LinkedList into the array and then compare the first element with the last element and so on..
+--this process is easy but it is not memory efficient.
+
+Time complexity: O(n)
+Space Complexity: O(n)
+
+Code:
+-----
+
+
+bool isPalindromeUsingArray() {
+    if (head == NULL || head->next == NULL) {
+        return true; // Empty or single node list is palindrome
+    }
+
+    // Step 1: Copy elements into an array
+    int* arr = toArray();
+
+    // Step 2: Compare first and last elements
+    int i = 0;
+    int j = size - 1;
+    while (i < j) {
+        if (arr[i] != arr[j]) {
+            delete[] arr;
+            return false;
+        }
+        i++;
+        j--;
+    }
+
+    delete[] arr; // Free allocated memory
+    return true;
+}
 
 
 
 
 
+Approach2:
+----------
+
+--Using Slow and Fast pointer technique we can check the palindrome in-place without using extra space.
+
+Steps:
+
+1. Find the middle of the LinkedList
+
+--Use the slow and fast pointer method.
+--When fast reaches end, slow will be at the middle.
+
+2. Reverse the second half of the list
+
+--reverse the linked list from slow to end.
+
+3. Compare the second half and the reversed second half
+
+--traverse both halves and compare the data.
+
+4. (Optional) Restore the list
+
+--Reverse the second half again to restore the original order.
+
+
+Code:
+----
+
+--Helper Function to Reverse a List (we already have reverse(), but we’ll use a local version for the second half)
+
+Node* reverseList(Node* node) {
+    Node* prev = NULL;
+    Node* current = node;
+    Node* next = NULL;
+
+    while (current != NULL) {
+        next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+    return prev; // New head of reversed list
+}
+ 
+
+
+Code for Palindrome Check:
+-------------------------
+
+bool isPalindrome() {
+    if (head == NULL || head->next == NULL) {
+        return true; // Empty or single node list
+    }
+
+    // Step 1: Find middle
+    Node* slow = head;
+    Node* fast = head;
+    while (fast->next != NULL && fast->next->next != NULL) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    // Step 2: Reverse second half
+    Node* secondHalfStart = reverseList(slow->next);
+
+    // Step 3: Compare both halves
+    Node* first = head;
+    Node* second = secondHalfStart;
+    bool palindrome = true;
+
+    while (second != NULL) {
+        if (first->data != second->data) {
+            palindrome = false;
+            break;
+        }
+        first = first->next;
+        second = second->next;
+    }
+
+    // Step 4: Restore second half (optional, to keep list intact)
+    slow->next = reverseList(secondHalfStart);
+
+    return palindrome;
+}
+
+
+
+Cycle in LinkedList:
+=====================
+
+--A cycle (loop) in a linked list occurs when a node’s next pointer points back to a previous node instead of NULL.
+
+--This creates an infinite loop because traversal will never reach NULL.
+
+--If a cycle exists, the concept of a single tail breaks down.
+
+--We can’t say tail->next = NULL directly, because we don’t know where the cycle starts and which node to call "tail."
+
+
+Example:
+
+1 -> 2 -> 3 -> 4
+        ↑          |
+        |_______|
+
+
+Here, node 4 points back to node 2, so the list has a cycle.
+
+code: create a cycle:
+--------------------
+
+
+ void createCycle() {
+        if (head == NULL) return;
+
+        Node* temp = head;
+        Node* second = head->next; // storing 2nd node
+        
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = second;  // Last node connects back to 2nd node
+    }
+
+
+Note: if we call display() method after this createCycle() method, it will form an infinite loop.
+
+
+
+Floyd’s Cycle Detection Algorithm:
+--------------------------------
+
+It uses two pointers:
+
+--slow (moves one step at a time)
+--fast (moves two steps at a time)
+
+
+Step1: Initialize:
+
+slow = head;
+fast = head;
+
+Step2: Traverse the list:
+
+Move: slow-> slow->next
+Move: fast-> fast->next->next
+
+Step3: Condition:
+
+--if fast == NULL OR fast->next ==NULL ==> No Cycle
+--if slow == fast ==> Cycle exists.
+
+Example: DRY RUN:
+
+List: 1->2->3->4->5->2 (loop)
+
+Step1: slow=1, fast= 1
+Step2: slow=2, fast= 3
+Step3: slow=3, fast= 5
+Step4: slow=4, fast= 3
+Step5: slow=5, fast= 5 (they meet, cycle detected)
+
+
+bool detectCycle() {
+
+    if (head == NULL) return false;
+
+    Node* slow = head;
+    Node* fast = head;
+
+    while (fast != NULL && fast->next != NULL) {
+        slow = slow->next;          // move 1 step
+        fast = fast->next->next;    // move 2 steps
+
+        if (slow == fast) {
+            return true; // Cycle found
+        }
+    }
+    return false; // No cycle
+}
+
+
+
+Once Cycle is Detected:- Next Steps:
+
+(A) Find the starting node of the cycle:
+
+--find the node where the cycle begins.
+
+code:
+-----
+
+Node* detectCycleStarts() {
+
+    Node* slow = head;
+    Node* fast = head;
+
+    while (fast != NULL && fast->next != NULL) {
+        slow = slow->next;          // move 1 step
+        fast = fast->next->next;    // move 2 steps
+
+        if (slow == fast) {
+            break; // Cycle found
+        }
+    }
+    
+    //No Cycle
+    if (fast == NULL || fast->next == NULL ) 
+        return NULL;
+
+    //Find Cycle start
+    slow= head; //reset the slow to head
+    while(slow != fast){
+        slow= slow->next;
+        fast = fast->next;
+    }
+
+    return slow; //start of cycle
+    
+}
 
 
 
 
 
+(B) Remove the cycle
+
+--Once we know where the cycle begins, we can break it by making the last node’s next = NULL
+
+Steps:
+
+1. First find the cycle’s starting node (using above method).
+
+2. Then traverse from that node till you reach the last node in the cycle.
+
+3. Make lastNode->next = NULL.
+
+
+code:
+------
+
+void removeCycle() {
+
+    Node* startOfCycle = detectCycleStart();
+    if(startOfCycle == NULL) return;  // No cycle
+
+    Node* temp = startOfCycle;
+    while(temp->next != startOfCycle) {
+        temp = temp->next;
+    }
+    temp->next = NULL; // Break the cycle
+}
+
+
+
+Merging two Linked List:
+=========================
+
+Problem Statement: 
+-----------------
+
+--We are given two linked lists, both are already sorted in ascending order.
+--We need to merge them into a single sorted linked list.
+
+
+Example:
+
+List1: 1 → 3 → 5 → NULL
+List2: 2 → 4 → 6 → NULL
+
+MergedList = 1 → 2 → 3 → 4 → 5 → 6 → NULL
+
+
+code:
+------
+
+
+Node* mergeTwoLists(Node* n1Head, Node* n2Head){
+
+
+    //If first list is empty then return the second list
+    // and if the second list is empty then return the first list
+    //there is no use of merging.
+    if(n1Head == NULL){
+        return n2Head;
+    }
+        
+    if(n2Head == NULL){
+        return n1Head;
+    }
+
+    //step1: initliaze the head and tail for the merged List
+    //Using tail node we add the new nodes(build the list)
+    Node* head;
+    Node* tail;
+
+    if(n1Head->data < n2Head->data){
+        head = tail = n1Head;
+        n1Head= n1Head->next;
+    }else{
+
+        head = tail = n2Head;
+        n2Head= n2Head->next;
+    }
+
+
+    //step2: Traverse and merge
+    while(n1Head != NULL && n2Head != NULL){
+
+        if(n1Head->data < n2Head->data){
+            tail->next = n1Head;
+            n1Head= n1Head->next;
+        }
+        else{
+
+            tail->next = n2Head;
+            n2Head= n2Head->next;
+        }
+
+        tail= tail->next;
+
+    }
+
+
+    //step3: attach the remaining nodes
+    if(n1Head != NULL){
+        tail->next= n1Head;
+    }else{
+        tail->next = n2Head;
+    }
+
+    return head;
+
+
+};
+
+
+int main(){
+
+
+    LinkedList l1;
+    l1.insertAtBegining(50);
+    l1.insertAtBegining(40);
+    l1.insertAtBegining(30);
+    l1.insertAtBegining(20);
+
+
+    LinkedList l2;
+    l2.insertAtBegining(55);
+    l2.insertAtBegining(42);
+    l2.insertAtBegining(32);
+    l2.insertAtBegining(22);
+
+    Node* n= mergeTwoLists(l1.head,l2.head);
+
+    while(n != NULL){
+        cout<<n->data <<" -> ";
+        n= n->next;
+    }
+    cout<<"NULL";
+
+    
+
+**Note: make the head and tail variable of the LinkedList class as public to run the above example.
+
+
+DRY RUN:
+--------
+
+List1: 1 → 3 → 5
+List2: 2 → 4 → 6
+
+
+Process:
+
+first compare(1,2) → 1 smaller → head=tail=1
+
+then compare(3,2) → 2 smaller → tail->next=2
+
+then compare(3,4) → 3 smaller → tail->next=3
+
+then compare(5,4) → 4 smaller → tail->next=4
+
+then compare(5,6) → 5 smaller → tail->next=5
+
+Now List1 is empty → attach the remaining (6) of List2
+
+
+
+Recursive approach:
+--------------------
+
+Node* mergeTwoLists(Node* n1Head, Node* n2Head) {
+    // Base cases
+    if (n1Head == NULL) return n2Head;
+    if (n2Head == NULL) return n1Head;
+
+    // Recursive step
+    if (n1Head->data < n2Head->data) {
+        n1Head->next = mergeTwoLists(n1Head->next, n2Head);
+        return n1Head;
+    } else {
+        n2Head->next = mergeTwoLists(n1Head, n2Head->next);
+        return n2Head;
+    }
+}
+
+
+DRY RUN:
+--------
+
+List1: 1 → 3 → 5
+List2: 2 → 4 → 6
+
+
+Call 1:
+mergeTwoLists(1, 2)
+Compare 1 and 2 → 1 < 2
+So, set 1->next = mergeTwoLists(3, 2)
+Return 1.
+
+Call 2:
+mergeTwoLists(3, 2)
+Compare 3 and 2 → 3 > 2
+So, set 2->next = mergeTwoLists(3, 4)
+Return 2.
+
+
+Call 3:
+mergeTwoLists(3, 4)
+Compare 3 and 4 → 3 < 4
+So, set 3->next = mergeTwoLists(5, 4)
+Return 3.
+
+
+Call 4:
+mergeTwoLists(5, 4)
+Compare 5 and 4 → 5 > 4
+So, set 4->next = mergeTwoLists(5, 6)
+Return 4.
+
+
+Call 5:
+mergeTwoLists(5, 6)
+Compare 5 and 6 → 5 < 6
+So, set 5->next = mergeTwoLists(NULL, 6)
+Return 5.
+
+
+Call 6:
+mergeTwoLists(NULL, 6)
+First condition → since first list is NULL, return 6.
+ 
+
+
+Now unwind recursion:
+
+From Call 6 → returns 6
+So 5->next = 6
+Return 5.
+
+From Call 5 → returns 5
+So 4->next = 5
+Return 4.
+
+From Call 4 → returns 4
+So 3->next = 4
+Return 3.
+
+From Call 3 → returns 3
+So 2->next = 3
+Return 2.
+
+From Call 2 → returns 2
+So 1->next = 2
+Return 1.
+
+
+Note: At each recursive step, we pick the smaller node and let recursion handle the rest. Finally, the function connects all nodes in sorted order as the stack unwinds.
+
+
+
+Sorting LinkedList(merge sort):
+===============================
+
+
+
+//merged two sorted List
+Node* mergeTwoLists(Node* n1Head, Node* n2Head) {
+    // Base cases
+    if (n1Head == NULL) return n2Head;
+    if (n2Head == NULL) return n1Head;
+
+    // Recursive step
+    if (n1Head->data < n2Head->data) {
+        n1Head->next = mergeTwoLists(n1Head->next, n2Head);
+        return n1Head;
+    } else {
+        n2Head->next = mergeTwoLists(n1Head, n2Head->next);
+        return n2Head;
+    }
+}
+
+// --- Split into two halves ---
+Node* findMiddle(Node* head) {
+    if (head == NULL || head->next == NULL) {
+        return head;
+    }
+
+    Node* slow = head;
+    Node* fast = head->next;  // notice: start fast one step ahead
+
+    while (fast != NULL && fast->next != NULL) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    return slow;  // node just before the mid
+}
+
+
+// --- Merge Sort for Linked List ---
+Node* mergeSort(Node* head) {
+    if (head == NULL || head->next == NULL) return head; // base case
+
+    Node* mid = findMiddle(head);
+    Node* second= mid->next;
+    mid->next = NULL; // break the list
+
+    Node* left = mergeSort(head);
+    Node* right = mergeSort(second);
+
+    return mergeTwoLists(left, right);
+}
 
 
 
 
+int main(){
 
 
+    LinkedList l1;
+    l1.insertAtBegining(50);
+    l1.insertAtBegining(40);
+    l1.insertAtBegining(30);
+    l1.insertAtBegining(20);
+    l1.insertAtBegining(10);
+    l1.insertAtBegining(110);
+    l1.insertAtBegining(22);
 
+    l1.display();
 
+    cout<<endl;
 
+    l1.head= mergeSort(l1.head);
 
-
-
-
-
-
+    cout<<"After sorting: \n";
+    l1.display();
+ 
+    return 0;
+}
 
 
 
