@@ -797,6 +797,7 @@ if (index < 0 || index >= size) {
         return;
     }
 
+
     Node* current = head;
 
     for (int i = 0; i < index - 1; i++) {
@@ -1106,7 +1107,7 @@ Idea:
 
 --slow will be at the middle node.
 
---Since fast moves twice as fast, when it has traveled the whole list, slow has traveled only half the list → exactly the middle.
+--Since fast moves twice as slow, when it has traveled the whole list, slow has traveled only half the list → exactly the middle.
 
 Step1: Initialize:
 
@@ -1155,7 +1156,7 @@ Node* findMiddle() {
 
 
 Example: Checking if a Linked List is Palindrome:
----------------------------------------------------------
+-------------------------------------------------
 
 
 --A Palindrome means a sequence that reads the same forward and backward.
@@ -1179,31 +1180,36 @@ Space Complexity: O(n)
 Code:
 -----
 
+bool isPalindrome(){
 
-bool isPalindromeUsingArray() {
-    if (head == NULL || head->next == NULL) {
-        return true; // Empty or single node list is palindrome
-    }
-
-    // Step 1: Copy elements into an array
-    int* arr = toArray();
-
-    // Step 2: Compare first and last elements
-    int i = 0;
-    int j = size - 1;
-    while (i < j) {
-        if (arr[i] != arr[j]) {
-            delete[] arr;
-            return false;
+        if(head == NULL || head -> next == NULL){
+            return true;
         }
-        i++;
-        j--;
+
+        vector<int> arr;
+    
+    // Step 1: Copy linked list data into array
+     Node* temp = head;
+    while (temp != NULL) {
+        arr.push_back(temp->data);
+        temp = temp->next;
     }
+    
+    // Step 2: Check palindrome
+    int i = 0, j = arr.size() - 1;
+        while(i < j){
+            if(arr[i] != arr[j]){
+                return false;
+            }
+            i++;
+            j--;
+        }
 
-    delete[] arr; // Free allocated memory
-    return true;
-}
+        
+        return true;
 
+
+    }
 
 
 
@@ -1224,7 +1230,7 @@ Steps:
 
 --reverse the linked list from slow to end.
 
-3. Compare the second half and the reversed second half
+3. Compare the first half and the reversed second half
 
 --traverse both halves and compare the data.
 
@@ -1298,7 +1304,7 @@ bool isPalindrome() {
 Cycle in LinkedList:
 =====================
 
---A cycle (loop) in a linked list occurs when a node’s next pointer points back to a previous node instead of NULL.
+--A cycle (loop) in a linked list occurs when a node’s next pointer points back to a previous node instead of NULL or next node.
 
 --This creates an infinite loop because traversal will never reach NULL.
 
@@ -1310,8 +1316,8 @@ Cycle in LinkedList:
 Example:
 
 1 -> 2 -> 3 -> 4
-        ↑          |
-        |_______|
+      ↑        |
+      |________|
 
 
 Here, node 4 points back to node 2, so the list has a cycle.
@@ -1486,18 +1492,18 @@ code:
 ------
 
 
-Node* mergeTwoLists(Node* n1Head, Node* n2Head){
+Node* mergeTwoLists(Node* head1, Node* head2){
 
 
     //If first list is empty then return the second list
     // and if the second list is empty then return the first list
     //there is no use of merging.
-    if(n1Head == NULL){
-        return n2Head;
+    if(head1== NULL){
+        return head2;
     }
         
-    if(n2Head == NULL){
-        return n1Head;
+    if(head2 == NULL){
+        return head1;
     }
 
     //step1: initliaze the head and tail for the merged List
@@ -1505,39 +1511,39 @@ Node* mergeTwoLists(Node* n1Head, Node* n2Head){
     Node* head;
     Node* tail;
 
-    if(n1Head->data < n2Head->data){
-        head = tail = n1Head;
-        n1Head= n1Head->next;
+    if(head1->data < head2->data){
+        head = tail = head1; // First node of merged list
+        head1= head1->next; // Move head1 forward
     }else{
 
-        head = tail = n2Head;
-        n2Head= n2Head->next;
+        head = tail = head2;
+        head2= head2->next;
     }
 
 
     //step2: Traverse and merge
-    while(n1Head != NULL && n2Head != NULL){
+    while(head1 != NULL && head2 != NULL){
 
-        if(n1Head->data < n2Head->data){
-            tail->next = n1Head;
-            n1Head= n1Head->next;
+        if(head1->data < head2->data){
+            tail->next = head1;
+            head1= head1->next;
         }
         else{
 
-            tail->next = n2Head;
-            n2Head= n2Head->next;
+            tail->next = head2;
+            head2= head2->next;
         }
 
-        tail= tail->next;
+        tail= tail->next; // move tail to new node
 
     }
 
 
     //step3: attach the remaining nodes
-    if(n1Head != NULL){
-        tail->next= n1Head;
+    if(head1 != NULL){
+        tail->next= head1;
     }else{
-        tail->next = n2Head;
+        tail->next = head2;
     }
 
     return head;
@@ -1601,18 +1607,18 @@ Now List1 is empty → attach the remaining (6) of List2
 Recursive approach:
 --------------------
 
-Node* mergeTwoLists(Node* n1Head, Node* n2Head) {
+Node* mergeTwoLists(Node* head1, Node* head2) {
     // Base cases
-    if (n1Head == NULL) return n2Head;
-    if (n2Head == NULL) return n1Head;
+    if (head1 == NULL) return head2;
+    if (head2 == NULL) return head1;
 
     // Recursive step
-    if (n1Head->data < n2Head->data) {
-        n1Head->next = mergeTwoLists(n1Head->next, n2Head);
-        return n1Head;
+    if (head1->data < head2->data) {
+        head1->next = mergeTwoLists(head1->next, head2);
+        return head1;
     } else {
-        n2Head->next = mergeTwoLists(n1Head, n2Head->next);
-        return n2Head;
+        head2->next = mergeTwoLists(head1, head2->next);
+        return head2;
     }
 }
 
@@ -1623,69 +1629,17 @@ DRY RUN:
 List1: 1 → 3 → 5
 List2: 2 → 4 → 6
 
+Compare 1 & 2 → pick 1 → recursive call on (3→5,  2→4→6)
 
-Call 1:
-mergeTwoLists(1, 2)
-Compare 1 and 2 → 1 < 2
-So, set 1->next = mergeTwoLists(3, 2)
-Return 1.
+Compare 3 & 2 → pick 2 → recursive call on (3→5,  4→6)
 
-Call 2:
-mergeTwoLists(3, 2)
-Compare 3 and 2 → 3 > 2
-So, set 2->next = mergeTwoLists(3, 4)
-Return 2.
+Compare 3 & 4 → pick 3 → recursive call on (5, 4→6)
 
+Compare 5 & 4 → pick 4 → recursive call on (5, 6)
 
-Call 3:
-mergeTwoLists(3, 4)
-Compare 3 and 4 → 3 < 4
-So, set 3->next = mergeTwoLists(5, 4)
-Return 3.
+Compare 5 & 6 → pick 5 → recursive call on (NULL, 6)
 
-
-Call 4:
-mergeTwoLists(5, 4)
-Compare 5 and 4 → 5 > 4
-So, set 4->next = mergeTwoLists(5, 6)
-Return 4.
-
-
-Call 5:
-mergeTwoLists(5, 6)
-Compare 5 and 6 → 5 < 6
-So, set 5->next = mergeTwoLists(NULL, 6)
-Return 5.
-
-
-Call 6:
-mergeTwoLists(NULL, 6)
-First condition → since first list is NULL, return 6.
- 
-
-
-Now unwind recursion:
-
-From Call 6 → returns 6
-So 5->next = 6
-Return 5.
-
-From Call 5 → returns 5
-So 4->next = 5
-Return 4.
-
-From Call 4 → returns 4
-So 3->next = 4
-Return 3.
-
-From Call 3 → returns 3
-So 2->next = 3
-Return 2.
-
-From Call 2 → returns 2
-So 1->next = 2
-Return 1.
-
+One list empty → attach remaining (6)
 
 Note: At each recursive step, we pick the smaller node and let recursion handle the rest. Finally, the function connects all nodes in sorted order as the stack unwinds.
 

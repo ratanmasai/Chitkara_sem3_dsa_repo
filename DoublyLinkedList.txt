@@ -1,0 +1,595 @@
+Doubly Linked List:
+===================
+
+
+--A Doubly Linked List (DLL) is a linear data structure where each node contains:
+
+1. Data (value of the node)
+
+2. Next pointer (points to the next node)
+
+3. Previous pointer (points to the previous node)
+
+--Unlike a Singly Linked List, a DLL allows traversal both forward and backward, making it more flexible but slightly heavier (extra memory for the prev pointer).
+
+
+Analogy:
+--------
+
+--Think of a doubly linked list like a two-way railway track where:
+
+--Each coach (node) is connected to the next and the previous coach.
+
+--You can move forward or backward easily.
+
+--If you want to detach or add a coach, you can adjust the connections from both sides.
+
+--In contrast, a singly linked list is like a one-way track — you can only move forward.
+
+
+Properties of DLL:
+------------------
+
+1. Each node has 3 fields:
+
+	prev → link to the previous node
+
+	data → data stored in the node
+
+	next → link to the next node
+
+2. The head node’s prev is always NULL.
+
+3. The tail node’s next is always NULL.
+
+4. DLL allows bidirectional traversal.
+
+
+
+Example:
+-------
+
+NULL <- [Prev | Data | Next] <-> [Prev | Data | Next] <-> [Prev | Data | Next] -> NULL
+
+
+Advantages of DLL over SLL:
+----------------------------
+
+1. Can be traversed in both directions.
+2. Deletion is easier because prev is available.
+3. Insertion at both ends is efficient.
+
+
+Disadvantages of DLL:
+----------------------
+
+1. Requires extra memory for prev pointer.
+2. More complex implementation compared to SLL.
+
+
+Use Cases:
+----------
+
+--Browser history (forward/backward navigation).
+--Undo/redo functionality in editors.
+--Deques (double-ended queues).
+
+
+
+Node Structure:
+---------------
+
+class Node {
+
+public:
+
+    int data;
+    Node* prev;
+    Node* next;
+
+    Node(int data) {
+        this->data = data;
+        this->prev = NULL;
+        this->next = NULL;
+    }
+};
+
+
+
+
+class DLL{
+
+private:
+
+    Node* head;
+    Node* tail;
+    int size;
+
+public:
+
+    DLL(){
+        head=NULL;
+        tail=NULL;
+        size=0;
+    }
+
+    void insertAtFront(int value){
+
+        Node* newNode= new Node(value);
+
+        //If DLL is empty
+        if(head == NULL){
+            head=tail=newNode;
+        }else{
+            newNode->next = head;
+            head->prev = newNode;
+            head = newNode;
+        }
+
+        size++;
+
+    }
+
+
+    void displayForward(){
+
+        Node* current = head;
+
+        cout<<"Forward Traversal \n";
+
+        cout<<"NULL <-> ";
+        while(current != NULL){
+
+            cout<<current->data <<" <-> ";
+            current = current->next;
+        }
+        cout<<"NULL" <<endl;
+
+    }
+
+    void displayBackward(){
+        Node* current = tail;
+        cout<<"Backward Traversal \n";
+        cout<<"NULL <- ";
+
+        while(current != NULL){
+            cout<<current->data <<" <-> ";
+            current = current->prev;
+        }
+        cout<<"NULL" <<endl;
+
+
+    }
+
+   
+    int getSize(){
+        return size;
+    }
+
+
+};
+
+
+int main(){
+
+    DLL d1;
+
+    d1.insertAtFront(50);
+    d1.insertAtFront(40);
+    d1.insertAtFront(30);
+    d1.insertAtFront(20);
+    d1.insertAtFront(10);
+
+    d1.displayForward();
+    d1.displayBackward();
+    return 0;
+}
+
+
+
+
+Inserting At End:
+------------------
+
+
+
+    void insertAtEnd(int value){
+
+        Node* newNode = new Node(value);
+
+        if(head == NULL){
+            head = tail = newNode;
+        }else{
+
+            tail->next = newNode;
+            newNode->prev = tail;
+            tail = newNode;
+
+        }
+        size++;
+
+    }
+
+
+Delete from front:
+------------------
+
+
+    void deleteFromFront(){
+
+        if(head == NULL){
+            cout<<"DLL is empty \n";
+            return;
+        }
+
+        Node* current = head;
+        
+        //only one node
+        if(head == tail){
+            head = tail = NULL;
+        }else{
+            head = head->next;
+            head->prev = NULL;
+        }
+
+        delete current;
+        size--;
+
+
+    }
+
+
+Delete from end:
+----------------
+
+    void deleteFromEnd(){
+
+        if(head == NULL){
+            cout<<"DLL is empty \n";
+            return;
+        }
+
+        Node* current = tail;
+
+        if(head == tail){
+            //only one Node
+            head = tail = NULL;
+        }else{
+
+            tail = tail->prev;
+            tail->next = NULL;
+        }
+        delete current;
+        size--;
+
+    }
+
+
+Note: Using insertFromFront(), InsertFromEnd(), deleteFromFront() and deleteFromEnd() we implements the Double ended queue (Dqueue).
+
+
+
+
+
+
+Implementing Destructure:
+--------------------------
+
+ // Destructor
+    ~DLL() {
+        while (head != NULL) {
+            deleteFromFront();
+        }
+    }
+
+
+
+
+Getting value at index:
+-----------------------
+
+
+    int getValueAtIndex(int index){
+
+        if(index < 0 || index >= size){
+
+            cout<<"Index Out of Bounds ! \n";
+            return -1;
+        }
+
+        Node* current;
+
+        //Optamized traversal: decide whether to start from head or tail
+        if(index < size/2){
+
+            current = head;
+
+            for(int i=0; i<index;i++){
+                current = current->next;
+            }
+        }else{
+
+            current = tail;
+
+            for(int i=size-1; i> index; i--){
+                current = current->prev;
+            }
+        }
+
+        return current->data;
+
+    }
+
+
+
+Getting the index of an element (first occurence):
+--------------------------------------------------
+
+
+int indexOf(int value){
+
+        Node* current = head;
+        int index =0;
+
+        while(current != NULL){
+            if(current->data == value){
+                return index;
+            }
+            current = current->next;
+            index++;
+        }
+
+        return -1;
+
+
+}
+
+
+Searching an element inside the LL:
+-----------------------------------
+
+
+    bool contains(int value){
+        return indexOf(value) != -1;
+    }
+
+
+Task: 
+
+implement the following functionalities:
+
+1. vector<int> toVector(): convert the DLL to the vector
+
+2. int* toArray(): converting the DLL to an array
+
+
+
+Inserting a Node at any position:
+----------------------------------
+
+
+    void insertAtPosition(int index, int value){
+
+        if(index < 0 || index > size){
+
+            cout<<"Index out of Bounds! \n";
+            return;
+        }
+
+        if(index == 0){
+            insertAtFront(value);
+            return;
+        }
+
+        if(index == size){
+            insertAtEnd(value);
+            return;
+        }
+
+
+        Node* newNode = new Node(value);
+
+        Node* current = head;
+
+        //Traverse to index position
+        for(int i=0;i<index;i++){
+            current = current -> next;
+        }
+
+        //Adjust the pointers
+        Node* previous = current->prev;
+
+        previous->next = newNode;
+        newNode->prev = previous;
+
+        newNode->next = current;
+        current->prev = newNode;
+
+        size++;
+
+    }
+
+
+
+Deleting from any position:
+----------------------------
+
+void deleteAtPosition(int index) {
+
+    if (index < 0 || index >= size) {
+        cout << "Index out of Bounds!\n";
+        return;
+    }
+
+    // Case 1: Delete from front
+    if (index == 0) {
+        deleteFromFront();
+        return;
+    }
+
+    // Case 2: Delete from end
+    if (index == size - 1) {
+        deleteFromEnd();
+        return;
+    }
+
+    // Case 3: Delete from middle
+    Node* current = head;
+    for (int i = 0; i < index; i++) {
+        current = current->next;
+    }
+
+    Node* prevNode = current->prev;
+    Node* nextNode = current->next;
+
+    prevNode->next = nextNode;
+    nextNode->prev = prevNode;
+
+    delete current;
+    size--;
+}
+
+
+
+
+Task: Check if the Doubly LinkedList is Palindrome 
+
+
+
+Rotate Doubly Linked List by N nodes:
+-------------------------------------
+
+Example:
+
+List: 10 ⇔ 20 ⇔ 30 ⇔ 40 ⇔ 50 ⇔ 60
+
+N = 2 (rotate last 2 nodes to the front)
+
+Result: 50 ⇔ 60 ⇔ 10 ⇔ 20 ⇔ 30 ⇔ 40
+
+
+
+Approach:
+
+
+step1: Handle the edge cases:
+
+
+if (head == NULL || N <= 0 || N % size == 0) 
+	return;
+
+
+--If list is empty → do nothing
+--If N is 0 → do nothing
+--If N is a multiple of size → same list, do nothing
+
+
+step2: Normalize N
+
+N = N % size;
+
+
+If N is larger than size, we only need to rotate by N % size.
+Example: rotating by 8 in a 6-node list = rotating by 2.
+
+
+step3: Find new head (size - N steps)
+
+Node* newHead = head;
+for (int i = 0; i < size - N; i++) {
+    newHead = newHead->next;
+}
+
+
+--We move (size - N) steps forward to find the new head.
+
+size = 6, N = 2
+
+size - N = 4 → move 4 steps from head
+
+
+Start at 10 → 20 → 30 → 40 → **50** → 60
+
+So, newHead = 50
+
+
+step4: Find new tail and break the list
+
+Node* newTail = newHead->prev;
+Node* oldTail = tail;
+
+newTail->next = NULL;
+newHead->prev = NULL;
+
+
+--newTail is just before newHead → here, 40
+--Break the list into 2 parts: 
+
+Part A: 10 ⇔ 20 ⇔ 30 ⇔ 40
+Part B: 50 ⇔ 60
+
+
+step5: Connect old tail with old head
+
+oldTail->next = head;
+head->prev = oldTail;
+
+
+Join 60 → 10
+
+Now the list looks like this: 50 ⇔ 60 ⇔ 10 ⇔ 20 ⇔ 30 ⇔ 40
+
+
+step6: Update head and tail
+
+head = newHead; // 50
+tail = newTail; // 40
+
+
+Final rotated list is ready: 50 ⇔ 60 ⇔ 10 ⇔ 20 ⇔ 30 ⇔ 40
+
+
+
+final code:
+-----------
+
+void rotateByN(int N) {
+    if (head == NULL || N <= 0 || N % size == 0) {
+        return; // Nothing to rotate
+    }
+
+    N = N % size; // In case N > size
+
+    // Step 1: Find the node at position (size - N)
+    Node* newHead = head;
+    for (int i = 0; i < size - N; i++) {
+        newHead = newHead->next;
+    }
+
+    // Step 2: Break the list into two parts
+    Node* newTail = newHead->prev;
+    Node* oldTail = tail;
+
+    newTail->next = NULL;
+    newHead->prev = NULL;
+
+    // Step 3: Connect old tail to old head
+    oldTail->next = head;
+    head->prev = oldTail;
+
+    // Step 4: Update head and tail
+    head = newHead;
+    tail = newTail;
+}
+
+
+
+
+
+
+
+
+
+
+
+
