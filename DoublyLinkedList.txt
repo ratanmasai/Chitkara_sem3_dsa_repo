@@ -455,6 +455,106 @@ void deleteAtPosition(int index) {
 Task: Check if the Doubly LinkedList is Palindrome 
 
 
+Approach:
+---------
+
+Use two pointers:
+
+--left starting at head
+
+--right starting at tail
+
+Compare values:
+
+If mismatch found → Not a palindrome.
+
+Else move inward (left = left->next, right = right->prev).
+
+If all matched → Palindrome.
+
+
+code:
+------
+
+
+bool isPalindrome() {
+
+    if (head == NULL || head == tail) return true; // Empty or single node
+
+    Node* left = head;
+    Node* right = tail;
+
+    while (left != right && left->prev != right) {
+        if (left->data != right->data) {
+            return false; // Mismatch
+        }
+        left = left->next;
+        right = right->prev;
+    }
+
+    return true;
+}
+
+
+
+Note: 
+
+1. left != right: Handles Odd-length DLL:
+
+--For odd number of nodes, the middle node will be the same for both left and right at some point.
+
+10 20 30 40 30 20 10
+->		  <-
+
+--At some step, both left and right will point to the same 40.
+
+That’s when the loop should stop → left == right.
+
+
+2. left->prev != right   (or we can write right->next != left): Handles Even-length DLL
+
+--For even number of nodes, there is no single middle node; instead, two middle nodes "cross over" each other.
+
+--After checking all pairs, left will move forward and right will move backward, eventually crossing each other.
+
+--That’s when the loop should stop → left->prev == right.
+
+
+10 20 30 40 40 30 20 10
+->		     <-
+
+
+
+
+
+DRY RUN:
+---------
+
+DLL: 1 <-> 2 <-> 2 <-> 1
+
+
+Iteration 1:
+
+left=1, right=1 (last node).
+Condition: (left != right && left->prev != right) → (1st != 4th && NULL != 4th) → true.
+
+After move → left=2 (2nd), right=2 (3rd).
+Condition: (left != right && left->prev != right) → (2nd != 3rd && 1st != 3rd) → true.
+
+After move → left=2 (3rd), right=2 (2nd).
+Now left->prev == right (3rd’s prev is 2nd).
+
+Loop stops → means traversal is complete.
+
+
+
+If list length is odd → left == right (they meet at the middle).
+
+If list length is even → left->prev == right (they cross over).
+
+
+
+
 
 Rotate Doubly Linked List by N nodes:
 -------------------------------------
@@ -516,6 +616,7 @@ So, newHead = 50
 step4: Find new tail and break the list
 
 Node* newTail = newHead->prev;
+
 Node* oldTail = tail;
 
 newTail->next = NULL;
@@ -529,13 +630,11 @@ Part A: 10 ⇔ 20 ⇔ 30 ⇔ 40
 Part B: 50 ⇔ 60
 
 
-step5: Connect old tail with old head
+step5: Connect old tail with old head (connecting 60 <-> 10 )
 
 oldTail->next = head;
 head->prev = oldTail;
 
-
-Join 60 → 10
 
 Now the list looks like this: 50 ⇔ 60 ⇔ 10 ⇔ 20 ⇔ 30 ⇔ 40
 
@@ -586,7 +685,666 @@ void rotateByN(int N) {
 
 
 
+Circular Linked List (Singly Circular):
+=======================================
 
+A Circular Linked List is a variation of the linked list in which:
+
+--The last node points back to the first node instead of NULL.
+
+--This makes the list a circle.
+
+Each Node has:
+
+1. Data
+2. next pointer
+
+--The next of the last node points to the head.
+
+
+Example:
+
+10 → 20 → 30 → 10 (loop)
+
+
+
+Analogy:
+-------
+
+--Think of a circular linked list like people sitting around a round table:
+
+--There is no “end” → you can keep going around forever.
+
+
+Characteristics:
+---------------
+
+1. Continuous Loop: No beginning or end; last node points to head.
+2. Unidirectional: Forward traversal only.
+3. Dynamic: Can add/remove nodes, maintaining the loop.
+4. Careful Traversal: Must avoid infinite loops (e.g., stop when reaching head again).
+
+
+
+Advantages:
+-----------
+
+--Continuous access (loop back to start without restarting).
+--Useful for cyclic or periodic tasks.
+--No need for a separate tail pointer in some cases.
+--Insertion at end is simpler (no need to traverse fully if tail is maintained).
+
+Disadvantages:
+-------------
+
+1. More complex implementation than singly/doubly linked list.
+2. Risk of infinite loop if traversal doesn’t stop correctly.
+3. No backward traversal.
+4. Harder to detect the end (no nullptr).
+
+
+
+Use Cases:
+----------
+
+1. CPU Scheduling (Round-Robin).
+2. Multiplayer games (players in a circle, taking turns).
+3. Circular queues.
+4. Music playlist looping.
+
+
+
+Example:
+--------
+
+
+class Node{
+
+public:
+
+	int data;
+	Node* next;
+
+	Node(int data){
+		this->data = data;
+		this->next = NULL;
+	}
+
+};
+
+
+class CLL{
+
+private:
+
+	   Node* head;
+   	   Node* tail;
+  	   int size;
+
+public:
+
+	CLL(){
+		head = NULL;
+       		tail = NULL;
+        		size = 0;
+	}
+
+	//perform other operations
+}
+
+
+
+
+1. Insert at front:
+--------------------
+
+ void insertAtFront(int value) {
+        
+   Node* newNode = new Node(value);
+       
+       if (head == NULL) {
+            head = tail = newNode;
+            tail->next = head; // circular link
+        } else {
+            newNode->next = head;
+            head = newNode;
+            tail->next = head; // maintain circular
+        }
+
+        size++;
+    }
+
+
+2. Insert at End:
+---------------
+
+void insertAtEnd(int value) {
+
+        Node* newNode = new Node(value);
+
+        if (head == NULL) {
+            head = tail = newNode;
+            tail->next = head; // circular link
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+            tail->next = head; // maintain circular
+        }
+        size++;
+    }
+
+
+
+3. Traverse the CLL:
+--------------------
+
+
+ // Display list
+    void display() {
+
+        if (head == NULL) {
+            cout << "List is empty\n";
+            return;
+        }
+
+        cout << "Circular Linked List: ";
+        Node* current = head;
+
+        do {
+            cout << current->data << " -> ";
+            current = current->next;
+        } while (current != head);
+        cout << "(back to head)\n";
+    }
+
+
+
+another way:
+
+
+if (head != NULL) {
+
+    Node* current = head;
+
+    while (true) {
+        cout << current->data << " -> ";
+        current = current->next;
+        if (current == head) 
+	break; // stop when we come back
+    }
+ 	cout << "(back to head)\n";
+ 
+}
+
+
+
+
+Destructure:
+-----------
+
+ // Destructor for cleanup
+    ~CircularLinkedList() {
+        if (head == NULL) 
+		return;
+
+        Node* current = head->next;
+
+        while (current != head) {
+            Node* temp = current;
+            current = current->next;
+            delete temp;
+        }
+
+        delete head;
+        head = tail =  NULL;
+    }
+
+
+
+
+
+4. Delete from front:
+--------------------
+
+void deleteFromFront() {
+
+    if (head == NULL) {
+        cout << "List is empty\n";
+        return;
+    }
+
+    if (head == tail) { // only one node
+
+        delete head;
+        head = tail = NULL;
+
+    } else {
+
+        Node* temp = head;
+        head = head->next;
+        tail->next = head; // maintain circular
+        delete temp;
+
+    }
+    size--;
+}
+
+
+
+5. Delete from End:
+--------------------
+
+void deleteFromEnd() {
+
+    if (head == NULL) {
+        cout << "List is empty\n";
+        return;
+    }
+
+    if (head == tail) {
+
+        delete head;
+        head = tail = NULL;
+
+    } else {
+
+        Node* current = head;
+
+        while (current->next != tail) {
+            current = current->next;
+        }
+
+        current->next = head;
+        delete tail;
+        tail = current;
+    }
+    size--;
+}
+
+
+another way: without using tail pointer:
+---------------------------------------
+
+
+void deleteFromEnd() {
+    if (head == NULL) {
+        cout << "List is empty\n";
+        return;
+    }
+
+    // Case 1: Only one node
+    if (head->next == head) {
+        delete head;
+        head = NULL;
+    } 
+    else {
+        // Traverse to second last node
+        Node* current = head;
+        while (current->next->next != head) {
+            current = current->next;
+        }
+
+        // current->next is the last node
+        Node* lastNode = current->next;
+        current->next = head;   // Link back to head
+        delete lastNode;        // Delete last node
+    }
+
+    size--;
+}
+
+
+
+Insertion and deletion at any position:
+--------------------------------------
+
+--Insertion and deletion at any position in a Circular Linked List is almost the same as in Singly Linked List. 
+--The only difference is that we must maintain the circular property  (last node’s next should always point to head).
+
+
+Example1 :
+
+void insertAtPosition(int index, int value) {
+
+    if (index < 0 || index > size) {
+        cout << "Invalid index\n";
+        return;
+    }
+
+    Node* newNode = new Node(value);
+
+    // Case 1: Insert at beginning
+    if (index == 0) {
+
+        if (head == NULL) {  // Empty list
+            head = tail = newNode;
+            tail->next = head;
+        } else {
+            newNode->next = head;
+            head = newNode;
+            tail->next = head; // Maintain circularity
+        }
+
+    }
+
+    // Case 2: Insert at end
+    else if (index == size) {
+        tail->next = newNode;
+        tail = newNode;
+        tail->next = head; // Maintain circularity
+    }
+
+    // Case 3: Insert at middle
+    else {
+        Node* current = head;
+        for (int i = 0; i < index - 1; i++) {
+            current = current->next;
+        }
+
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+
+    size++;
+}
+
+
+
+
+Example2: 
+
+void deleteAtPosition(int index) {
+    if (head == NULL) {
+        cout << "CLL is empty, nothing to delete\n";
+        return;
+    }
+
+    if (index < 0 || index >= size) {
+        cout << "Invalid index\n";
+        return;
+    }
+
+    // Case 1: Deleting first node
+    if (index == 0) {
+        Node* temp = head;
+
+        if (head == tail) {  // Only one node
+            head = tail = NULL;
+        } else {
+            head = head->next;
+            tail->next = head;
+        }
+
+        delete temp;
+        size--;
+        return;
+    }
+
+    // Case 2: Deleting last node
+    if (index == size - 1) {
+        Node* current = head;
+        while (current->next != tail) {
+            current = current->next;
+        }
+
+        Node* temp = tail;
+        tail = current;
+        tail->next = head;
+
+        delete temp;
+        size--;
+        return;
+    }
+
+    // Case 3: Deleting from middle
+    Node* current = head;
+    for (int i = 0; i < index - 1; i++) {
+        current = current->next;
+    }
+
+    Node* temp = current->next;
+    current->next = temp->next;
+
+    delete temp;
+    size--;
+}
+
+
+
+Josephus Problem (Classic on Circular Linked List):
+------------------------------------------------
+
+Problem Statement:
+-----------------
+
+
+-- Given n people standing in a circle, eliminate every k-th person until only one remains. Return the safe position.
+
+Input:
+
+ n = 5, k = 2
+
+Output:
+ Safe Position = 3
+
+
+Example:
+
+n = 5, k = 2
+
+People: [1, 2, 3, 4, 5]
+
+Step by step elimination:
+
+1. Start at person 1. Counting 2 → eliminate person 2.
+Remaining: [1, 3, 4, 5]
+
+2. Next count starts from 3. Counting 2 → eliminate person 4.
+Remaining: [1, 3, 5]
+
+3. Next count starts from 5. Counting 2 → eliminate person 1.
+Remaining: [3, 5]
+
+4. Next count starts from 3. Counting 2 → eliminate person 5.
+Remaining: [3]
+
+Safe Position = 3
+
+
+Analogy (Musical Chairs Example):
+-------------------------------
+
+Think of it like a musical chairs game:
+
+--People are standing in a circle.
+
+--The music plays, and you start counting.
+
+--Every k-th person is eliminated (like someone losing the chair).
+
+--After eliminating one person, counting resumes from the next person.
+
+--This process continues until only one person is left.
+
+--That last person is the safe position.
+
+
+
+Approach:
+--------
+
+(n=5, k=2)
+
+Circle: 1 → 2 → 3 → 4 → 5 → back to 1
+
+
+Start at 1
+
+Move 1 step → current = 2
+
+Eliminate 2
+Circle = 1 → 3 → 4 → 5 → back to 1
+
+Next current = 3
+
+Move 1 step → current = 4
+
+Eliminate 4
+Circle = 1 → 3 → 5 → back to 1
+
+Next current = 5
+
+Move 1 step → current = 1
+
+Eliminate 1
+Circle = 3 → 5 → back to 3
+
+Next current = 3
+
+Move 1 step → current = 5
+
+Eliminate 5
+Circle = 3
+
+Safe Position = 3
+
+
+
+
+Code:
+------
+
+
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int val) {
+        data = val;
+        next = NULL;
+    }
+};
+
+int josephusCLL(int n, int k) {
+
+    // Step 1: Create Circular Linked List
+    Node* head = new Node(1);
+    Node* tail = head;
+
+    for (int i = 2; i <= n; i++) {
+        tail->next = new Node(i);
+        tail = tail->next;
+    }
+    tail->next = head; // make it circular
+
+  //here head =1 and tail = 5
+
+
+    // Step 2: Start elimination
+    Node* current = head;
+    Node* prev = tail; // last node (for deletion handling)
+		  //keeps track of the node before current (this helps us delete current).
+
+    while (current->next != current) { // until one node remains
+        // move k-1 steps
+        for (int i = 0; i < k-1; i++) {
+            prev = current;
+            current = current->next;
+        }
+
+        // Delete current node
+        cout << "Eliminated: " << current->data << endl; // (optional)
+        prev->next = current->next;
+        delete current;
+
+        // Move forward
+        current = prev->next;
+    }
+
+    int safePos = current->data;
+    delete current;
+    return safePos;
+}
+
+
+int main() {
+
+    CLL c1;
+
+    int n = 5, k = 2;
+    cout << "Safe Position = " << c1.josephusCLL(n, k) << endl;
+    return 0;
+}
+
+
+DRY RUN:
+--------
+
+n=5, k=2
+
+
+People = 1 → 2 → 3 → 4 → 5 → (back to 1) (circular linked list)
+
+current = head (1)
+
+prev = tail (5)
+
+
+
+While Loop (since more than 1 node remains):
+
+Round 1:
+
+Need to move k-1 = 1 step.
+
+prev = 1, current = 2
+
+Eliminate 2
+List becomes: 1 → 3 → 4 → 5 → (back to 1)
+current = 3
+
+
+Round 2:
+
+Move 1 step:
+
+prev = 3, current = 4
+
+Eliminate 4
+List becomes: 1 → 3 → 5 → (back to 1)
+current = 5
+
+
+Round 3:
+
+Move 1 step:
+
+prev = 5, current = 1
+
+Eliminate 1
+List becomes: 3 → 5 → (back to 3)
+current = 3
+
+Round 4: 
+
+Move 1 step:	
+
+prev = 3, current = 5
+
+Eliminate 5
+List becomes: 3 → (back to 3)
+current = 3
+
+
+End Condition
+
+Only one node remains (3).
+
+safePos = 3.
 
 
 
