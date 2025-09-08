@@ -150,7 +150,7 @@ public:
     void displayBackward(){
         Node* current = tail;
         cout<<"Backward Traversal \n";
-        cout<<"NULL <- ";
+        cout<<"NULL <-> ";
 
         while(current != NULL){
             cout<<current->data <<" <-> ";
@@ -699,7 +699,7 @@ Each Node has:
 1. Data
 2. next pointer
 
---The next of the last node points to the head.
+--The next of the last node(tail) points to the head.
 
 
 Example:
@@ -862,7 +862,7 @@ void insertAtEnd(int value) {
 another way:
 
 
-if (head != NULL) {
+
 
     Node* current = head;
 
@@ -874,7 +874,7 @@ if (head != NULL) {
     }
  	cout << "(back to head)\n";
  
-}
+
 
 
 
@@ -1273,10 +1273,8 @@ int josephusCLL(int n, int k) {
 
 int main() {
 
-    CLL c1;
-
     int n = 5, k = 2;
-    cout << "Safe Position = " << c1.josephusCLL(n, k) << endl;
+    cout << "Safe Position = " << josephusCLL(n, k) << endl;
     return 0;
 }
 
@@ -1345,6 +1343,406 @@ End Condition
 Only one node remains (3).
 
 safePos = 3.
+
+
+
+
+
+
+Circular Doubly linked list:
+=============================
+
+
+
+--A Circular Doubly Linked List (CDLL) combines the features of a doubly linked list and a circular linked list, forming a bidirectional loop.
+
+--Here each node has the three parts:
+
+1. data: 
+2. next: points to the next node
+3. prev: points to the prev node
+
+
+--The last node's next points back to the first node.
+--The first node's prev points back to the last node.
+
+
+So, traversal is possible in both directions (forward & backward) and the list forms a circular chain.
+
+
+Traversal can be done:
+
+Forward (head → next … → head again)
+
+Backward (head → prev … → head again) or (tail → prev … → tail again) 
+
+Example:
+
+Head
+ ↓
+10 ⇄ 20 ⇄ 30 ⇄ 40
+↑                ↓
+------------------
+
+
+Analogy:
+---------
+
+--Playlist of songs where after last song again we go back to the first song and previous to the first song will be the last song.
+--So you can play songs forward and backward infinitely.
+
+
+Characteristics:
+------------------
+
+1. Bidirectional Loop: Traverse forward or backward, looping continuously.
+2. Highest Memory Usage: Three fields per node (data, next, prev).
+3. Complex: Requires careful pointer management to maintain the loop.
+4. Dynamic: Supports node addition/removal.
+
+
+
+Advantages:
+------------
+
+--Traversal in both directions with looping.
+--Flexible for complex navigation (e.g., forward/backward cycling).
+--Easier deletion than circular singly linked list (access to prev).
+
+
+Disadvantages:
+--------------
+
+--More memory usage (extra pointer prev).
+--Most complex implementation (manage prev, next, and loop).
+--Risk of infinite loops if not handled properly.
+
+
+Use Cases:
+----------
+
+--Advanced data structures like deques with cyclic behavior.
+--Multi-player game turn management (loop through players).
+--Applications needing bidirectional cyclic access.
+
+
+Example:
+-------
+
+class Node{
+
+public:
+
+	int data;
+	Node* next;
+    	Node* prev;
+
+	Node(int data){
+	
+		this->data = data;
+		this->next = NULL;
+        	this->prev = NULL; 
+	}
+
+};
+
+class CDLL{
+
+
+private:
+
+	Node* head;
+	Node* tail;
+	int size;
+
+public:
+
+	CDLL(){
+
+		head= NULL;
+		tail = NULL;
+		size=0;
+		
+	}
+
+
+
+	void insertAtFirst(int value){
+        		
+		Node* newNode = new Node(value);
+
+		if(head == NULL){
+
+           			head = tail = newNode;
+            			head->next = head;
+            			head->prev = head;
+        		}else{
+
+            			newNode->next = head;
+            			head->prev = newNode;
+           			newNode->prev = tail;
+            			tail->next= newNode;
+            			head = newNode;
+        		}
+
+        		size++;
+
+	}
+	
+
+
+
+
+void displayForward(){
+
+    if (head == NULL) {
+        cout << "List is empty\n";
+        return;
+    }
+
+    cout <<"Circular Doubly Linked List (Forward): ";
+    Node* current = head;
+
+    do {
+        cout << current->data;
+        current = current->next;
+        if (current != head) cout << " <-> ";
+    } while (current != head);
+
+    cout <<" <-> back to head\n";
+}
+
+void displayBackward(){
+
+    if (head == NULL) {
+        cout <<"List is empty\n";
+        return;
+    }
+
+    cout << "Circular Doubly Linked List (Backward): ";
+    Node* current = tail;
+
+    do {
+        cout << current->data;
+        current = current->prev;
+        if (current != tail) cout << " <-> ";
+    } while (current != tail);
+
+    cout<< " <-> back to tail\n";
+
+}
+
+
+}
+
+
+
+
+Insert At End:
+-------------
+
+
+void insertAtEnd(int value) {
+    Node* newNode = new Node(value);
+
+    if (head == NULL) {  // Empty list
+        head = tail = newNode;
+        head->next = head;
+        head->prev = head;
+    } else {
+        newNode->next = head;   // newNode → head
+        newNode->prev = tail;   // newNode ← tail
+        tail->next = newNode;   // tail → newNode
+        head->prev = newNode;   // head ← newNode
+        tail = newNode;         // Update tail
+    }
+    size++;
+}
+
+
+
+Delete at first:
+-----------------
+
+void deleteAtFirst() {
+    if (head == NULL) {
+        cout << "List is empty, nothing to delete!\n";
+        return;
+    }
+
+    if (head == tail) { // Only one node
+        delete head;
+        head = tail = NULL;
+    } else {
+        Node* temp = head;
+        head = head->next;
+        head->prev = tail;
+        tail->next = head;
+        delete temp;
+    }
+    size--;
+}
+
+
+Delete at Last:
+---------------
+
+
+void deleteAtLast() {
+    if (head == NULL) {
+        cout << "List is empty, nothing to delete!\n";
+        return;
+    }
+
+    if (head == tail) { // Only one node
+        delete tail;
+        head = tail = NULL;
+    } else {
+        Node* temp = tail;
+        tail = tail->prev;
+        tail->next = head;
+        head->prev = tail;
+        delete temp;
+    }
+    size--;
+}
+
+
+Delete By Value:
+----------------
+
+
+void deleteByValue(int value) {
+    if (head == NULL) {
+        cout << "List is empty, nothing to delete!\n";
+        return;
+    }
+
+    Node* current = head;
+
+    // Special case: head node
+    if (head->data == value) {
+        deleteAtFirst();
+        return;
+    }
+    // Special case: tail node
+    if (tail->data == value) {
+        deleteAtLast();
+        return;
+    }
+
+    // Search in middle nodes
+    do {
+        if (current->data == value) {
+            Node* prevNode = current->prev;
+            Node* nextNode = current->next;
+
+            prevNode->next = nextNode;
+            nextNode->prev = prevNode;
+
+            delete current;
+            size--;
+            return;
+        }
+        current = current->next;
+    } while (current != head);
+
+    cout << "Value " << value << " not found in the list.\n";
+}
+
+
+
+
+
+
+Concatanate the Two CDLL:
+========================
+
+Approach:
+---------
+
+
+--If one of the lists is empty, return the other.
+
+Otherwise:
+
+--Let tail1 = head1->prev (last node of list1).
+
+--Let tail2 = head2->prev (last node of list2).
+
+--Connect tail1->next = head2 and head2->prev = tail1.
+
+--Connect tail2->next = head1 and head1->prev = tail2.
+
+--Return head1 as the head of the concatenated CDLL.
+
+
+Code:
+------
+
+
+// Concatenate two CDLLs
+Node* concat(Node* head1, Node* head2) {
+    // If one list is empty, return the other
+    if (head1 == NULL) return head2;
+    if (head2 == NULL) return head1;
+
+    // Get last nodes (since prev of head points to last)
+    Node* tail1 = head1->prev;
+    Node* tail2 = head2->prev;
+
+    // Connect tail1 with head2
+    tail1->next = head2;
+    head2->prev = tail1;
+
+    // Connect tail2 with head1
+    tail2->next = head1;
+    head1->prev = tail2;
+
+    return head1;  // return head of concatenated CDLL
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
