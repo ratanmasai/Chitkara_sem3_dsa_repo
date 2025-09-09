@@ -1,0 +1,1297 @@
+Google Docs Note: https://docs.google.com/document/d/1v6gjLzfdj6mVfIcaElyNTFigKlkIk_1efUiiqwGm9rU/edit?tab=t.0
+
+
+Stack Data structure:
+=====================
+
+--A Stack is a linear data structure that follows LIFO (Last In First Out) principle.
+
+--The element inserted last is removed first.
+
+
+Use cases:
+-----------
+
+1. We can use stack to implement undo feature.
+
+2. To build navigation (forward/backword)
+
+3. Build compilers (ex:-syntax checking)
+
+4. Evaluate mathmatic expression (ex:- 1+2*3)
+
+5. Function Call Stack (used in recursion & program execution)
+
+
+Example:
+---------
+
+--Stacks of plates (we can only view or remove the top plate).
+--If we want to get bottom plate then we need to remove all plates one by one.(LIFO)
+
+
+Implementation:
+--------------
+
+Internally, we can implement Stack in C++ using:
+
+1. Arrays/vector
+
+2. Linked List
+
+It’s basically a wrapper around arrays/LL with special access rules.
+
+3. STL stack (wrapper around deque/vector/list)
+
+
+
+Basic Stack Operations:
+----------------------- 
+
+1. push(item) → add an item on top:  O(1)
+
+2. pop() → remove the top item: O(1)
+
+3. peek()/top() → return the top item without removing: O(1)
+
+4. isEmpty() → check if stack is empty: O(1)
+
+5. display() → Show all the elements: O(n) : optional
+
+
+Code: using array:
+-----------------
+
+
+#include <iostream>
+#define MAX 10 // maximum size of stack
+using namespace std;
+
+class MyStack{
+
+private:
+
+int items[MAX]; // array to store stack elements
+int count; // number of elements in stack
+
+
+public:
+    
+    // Constructor
+    MyStack(){
+        count=0;
+    }
+
+
+    //Push element on stack
+    void push(int item){
+
+        if(count == MAX){//stack full
+            cout<<"Stack Overflow!" <<endl;
+            return;
+        }  
+
+        items[count++] = item;
+    }
+
+    //Pop element from stack
+    int pop(){
+
+        if(count == 0){ //Stack empty
+            cout<<"Stack Underflow! "<<endl;
+            return -1; //return some invalid value.
+        }
+
+        return items[--count];
+
+
+    }
+
+    // Peek top element
+    int peek() {
+        if (count == 0) {
+            cout << "Stack is Empty!" << endl;
+            return -1;
+        }
+        return items[count - 1];
+    }
+
+    // Check if stack is empty
+    bool isEmpty() {
+        return count == 0;
+    }
+
+    void display(){
+
+        if(count == 0){
+            cout<<"Stack is empty \n";
+            return;
+        }
+
+        cout<<"Stack elements (top to down)" <<endl;
+        for(int i=count-1;i>=0;i--){
+            cout<<items[i] <<" ";
+        }
+
+        cout<<endl;
+
+
+    }
+
+
+};
+
+int main(){
+
+    MyStack s;
+
+    s.push(10);
+    s.push(20);
+    s.push(30);
+    s.push(40);
+    s.push(50);
+    
+    s.display();
+
+    
+    cout << "Peek top: " << s.peek() << endl;
+
+    cout << "Popped: " << s.pop() << endl;
+    cout << "Popped: " << s.pop() << endl;
+
+    s.display();
+
+    cout << "Is stack empty? " << (s.isEmpty() ? "Yes" : "No") << endl;
+
+
+    return 0;
+}
+
+
+Using vector:
+------------
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class MyStack {
+private:
+    vector<int> items;   // vector to store stack elements
+
+public:
+    // Push element onto stack
+    void push(int item) {
+        items.push_back(item);  // push at the end
+        cout << item << " pushed into stack." << endl;
+    }
+
+    // Pop element from stack
+    int pop() {
+        if (items.empty()) {
+            cout << "Stack Underflow!" << endl;
+            return -1;  // return some invalid value
+        }
+        int topItem = items.back();
+        items.pop_back();   // remove last element
+        cout << topItem << " popped from stack." << endl;
+        return topItem;
+    }
+
+    // Peek top element
+    int peek() {
+        if (items.empty()) {
+            cout << "Stack is Empty!" << endl;
+            return -1;
+        }
+        return items.back();
+    }
+
+    // Check if stack is empty
+    bool isEmpty() {
+        return items.empty();
+    }
+
+    // Display stack elements
+    void display() {
+        if (items.empty()) {
+            cout << "Stack is empty" << endl;
+            return;
+        }
+        cout << "Stack elements (top to bottom): ";
+        for (int i = items.size() - 1; i >= 0; i--) {
+            cout << items[i] << " ";
+        }
+        cout << endl;
+    }
+};
+
+
+
+
+
+Note: To prevent the memory leak we should add the following destructure iniside the above MyStack class:
+
+~MyStack() {
+    while (!isEmpty()) {
+        pop();
+    }
+}
+
+
+Note: This is not needed for vector-based implementation because std::vector automatically frees memory.
+It is needed for Linked List implementation or array implementation to prevent memory leaks.
+
+
+Using Linked List:
+==================
+
+
+Why Linked List instead of Array/Vector?
+-----------------------------------------
+
+1. Dynamic Size: 
+
+--Array/Vector-based stack has a fixed size (or needs resizing).
+--Linked List grows/shrinks dynamically → no overflow (except memory full case).
+
+2. Efficient Memory Usage: 
+
+--Array may waste memory (if pre-allocated but unused).
+--LL uses exactly what is required.
+
+3. Constant-Time Operations:
+
+--push() and pop() always O(1) (no shifting, no resizing).
+--In vector, resizing can take O(n) in worst case.
+
+4. Flexibility:
+
+--Useful when we don’t know the maximum number of elements in advance.
+
+
+Downside: LL needs extra memory for next pointer, and cache locality is worse than arrays.
+
+
+code:
+-----
+
+
+class Node{
+
+public:
+
+    int data;
+    Node* next;
+
+    Node(int data){
+        this->data= data;
+        this->next = NULL;
+    }
+
+};
+
+class MyStack{
+
+private: 
+
+    Node* top; //pointer to top node
+    int size;
+
+public: 
+
+    //constructor
+    MyStack(){
+        top= NULL;
+	size=0;
+    }
+
+
+    //Push element on stack
+    void push(int value){
+        Node* newNode = new Node(value);
+
+        newNode->next = top;//new node points to the old top
+        top = newNode; //update top
+        cout<<value <<" pushed into the stack" <<endl;
+        size++;
+    }
+
+
+
+    //Pop element from stack
+    int pop(){
+        if(top == NULL){
+            cout<<"Stack is empty! " <<endl;
+            return -1;
+        }
+
+        int poppedValue = top->data;
+        Node* temp = top;
+        top = top->next; //move the top down
+        delete temp; // free memory
+        size--; //decrease the count
+        cout<<poppedValue <<" Popped from the stack" <<endl;
+        return poppedValue;
+    }
+
+
+    //peek top element
+    int peek(){
+        if(top == NULL){
+            cout<<"Stack is empty \n";
+            return -1;
+        }
+
+        return top->data;
+
+    }
+
+    bool isEmpty(){
+        return top == NULL;
+    }
+
+    int getSize(){
+        return size;
+    }
+
+    void display(){
+
+        if(isEmpty()){
+            cout<<"Stack is empty \n";
+            return;
+        }
+
+        cout<<"Stack elements (top to bottom) \n";
+        Node* current= top;
+
+        while(current != NULL){
+            cout<<current -> data <<" ";
+            current = current -> next;
+        }
+
+        cout<<endl;
+
+
+    }
+
+};
+
+
+
+
+Using STL(C++):
+=================
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+
+int main() {
+   // Declare stack of integers
+   stack<int> s;
+
+
+   // Push elements
+   s.push(10);
+   s.push(20);
+   s.push(30);
+
+
+   cout << "Top element: " << s.top() << endl; // should print 30
+
+
+   // Pop element
+   s.pop();
+   cout << "Top element after pop: " << s.top() << endl; // should print 20
+
+
+   // Size of stack
+   cout << "Stack size: " << s.size() << endl;
+
+
+   // Check if empty
+   if(s.empty())
+       cout << "Stack is empty" << endl;
+   else
+       cout << "Stack is not empty" << endl;
+
+
+   // Display all elements (by popping)
+   cout << "Stack elements (top to bottom): ";
+   while(!s.empty()) {
+       cout << s.top() << " ";
+       s.pop();
+   }
+   cout << endl;
+
+
+   return 0;
+}
+
+
+
+Stack related Problems:
+========================
+
+
+1. Balanced expression:
+------------------------
+
+
+Q/- What is a Balanced Expression?
+
+--A balanced expression is one where:
+
+--Every opening bracket has a corresponding closing bracket.
+
+--Brackets are properly nested (correct order).
+
+
+Examples:
+
+(1+2)
+
+{[()()]}
+
+<{(2+3)*[5]}>
+
+
+Where the followings are not balanced:
+
+
+(1+2 : (missing ))
+
+(1+2] : (mismatched ])
+
+((1+2) : (extra opening)
+
+){1+2} : (wrong order)
+
+
+
+Real-life analogy:
+-------------------
+
+Think of brackets as doors:
+
+--When you open a door ((, {, <, [), you must close it in the reverse order.
+
+--If you open multiple doors, you close the most recent one first (LIFO principle → use Stack).
+
+
+
+How do we check balance?
+------------------------
+
+Algorithm:
+
+1. Traverse expression character by character.
+
+2. If you see an opening bracket, push it on the stack.
+
+3. If you see a closing bracket:
+
+--If the stack is empty →  unbalanced.
+
+--Otherwise pop from the stack and check if it matches.
+
+4. After traversing, if the stack is empty →  balanced.
+
+
+
+Example1: Handle only ( and )
+------------------------------
+
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+
+bool isBalanced(string str){
+
+    stack<char> s;
+
+    for(char ch: str){
+
+        if(ch == '(')
+            s.push(ch);
+
+        else if(ch == ')'){
+            if(s.empty())
+                return false;
+            
+            s.pop();
+        }
+    }
+
+        return s.empty();
+
+};
+
+
+
+
+
+int main(){
+
+
+    cout<<(isBalanced("(1+2)") ? "Balanaced" : "Not Balanaced");
+    cout<<endl;
+    cout<<(isBalanced("((1+2)") ? "Balanaced" : "Not Balanaced");
+    cout<<endl;
+    
+
+    return 0;
+}
+
+
+Example2: Support All Brackets () {} [] <>
+--------------------------------------------
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+ bool isBalanced(string str) {
+        stack<char> s;
+
+        for (char ch : str) {
+            if (ch == '(' || ch == '{' || ch == '[' || ch == '<') {
+                s.push(ch);
+            }
+            else if (ch == ')' || ch == '}' || ch == ']' || ch == '>') {
+                if (s.empty()) 
+			return false;
+
+                char top = s.top(); //getting the top 
+		s.pop(); // removing the top and making top down
+
+                if ((ch == ')' && top != '(') ||
+                    (ch == '}' && top != '{') ||
+                    (ch == ']' && top != '[') ||
+                    (ch == '>' && top != '<')) {
+                    return false;
+                }
+            }
+        }
+
+        return s.empty();
+    }
+
+
+
+
+int main(){
+
+
+    cout<<(isBalanced("{<(1+2)>}") ? "Balanaced" : "Not Balanaced");
+    cout<<endl;
+    cout<<(isBalanced("{(1+2]>}") ? "Balanaced" : "Not Balanaced");
+    cout<<endl;
+    
+    return 0;
+}
+
+
+
+
+
+Refactoring the above code:
+---------------------------
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+bool isLeftBracket(char ch) {
+    return (ch == '(' || ch == '{' || ch == '[' || ch == '<');
+}
+
+bool isRightBracket(char ch) {
+    return (ch == ')' || ch == '}' || ch == ']' || ch == '>');
+}
+
+bool bracketsMatch(char left, char right) {
+    if (left == '(' && right == ')') return true;
+    if (left == '{' && right == '}') return true;
+    if (left == '[' && right == ']') return true;
+    if (left == '<' && right == '>') return true;
+    return false;
+}
+
+bool isBalanced(string str) {
+    stack<char> s;
+
+    for (char ch : str) {
+        if (isLeftBracket(ch)) {
+            s.push(ch);
+        } 
+        else if (isRightBracket(ch)) {
+            if (s.empty()) 
+		return false;
+
+            char top = s.top();
+            s.pop();
+
+            if (!bracketsMatch(top, ch)) {
+                return false;
+            }
+        }
+    }
+    return s.empty();
+}
+
+int main() {
+    string str1 = "{<(1+2)>}";
+    string str2 = "{(1+2]>}";
+
+    cout << (isBalanced(str1) ? "Balanced" : "Not Balanced ") << endl;
+    cout << (isBalanced(str2) ? "Balanced " : "Not Balanced ") << endl;
+
+    return 0;
+}
+
+
+
+Polish Notation:
+================
+
+--Polish Notation is a way of writing arithmetic expressions without the need for parentheses to define operator precedence.
+
+--It was introduced by a Polish mathematician.
+
+--Infix Notation (Normal form): The usual way humans write expressions is called Infix Notation, where the operator is written between operands.
+Example:
+
+(A + B) * C
+
+
+Types of Polish Notation:
+-------------------------
+
+
+--Polish Notations are generally of 2 types:
+
+1. Prefix Notation(Polish Notation): Operator comes before operands.
+Example:
+
+* + A B C     // equivalent to (A + B) * C
+
+2. Postfix Notation(Reverse Polish notation): Operator comes after operands.
+Example:
+
+A B + C *     // equivalent to (A + B) * C
+
+
+Note: Computers often use Postfix (RPN) internally because it is easier to evaluate using a stack, without needing parentheses or complex precedence rules.
+
+
+
+Operator Precedence & Associativity:
+------------------------------------
+
+--When converting infix → postfix/prefix, precedence and associativity of operators matter.
+
+
+Operator		Precedence		Associativity
+
+^ (exponent)		Highest			Right to left
+
+*, /, %			Higher			Left to Right
+
++, -			Lower			Left to Right
+
+Parentheses () {} []	Highest for grouping
+
+
+
+Rules:
+------
+
+--Highest precedence operators are handled first 
+--For the same precedence associativity decides the order.
+
+
+
+Infix → Postfix Conversion (Step-by-Step Rules):
+------------------------------------------------
+
+Rules:
+------
+
+1. Operands (A-Z, 0-9): Directly add to the postfix expression.
+
+2. Left Parenthesis ‘(’: Push onto stack.
+
+3. Right Parenthesis ‘)’:
+
+--Keep popping operators from the stack and add them to Postfix until you find a (.
+--Remove ( from the stack (do not add it to Postfix).
+
+4. Operators (+, -, , /, ^): 
+
+--If the stack is not empty, and the operator on top of the stack has greater or equal precedence, then pop it and add it to Postfix.
+
+--After popping, push the new/current operator into the stack.
+
+5. At the end: After scanning the whole expression, pop all remaining operators from the stack and add them to the Postfix expression.
+
+
+Example1: A + B * C
+--------------------
+
+
+Step 1: Operand A → Postfix: A
+
+Step 2: Operator + → Stack: +
+
+Step 3: Operand B → Postfix: A B
+
+Step 4: Operator * → Higher precedence than + → push → Stack: + *
+
+Step 5: Operand C → Postfix: A B C
+
+End: Pop stack → * +
+
+
+Result Postfix : A B C * +
+
+
+Example2: (A + B) * C
+----------------------
+
+Step 1: ( → push → Stack: (
+
+Step 2: A → Postfix: A
+
+Step 3: + → push → Stack: ( +
+
+Step 4: B → Postfix: A B
+
+Step 5: ) → pop until ( → Postfix: A B +
+
+Step 6: * → push → Stack: *
+
+Step 7: C → Postfix: A B + C
+
+End: Pop stack → *
+
+
+Result Postfix: A B + C *
+
+
+
+
+Summary: Postfix (Infix → Postfix):
+------------------------------------
+
+1. Scan left → right
+
+2. Operand → output
+
+3. Operator → push (pop higher/equal precedence)
+
+4. ( → push, ) → pop until (
+
+
+Code:
+------
+
+#include <iostream>
+#include <stack>
+#include <cctype>  // for isalnum
+using namespace std;
+
+// Function to return precedence of operators
+int precedence(char op) {
+    if (op == '^') return 3;
+    if (op == '*' || op == '/' || op == '%') return 2;
+    if (op == '+' || op == '-') return 1;
+    return -1;
+}
+
+// Function to convert Infix to Postfix
+string infixToPostfix(string exp) {
+    stack<char> st;
+    string result = "";
+
+    for (char ch : exp) {
+        // 1. If operand, add to result
+        if (isalnum(ch)) {
+            result += ch;
+        }
+        // 2. If '(', push to stack
+        else if (ch == '(') {
+            st.push(ch);
+        }
+        // 3. If ')', pop until '('
+        else if (ch == ')') {
+            while (!st.empty() && st.top() != '(') {
+                result += st.top();
+                st.pop();
+            }
+            if (!st.empty()) 
+		st.pop(); // pop '('
+        }
+        // 4. If operator
+        else {
+            while (!st.empty() && precedence(st.top()) >= precedence(ch)) {
+                result += st.top();
+                st.pop();
+            }
+            st.push(ch);
+        }
+    }
+
+    // Pop remaining operators
+    while (!st.empty()) {
+        result += st.top();
+        st.pop();
+    }
+
+    return result;
+}
+
+int main() {
+    string exp = "(A+B)*C";
+    cout << "Infix Expression: " << exp << endl;
+    cout << "Postfix Expression: " << infixToPostfix(exp) << endl;
+    return 0;
+}
+
+
+
+
+Infix → Prefix Conversion (Rules):
+===================================
+
+
+--Prefix conversion is similar but scans from right to left.
+
+Rules:
+------
+
+
+1. Operands: Directly add to prefix expression.
+
+2. Right Parenthesis ): Push onto stack.
+
+3. Left Parenthesis (: Pop until ) is found.
+
+4. Operators:
+
+--While the stack is not empty and the operator on top has higher precedence, pop and add to prefix expression.
+
+--Then push the current operator.
+
+5. At the end: Pop all operators.
+
+
+
+Example 1: A + B * C
+--------------------
+
+
+Step 1: Operand C → Prefix: C
+
+Step 2: Operator * → Stack: *
+
+Step 3: Operand B → Prefix: B C
+
+Step 4: Operator + → Lower precedence than * → Pop * → Prefix: * B C, push +
+
+Step 5: Operand A → Prefix: A * B C
+
+End: Pop stack (+) → + A * B C
+
+
+Result Prefix: + A * B C
+
+
+
+
+Example 2: (A + B) * C
+-----------------------
+
+Step 1: Operand C → Prefix: C
+
+Step 2: Operator * → Stack: *
+
+Step 3: ) → push → Stack: * )
+
+Step 4: Operand B → Prefix: B C
+
+Step 5: Operator + → push → Stack: * ) +
+
+Step 6: Operand A → Prefix: A B C
+
+Step 7: ( → Pop until ) → Prefix: + A B C
+
+End: Pop * → * + A B C
+
+Result Prefix: * + A B C
+
+
+
+Summary: Postfix (Infix → Prefix):
+----------------------------------
+
+1. Scan right → left
+
+2. Operand → output
+
+3. Operator → push (pop higher precedence)
+
+4. ) → push, ( → pop until )
+
+
+Code:
+-----
+
+--Trick: Instead of writing a completely new algorithm, we can use this smart approach:
+
+1. Reverse the infix string.
+
+2. Replace ( with ) and vice versa.
+
+3. Convert using infixToPostfix.
+
+4. Reverse the result → that’s the Prefix!
+
+Example: (A + B) * C
+
+
+step1: reverse the expression: C * ) B + A (
+
+step2: Replace ( with ) and vice versa: C * ( B + A )
+
+step3: converting infix to postfix: C B A + *
+
+step4: reversing the result: * + A B C
+
+
+
+
+
+
+Example:
+--------
+
+#include <iostream>
+#include <stack>
+#include <algorithm> // for reverse
+#include <cctype>
+using namespace std;
+
+int precedence(char op) {
+    if (op == '^') return 3;
+    if (op == '*' || op == '/' || op == '%') return 2;
+    if (op == '+' || op == '-') return 1;
+    return -1;
+}
+
+string infixToPostfix(string exp) {
+    stack<char> st;
+    string result = "";
+
+    for (char ch : exp) {
+        if (isalnum(ch)) {
+            result += ch;
+        }
+        else if (ch == '(') {
+            st.push(ch);
+        }
+        else if (ch == ')') {
+            while (!st.empty() && st.top() != '(') {
+                result += st.top();
+                st.pop();
+            }
+            if (!st.empty()) 
+		st.pop();
+        }
+        else {
+            while (!st.empty() && precedence(st.top()) >= precedence(ch)) {
+                result += st.top();
+                st.pop();
+            }
+            st.push(ch);
+        }
+    }
+    while (!st.empty()) {
+        result += st.top();
+        st.pop();
+    }
+    return result;
+}
+
+string infixToPrefix(string exp) {
+    // Step 1: Reverse the string
+    reverse(exp.begin(), exp.end());
+
+    // Step 2: Swap ( and )
+    for (char &ch : exp) {
+        if (ch == '(') 
+		ch = ')';
+        else if (ch == ')') 
+		ch = '(';
+    }
+
+    // Step 3: Convert to Postfix
+    string postfix = infixToPostfix(exp);
+
+    // Step 4: Reverse Postfix to get Prefix
+    reverse(postfix.begin(), postfix.end());
+
+    return postfix;
+}
+
+int main() {
+    string exp = "(A+B)*C";
+    cout << "Infix Expression: " << exp << endl;
+    cout << "Prefix Expression: " << infixToPrefix(exp) << endl;
+    return 0;
+}
+
+
+
+
+Evaluating the PostFix expression:
+==================================
+
+
+#include <iostream>
+#include <stack>
+#include <cctype>
+#include <cmath>
+
+using namespace std;
+
+int applyOp(int a, int b, char op) {
+    switch(op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return a / b; // assume b ≠ 0
+        case '%': return a % b;
+        case '^': return pow(a, b);
+    }
+    return 0;
+}
+
+int evaluatePostfix(string exp) {
+    stack<int> st;
+
+    for (char ch : exp) {
+        if (isdigit(ch)) {
+            st.push(ch - '0'); // convert char to int
+        }
+        else {
+            int val2 = st.top(); st.pop();
+            int val1 = st.top(); st.pop();
+            int result = applyOp(val1, val2, ch);
+            st.push(result);
+        }
+    }
+    return st.top();
+}
+
+int main() {
+    string exp = "23+5*";  // equivalent to (2+3)*5
+    cout << "Postfix Expression: " << exp << endl;
+    cout << "Evaluated Value: " << evaluatePostfix(exp) << endl;
+    return 0;
+}
+
+
+
+
+
+Evaluating the Prefix expression:
+==================================
+
+--Trick: Process expression right → left (reverse direction).
+
+#include <iostream>
+#include <stack>
+#include <cctype>
+#include <cmath>
+
+using namespace std;
+
+int applyOp(int a, int b, char op) {
+    switch(op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return a / b;
+        case '%': return a % b;
+        case '^': return pow(a, b);
+    }
+    return 0;
+}
+
+int evaluatePrefix(string exp) {
+    stack<int> st;
+
+    for (int i = exp.size() - 1; i >= 0; i--) {
+        char ch = exp[i];
+        if (isdigit(ch)) {
+            st.push(ch - '0');
+        }
+        else {
+            int val1 = st.top(); st.pop();
+            int val2 = st.top(); st.pop();
+            int result = applyOp(val1, val2, ch);
+            st.push(result);
+        }
+    }
+    return st.top();
+}
+
+int main() {
+    string exp = "*+235";  // equivalent to (2+3)*5
+    cout << "Prefix Expression: " << exp << endl;
+    cout << "Evaluated Value: " << evaluatePrefix(exp) << endl;
+    return 0;
+}
+
+
+
+
+Next Greater Element (NGE):
+===========================
+
+Problem Statement:
+------------------
+
+--You are given an array of numbers, e.g., arr = [4, 5, 2, 25].
+
+--For each element in the array, you need to find the first greater element to its right.
+
+--If there is no greater element to the right, return -1 for that element.
+
+Example:
+--------
+
+Input: arr = [4, 5, 2, 25]
+Output: [5, 25, 25, -1]
+
+
+Explanation:
+
+4 → next greater is 5
+
+5 → next greater is 25
+
+2 → next greater is 25
+
+25 → no greater element → -1
+
+
+
+Solution Approach using Stack:
+------------------------------
+
+
+We can solve this efficiently using a stack:
+
+1. Initialize an empty stack.
+
+2. Traverse the array from left to right.
+
+3. For each element current:
+
+--While the stack is not empty and current > stack.top():
+
+--Pop elements from stack.
+
+--For each popped element, current is the Next Greater Element.
+
+--Push current onto the stack.
+
+4. After the traversal, if any elements remain in the stack → there is no greater element, so assign -1.
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+
+
+Step-by-Step Example:
+--------------------
+
+
+Array: [4, 5, 2, 25] //original array
+
+Stack: [] //to store the indices
+
+Result: [-1, -1, -1, -1] // initialize the result with -1
+
+Step 1: Current = 4
+
+Stack empty → push 4 → Stack = [4]
+
+Step 2: Current = 5
+
+5 > 4 → pop 4 → result[0] = 5
+
+Push 5 → Stack = [5]
+
+Step 3: Current = 2
+
+2 < 5 → push 2 → Stack = [5, 2]
+
+Step 4: Current = 25
+
+25 > 2 → pop 2 → result[2] = 25
+
+25 > 5 → pop 5 → result[1] = 25
+
+Push 25 → Stack = [25]
+
+End:
+
+Stack has 25 → no greater element → result[3] = -1
+
+Final Result: [5, 25, 25, -1] 
+
+
+Code:
+------
+
+#include <iostream>
+#include <stack>
+#include <vector>
+using namespace std;
+
+vector<int> nextGreaterElement(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> result(n, -1); // Initialize result with -1
+    stack<int> st; // Stack stores indices
+
+    for (int i = 0; i < n; i++) {
+        while (!st.empty() && arr[i] > arr[st.top()]) {
+            result[st.top()] = arr[i]; // Current is NGE for stack top
+            st.pop();
+        }
+        st.push(i); // Push current index
+    }
+
+    return result;
+}
+
+int main() {
+    vector<int> arr = {4, 5, 2, 25};
+    vector<int> res = nextGreaterElement(arr);
+
+    cout << "Next Greater Elements: ";
+    for (int x : res)
+        cout << x << " ";
+    cout << endl;
+    return 0;
+}
+
+
+
+

@@ -569,6 +569,8 @@ Result: 50 ⇔ 60 ⇔ 10 ⇔ 20 ⇔ 30 ⇔ 40
 
 
 
+
+
 Approach:
 
 
@@ -586,8 +588,7 @@ if (head == NULL || N <= 0 || N % size == 0)
 
 step2: Normalize N
 
-N = N % size;
-
+N = N % size;  
 
 If N is larger than size, we only need to rotate by N % size.
 Example: rotating by 8 in a 6-node list = rotating by 2.
@@ -786,7 +787,7 @@ public:
 	CLL(){
 		head = NULL;
        		tail = NULL;
-        		size = 0;
+        	size = 0;
 	}
 
 	//perform other operations
