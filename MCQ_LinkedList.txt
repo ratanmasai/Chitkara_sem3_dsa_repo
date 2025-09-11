@@ -1,0 +1,369 @@
+Q1. In a Singly Linked List, the last node contains:
+
+a) Random data
+b) NULL in next pointer
+c) Address of head node
+d) Address of previous node
+
+
+Q2. What is the time complexity to insert a node at the beginning of a SLL?
+
+a) O(1)
+b) O(n)
+c) O(log n)
+d) O(n log n)
+
+Q3. Which of the following is not possible with only Singly Linked List?
+
+a) Forward traversal
+b) Backward traversal
+c) Insertion at beginning
+d) Deletion of first node
+
+
+Q4. To delete a node from a SLL, you need:
+
+a) Only pointer to head
+b) Pointer to head and previous node of the one to delete
+c) Only pointer to next node
+d) Random access like arrays
+
+
+Q5. In DLL, the prev pointer of head node points to:
+a) NULL
+b) Tail node
+c) Random node
+d) Itself
+
+
+Q6. Which operation is faster in DLL compared to SLL?
+a) Traversal
+b) Insertion at head
+c) Deletion of a given node (when pointer is given)
+d) Searching an element
+
+
+Q7. To delete a middle node X in DLL, how many links must be updated?
+a) 1
+b) 2
+c) 3
+d) 4
+
+
+Q8. Main disadvantage of DLL over SLL is:
+a) More memory per node
+b) Cannot traverse backward
+c) Harder insertion at head
+d) Cannot delete tail
+
+
+Q9. In CLL, the last node’s next points to:
+a) NULL
+b) Random node
+c) Head node
+d) Tail node
+
+
+Q10. Advantage of CLL over SLL is:
+a) No NULL pointer, traversal is continuous
+b) Uses less memory
+c) Easier to implement
+d) Faster searching
+
+
+Q11. Which of the following applications is best suited for CLL?
+a) Browser history
+b) Undo/redo operations
+c) Music playlist in repeat mode
+d) Binary tree implementation
+
+
+Q12. In CLL with 7 nodes, if you move 10 steps forward from head, you will be at:
+a) 3rd node
+b) 4th node
+c) 10th node
+d) 7th node
+
+
+Q13. In CDLL, the prev pointer of head points to:
+a) NULL
+b) Tail node
+c) Random node
+d) Itself
+
+
+
+Q14. CDLL allows:
+a) Only forward traversal
+b) Only backward traversal
+c) Both forward and backward infinite traversal
+d) Random access like arrays
+
+
+Q15. To insert a node before head in CDLL, we must update:
+a) Tail’s next
+b) Head’s prev
+c) New node’s next & prev
+d) All of the above
+
+
+Q16. In CDLL with 5 nodes, if you rotate right 8 times, the new head is:
+a) 2nd node
+b) 3rd node
+c) 4th node
+d) 5th node
+
+
+Q17. Time complexity to search an element in any linked list is:
+a) O(1)
+b) O(n)
+c) O(log n)
+d) O(n log n)
+
+
+Q18. Which Linked List is best for implementing Deque (double-ended queue)?
+a) SLL
+b) DLL
+c) CLL
+d) CDLL
+
+
+Q19. Which Linked List makes Josephus Problem implementation easier?
+a) SLL
+b) DLL
+c) CLL
+d) CDLL
+
+
+Q20. Which Linked List is most suitable for checking Palindrome using two-pointer technique?
+a) SLL
+b) DLL
+c) CLL
+d) CDLL
+
+
+
+Q21.
+
+struct Node {
+    int data;
+    Node* next;
+    Node(int x) : data(x), next(NULL) {}
+};
+
+int main() {
+    Node* head = new Node(10);
+    head->next = new Node(20);
+    head->next->next = new Node(30);
+
+    Node* temp = head;
+    while (temp != NULL) {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+}
+
+
+
+What will be the output?
+a) 10 20 30
+b) 30 20 10
+c) Infinite loop
+d) Compilation error
+
+
+
+
+Q22.
+
+struct Node {
+    int data;
+    Node* prev;
+    Node* next;
+    Node(int x) : data(x), prev(NULL), next(NULL) {}
+};
+
+int main() {
+    Node* n1 = new Node(10);
+    Node* n2 = new Node(20);
+    Node* n3 = new Node(30);
+    n1->next = n2; n2->prev = n1;
+    n2->next = n3; n3->prev = n2;
+
+    Node* temp = n3;
+    while (temp != NULL) {
+        cout << temp->data << " ";
+        temp = temp->prev;
+    }
+}
+
+
+Output?
+a) 10 20 30
+b) 30 20 10
+c) 30 10
+d) Compilation error
+
+
+Q23.If we insert 40 at the end of DLL 10 ⇄ 20 ⇄ 30, what will the correct connections be?
+
+a) 30->next = 40, 40->prev = 30
+b) 20->next = 40, 40->prev = 30
+c) 40->next = 30, 30->prev = 40
+d) 40->next = NULL, 40->prev = NULL
+
+
+
+Q24.
+
+Node* head = new Node(10);
+Node* n2 = new Node(20);
+Node* n3 = new Node(30);
+head->next = n2;
+n2->next = n3;
+n3->next = head;
+
+Node* temp = head;
+int count = 0;
+while (count < 5) {
+    cout << temp->data << " ";
+    temp = temp->next;
+    count++;
+}
+
+
+Output?
+
+a) 10 20 30 10 20
+b) 10 20 30 30 20
+c) Infinite loop
+d) Compilation error
+
+
+Q25.If we delete head node in Circular Singly Linked List 10 → 20 → 30 → (back to head), what will be the new head?
+
+a) 10
+b) 20
+c) 30
+d) NULL
+
+
+Q26.
+
+Node* head = new Node(10);
+Node* n2 = new Node(20);
+head->next = n2;
+n2->prev = head;
+head->prev = n2;
+n2->next = head;
+
+Node* temp = head;
+int count = 0;
+while (count < 4) {
+    cout << temp->data << " ";
+    temp = temp->next;
+    count++;
+}
+
+
+Output?
+a) 10 20 10 20
+b) 10 20 30 40
+c) Infinite loop
+d) Compilation error
+
+
+Q27. In a Circular Doubly Linked List 10 ⇄ 20 ⇄ 30 ⇄ (circular), if we start at head and traverse backward 4 steps, sequence will be?
+
+a) 10 30 20 10
+b) 10 20 30 10
+c) 30 20 10 30
+d) Infinite loop
+
+
+Q28. Which statement is TRUE for Doubly Circular Linked List?
+
+a) Each node requires extra memory for prev pointer.
+b) Traversal can be both clockwise & counter-clockwise.
+c) Last node’s next points to head, and head’s prev points to tail.
+d) All of the above
+
+
+Q29.
+
+Node* slow = head;
+Node* fast = head;
+while (fast != NULL && fast->next != NULL) {
+    slow = slow->next;
+    fast = fast->next->next;
+}
+cout << slow->data;
+
+
+If the linked list is 10 → 20 → 30 → 40 → 50, what will be printed?
+a) 20
+b) 30
+c) 40
+d) 50
+
+
+Q30.
+
+Node* head = new Node(1);
+head->next = new Node(2);
+head->next->next = new Node(3);
+head->next->next->next = head; // circular
+
+Node* temp = head;
+while (temp != NULL) {
+    cout << temp->data << " ";
+    temp = temp->next;
+}
+
+
+What happens?
+a) Prints 1 2 3
+b) Prints infinitely
+c) Runtime error
+d) Compilation error
+
+
+Q31.
+
+Node* slow = head;
+Node* fast = head;
+bool flag = false;
+while (fast && fast->next) {
+    slow = slow->next;
+    fast = fast->next->next;
+    if (slow == fast) {
+        flag = true;
+        break;
+    }
+}
+cout << (flag ? "Loop Found" : "No Loop");
+
+
+If linked list is Circular (CLL), output will be?
+a) No Loop
+b) Loop Found
+c) Compilation error
+d) Infinite loop
+
+
+Q32. 
+
+Node* temp = head;
+do {
+    cout << temp->data << " ";
+    temp = temp->next;
+} while (temp != head);
+
+
+If list is 10 → 20 → 30 → (back to 10), output will be?
+a) 10 20 30 10
+b) 10 20 30
+c) Infinite loop
+d) Nothing
+
+
