@@ -1,4 +1,4 @@
-Google Docs Note: https://docs.google.com/document/d/1v6gjLzfdj6mVfIcaElyNTFigKlkIk_1efUiiqwGm9rU/edit?tab=t.0
+Google Docs Note: https://docs.google.com/document/d/1v6gjLzfdj6mVfIcaElyNTFigKlkIk_1efUiiqwGm9rU/edit?tab=t.co1forjufin8
 
 
 Stack Data structure:
@@ -168,6 +168,141 @@ int main(){
 }
 
 
+
+Another way using top pointer:
+-----------------------------
+
+
+
+#include <iostream>
+#define MAX 10
+using namespace std;
+
+class StackArray{
+
+private:
+
+    int items[MAX];
+    int top;
+
+public:
+
+    StackArray(){
+       top = -1;
+    }
+    
+
+    bool isEmpty(){
+        return top == -1;
+    }
+
+    bool isFull(){
+        return top == MAX-1;
+    }
+
+
+    void push(int item){
+
+        if(isFull()){
+            cout<<"Stack Overflow ! \n";
+            return;
+        }
+
+
+        items[++top] = item;
+
+    }
+
+    int pop(){
+
+        if(isEmpty()){
+            cout<<"Stack Underflow (empty) ! \n";
+            return -1;
+        }
+
+        return items[top--];
+
+
+    }
+
+    int peek(){
+         if(isEmpty()){
+            cout<<"Stack Underflow (empty) ! \n";
+            return -1;
+        }
+
+        return items[top];
+
+    }
+
+    int getSize(){
+        int count=0;
+        for(int i=0;i<=top;i++){
+            count++;
+        }
+        return count;
+    }
+
+   
+
+    void display(){
+
+        if(isEmpty()){
+            cout<<"Stack is empty \n";
+            return;
+        }
+
+        for(int i=top; i>=0;i--){
+            cout<<items[i] <<" ";
+        }
+
+        cout<<endl;
+
+
+    }
+
+
+
+
+};
+
+
+
+
+
+int main() {
+    
+
+    StackArray s1;
+
+    s1.push(50);
+    s1.push(40);
+    s1.push(30);
+    s1.push(20);
+    s1.push(10);
+
+    s1.display();
+
+
+    cout<<"Pop the item from top: "<<s1.pop() <<endl;
+
+    s1.display();
+
+    cout<<"\n See the TOP item: "<<s1.peek() <<endl;
+
+    s1.display();
+
+
+    return 0;
+}
+
+
+
+
+
+
+
+
 Using vector:
 ------------
 
@@ -180,6 +315,7 @@ private:
     vector<int> items;   // vector to store stack elements
 
 public:
+
     // Push element onto stack
     void push(int item) {
         items.push_back(item);  // push at the end
@@ -272,6 +408,10 @@ Why Linked List instead of Array/Vector?
 
 Downside: LL needs extra memory for next pointer, and cache locality is worse than arrays.
 
+
+
+--Use array-based stack if maximum size is known and performance matters.
+--Use linked list stack if size is unknown or can grow very large.
 
 code:
 -----
@@ -596,7 +736,9 @@ int main(){
 }
 
 
+Time Complexity: O(n).
 
+Space Complexity: O(n).
 
 
 Refactoring the above code:
@@ -653,6 +795,61 @@ int main() {
 
     return 0;
 }
+
+
+
+
+Above program using unorderedMap:
+=================================
+
+#include <iostream>
+#include <stack>
+#include <unordered_map>
+using namespace std;
+
+bool isBalanced(string s) {
+    stack<char> st;
+
+    // closing → opening map
+    unordered_map<char, char> brackets = {
+        {')', '('},
+        {'>', '<'},
+        {'}', '{'},
+        {']', '['}
+    };
+
+    for (char c : s) {
+        // If it's an opening bracket, push
+        if (c == '(' || c == '{' || c == '<' || c == '[') {
+            st.push(c);
+        }
+        // If it's a closing bracket
+        else if (brackets.find(c) != brackets.end()) {
+            if (st.empty() || st.top() != brackets[c]) {
+                return false; // mismatch
+            }
+            st.pop();
+        }
+        
+    }
+
+    return st.empty(); // true only if all brackets matched
+}
+
+int main() {
+    string str1 = "{<(1+2)>}";
+    string str2 = "{(1+2]>}";
+    string str3 = "a+(b*c)-{d/e}";  // test with letters/operators
+
+    cout << (isBalanced(str1) ? "Balanced" : "Not Balanced") << endl;
+    cout << (isBalanced(str2) ? "Balanced" : "Not Balanced") << endl;
+    cout << (isBalanced(str3) ? "Balanced" : "Not Balanced") << endl;
+
+    return 0;
+}
+
+
+
 
 
 
