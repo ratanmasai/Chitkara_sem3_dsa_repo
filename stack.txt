@@ -1,4 +1,4 @@
-Google Docs Note: https://docs.google.com/document/d/1v6gjLzfdj6mVfIcaElyNTFigKlkIk_1efUiiqwGm9rU/edit?tab=t.co1forjufin8
+Google Docs Notes: https://docs.google.com/document/d/1v6gjLzfdj6mVfIcaElyNTFigKlkIk_1efUiiqwGm9rU/edit?tab=t.co1forjufin8
 
 
 Stack Data structure:
@@ -236,11 +236,7 @@ public:
     }
 
     int getSize(){
-        int count=0;
-        for(int i=0;i<=top;i++){
-            count++;
-        }
-        return count;
+	return top+1;        
     }
 
    
