@@ -1388,24 +1388,24 @@ Explanation:
 Solution Approach using Stack:
 ------------------------------
 
-
-We can solve this efficiently using a stack:
+--We can also solve this efficiently using a stack by traversing from right to left:
 
 1. Initialize an empty stack.
 
-2. Traverse the array from left to right.
+2. Traverse the array from right to left.
 
 3. For each element current:
 
---While the stack is not empty and current > stack.top():
+--While the stack is not empty and stack.top() <= current → pop from the stack.
 
---Pop elements from stack.
+--If the stack is empty → no greater element exists → result[i] = -1.
 
---For each popped element, current is the Next Greater Element.
+--Else → stack.top() is the Next Greater Element → result[i] = stack.top().
 
 --Push current onto the stack.
 
-4. After the traversal, if any elements remain in the stack → there is no greater element, so assign -1.
+4. After traversal, the result array contains all NGEs.
+
 
 Time Complexity: O(n)
 Space Complexity: O(n)
@@ -1414,45 +1414,62 @@ Space Complexity: O(n)
 Step-by-Step Example:
 --------------------
 
+Array: [4, 5, 2, 25]
 
-Array: [4, 5, 2, 25] //original array
+Stack: [] (stores actual values)
+Result: [?, ?, ?, ?]
 
-Stack: [] //to store the indices
 
-Result: [-1, -1, -1, -1] // initialize the result with -1
+Step 1: i = 3, Current = 25
 
-Step 1: Current = 4
+--Stack empty → result[3] = -1
 
-Stack empty → push 4 → Stack = [4]
+--Push 25 → stack = [25]
 
-Step 2: Current = 5
+Result = [?, ?, ?, -1]
 
-5 > 4 → pop 4 → result[0] = 5
 
-Push 5 → Stack = [5]
+Step 2: i = 2, Current = 2
 
-Step 3: Current = 2
+--Stack.top() = 25, 25 <=  2  → stop
 
-2 < 5 → push 2 → Stack = [5, 2]
+--Stack not empty → result[2] = 25
 
-Step 4: Current = 25
+--Push 2 → stack = [25, 2]
 
-25 > 2 → pop 2 → result[2] = 25
+Result = [?, ?, 25, -1]
 
-25 > 5 → pop 5 → result[1] = 25
 
-Push 25 → Stack = [25]
+Step 3: i = 1, Current = 5
 
-End:
+--Stack.top() = 2, 2 <= 5  → pop 2 → stack = [25]
 
-Stack has 25 → no greater element → result[3] = -1
+--Stack.top() = 25, 25 <= 5  → stop
 
-Final Result: [5, 25, 25, -1] 
+--Stack not empty → result[1] = 25
+
+--Push 5 → stack = [25, 5]
+
+Result = [?, 25, 25, -1]
+
+
+Step 4: i = 0, Current = 4
+
+--Stack.top() = 5, 5 <= 4  → stop
+
+--Stack not empty → result[0] = 5
+
+--Push 4 → stack = [25, 5, 4]
+
+Result = [5, 25, 25, -1]
+
+
+Final Result: [5, 25, 25, -1]
+
 
 
 Code:
 ------
-
 #include <iostream>
 #include <stack>
 #include <vector>
@@ -1460,15 +1477,23 @@ using namespace std;
 
 vector<int> nextGreaterElement(vector<int>& arr) {
     int n = arr.size();
-    vector<int> result(n, -1); // Initialize result with -1
-    stack<int> st; // Stack stores indices
+    vector<int> result(n);
+    stack<int> st; // stack stores values
 
-    for (int i = 0; i < n; i++) {
-        while (!st.empty() && arr[i] > arr[st.top()]) {
-            result[st.top()] = arr[i]; // Current is NGE for stack top
+    for (int i = n-1; i >= 0; i--) {
+        int current = arr[i];
+
+        while (!st.empty() && st.top() <= current) {
             st.pop();
         }
-        st.push(i); // Push current index
+
+        if (st.empty()) {
+            result[i] = -1;
+        } else {
+            result[i] = st.top();
+        }
+
+        st.push(current);
     }
 
     return result;
