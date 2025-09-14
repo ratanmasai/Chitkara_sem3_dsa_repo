@@ -815,13 +815,13 @@ bool isBalanced(string s) {
     };
 
     for (char c : s) {
-        // If it's an opening bracket, push
+        // If it's 'c' is opening bracket, push
         if (c == '(' || c == '{' || c == '<' || c == '[') {
             st.push(c);
         }
         // If it's a closing bracket
-        else if (brackets.find(c) != brackets.end()) {
-            if (st.empty() || st.top() != brackets[c]) {
+        else if (brackets.find(c) != brackets.end()) { //if 'c' found in the map
+            if (st.empty() || st.top() != brackets[c]) { //brackets[')'] = '('
                 return false; // mismatch
             }
             st.pop();
@@ -844,7 +844,72 @@ int main() {
     return 0;
 }
 
+DRY RUN:
+--------
 
+Step 1: char = '['
+
+It's an opening bracket.
+
+Push onto stack.
+
+Stack: [
+
+Step 2: char = '('
+
+It's an opening bracket.
+
+Push onto stack.
+
+Stack: [ (
+
+Step 3: char = 'a'
+
+Not a bracket.
+
+Ignore.
+
+Stack: [ (
+
+Step 4: char = '+'
+
+Not a bracket.
+
+Ignore.
+
+Stack: [ (
+
+Step 5: char = 'b'
+
+Not a bracket.
+
+Ignore.
+
+Stack: [ (
+
+Step 6: char = ')'
+
+It's a closing bracket.
+
+Map says ')' should match '('.
+
+Stack top = '('  matches.
+
+Pop.
+
+Stack: [
+
+Step 7: char = ']'
+
+It's a closing bracket.
+
+Map says ']' should match '['.
+
+Stack top = '['  matches.
+
+Pop.
+
+Stack: empty
 
 
 
@@ -915,22 +980,78 @@ Infix → Postfix Conversion (Step-by-Step Rules):
 Rules:
 ------
 
-1. Operands (A-Z, 0-9): Directly add to the postfix expression.
+1. Operands (A-Z, 0-9): Directly add to the result.
 
 2. Left Parenthesis ‘(’: Push onto stack.
 
 3. Right Parenthesis ‘)’:
 
---Keep popping operators from the stack and add them to Postfix until you find a (.
---Remove ( from the stack (do not add it to Postfix).
+--Keep popping operators from the stack and add them to result until you find a (.
+--Remove ( from the stack (do not add it to result).
 
 4. Operators (+, -, , /, ^): 
 
---If the stack is not empty, and the operator on top of the stack has greater or equal precedence, then pop it and add it to Postfix.
+--while the stack is not empty and,
+	--top has higher precedence, OR
+	--top has same precedence and operator is left-to-right associative
+		--pop from stack
+--Then push the current operator
 
---After popping, push the new/current operator into the stack.
+5. At the end: After scanning the whole expression, pop all remaining operators from the stack and add them to the result.
 
-5. At the end: After scanning the whole expression, pop all remaining operators from the stack and add them to the Postfix expression.
+
+
+Simple analogy:
+-----------------
+
+
+Imagine you are in a canteen line:
+
+--Operands (A, B, C, numbers) → these are students. Students directly go to the counter (output).
+
+--Operators (+, -, , /, ^) → these are teachers. Teachers don’t directly go to the counter; they first go to the staff room (stack).
+
+--Stack → the staff room where teachers sit according to their importance (precedence).
+
+Rules of the staff room:
+
+--Higher priority teachers (like ^) sit on top.
+
+--If a new teacher comes and has lower or equal priority, the top teacher leaves the staff room first (goes to output), then the new one can sit.
+
+--Parentheses work like special temporary rooms:
+
+( → open a new temporary room.
+
+) → empty that room until ( is found.
+
+
+Rules with above analogy:
+------------------------
+
+1. Operands (A-Z, 0-9)
+→ Directly go to output (students → counter).
+
+2. '(' (opening bracket)
+→ Push into stack (open temporary room).
+
+3. ')' (closing bracket)
+→ Pop from stack to output until you find (. Remove the ( (but don’t put it in output).
+
+4. Operators (+, -, , /, ^)
+
+--If stack is empty → push it.
+
+--If stack top is another operator → compare precedence.
+
+a. If new operator has lower or equal precedence → pop from stack to output, then push the new operator.
+b. If new operator has higher precedence → push it directly.
+
+5. After scanning the expression
+
+→ Pop everything left in the stack and put into output.
+
+
 
 
 Example1: A + B * C
@@ -977,19 +1098,6 @@ Result Postfix: A B + C *
 
 
 
-
-Summary: Postfix (Infix → Postfix):
-------------------------------------
-
-1. Scan left → right
-
-2. Operand → output
-
-3. Operator → push (pop higher/equal precedence)
-
-4. ( → push, ) → pop until (
-
-
 Code:
 ------
 
@@ -1003,6 +1111,8 @@ int precedence(char op) {
     if (op == '^') return 3;
     if (op == '*' || op == '/' || op == '%') return 2;
     if (op == '+' || op == '-') return 1;
+    
+    // for any other charecter except: above operators
     return -1;
 }
 
@@ -1054,6 +1164,100 @@ int main() {
     cout << "Postfix Expression: " << infixToPostfix(exp) << endl;
     return 0;
 }
+
+
+
+DRY RUN: (A+B)*C
+--------
+
+Expected Postfix: AB+C*
+
+Step 1: Read (
+
+( = opening bracket → push into stack.
+
+Stack: (
+
+Output: (empty)
+
+Step 2: Read A
+
+A = operand (student) → goes directly to output.
+
+Stack: (
+
+Output: A
+
+Step 3: Read +
+
++ = operator (teacher).
+
+Stack top is ( → so just push +.
+
+Stack: ( +
+
+Output: A
+
+Step 4: Read B
+
+B = operand → directly to output.
+
+Stack: ( +
+
+Output: AB
+
+Step 5: Read )
+
+Closing bracket → pop until you find (.
+
+Pop + → goes to output.
+
+Remove ( (don’t put it in output).
+
+Stack: (empty)
+
+Output: AB+
+
+Step 6: Read *
+
+* = operator.
+
+Stack is empty → push it.
+
+Stack: *
+
+Output: AB+
+
+Step 7: Read C
+
+C = operand → directly to output.
+
+Stack: *
+
+Output: AB+C
+
+Step 8: End of Expression
+
+Pop everything left in stack.
+
+Pop * → goes to output.
+
+Stack: (empty)
+
+Output: AB+C* 
+
+
+
+Student Task: DRY RUN the following expression:
+
+(A+B*C)+D
+
+expected postfix: ABC*+D+
+
+
+
+
+
 
 
 
@@ -1127,18 +1331,6 @@ End: Pop * → * + A B C
 
 Result Prefix: * + A B C
 
-
-
-Summary: Postfix (Infix → Prefix):
-----------------------------------
-
-1. Scan right → left
-
-2. Operand → output
-
-3. Operator → push (pop higher precedence)
-
-4. ) → push, ( → pop until )
 
 
 Code:
@@ -1407,6 +1599,18 @@ Solution Approach using Stack:
 4. After traversal, the result array contains all NGEs.
 
 
+In summery:
+----------
+
+--The stack always keeps the “potential greater elements” from the right side.
+
+--If the stack’s top element is smaller than the current element, then it can never be the Next Greater Element (NGE) → so we remove (pop) it.
+
+--If a bigger element remains on the stack → that is the NGE for the current element.
+
+--If nothing is left in the stack → it means there is no greater element → put -1.
+
+
 Time Complexity: O(n)
 Space Complexity: O(n)
 
@@ -1468,6 +1672,12 @@ Final Result: [5, 25, 25, -1]
 
 
 
+Note: A stack that always maintains its elements in either increasing order or decreasing order is called a "monotonic stack". 
+When a new element comes, we pop from the stack until the order (increasing or decreasing) is preserved.
+
+--This helps us solve problems like Next Greater Element, Next Smaller Element.
+
+
 Code:
 ------
 #include <iostream>
@@ -1478,21 +1688,25 @@ using namespace std;
 vector<int> nextGreaterElement(vector<int>& arr) {
     int n = arr.size();
     vector<int> result(n);
-    stack<int> st; // stack stores values
+    stack<int> st; // stack stores potential NGEs
 
+// Traverse from right to left
     for (int i = n-1; i >= 0; i--) {
         int current = arr[i];
 
+ // Pop all smaller or equal elements
         while (!st.empty() && st.top() <= current) {
             st.pop();
         }
 
+// If stack empty → no greater element
         if (st.empty()) {
             result[i] = -1;
         } else {
             result[i] = st.top();
         }
 
+ // Push current element
         st.push(current);
     }
 
@@ -1509,6 +1723,186 @@ int main() {
     cout << endl;
     return 0;
 }
+
+
+
+Approach2: Left-to-Right Traversal (Using Stack of Indices)
+-------------------------------------------------------
+
+--This approach is also very popular because it directly finds the NGE while scanning left to right.
+
+Idea:
+-----
+
+--Traverse the array from left to right.
+
+--Use a stack to store indices of elements for which the NGE hasn’t been found yet.
+
+--For each new element, check if it’s greater than the element at the index on top of the stack.
+
+If yes → this new element is the NGE for that index → update result and pop.
+
+Repeat until stack is empty or top element is greater.
+
+--At the end, indices left in stack have no greater element → assign -1.
+
+
+
+Step-by-Step Dry Run:
+
+Array = [4, 5, 2, 25]
+Result = [-1, -1, -1, -1] (initialized with -1)
+Stack = [] (stores indices)
+
+
+Step 1: i = 0, Current = 4
+
+Stack empty → no pop.
+
+Push index 0.
+
+Stack = [0] → (represents arr[0] = 4)
+Result = [-1, -1, -1, -1]
+
+Step 2: i = 1, Current = 5
+
+Compare arr[1] = 5 with arr[st.top()] = arr[0] = 4
+→ 5 > 4 → result[0] = 5 → pop 0.
+
+Stack empty now.
+
+Push index 1.
+
+Stack = [1] → (represents arr[1] = 5)
+Result = [5, -1, -1, -1]
+
+
+
+Step 3: i = 2, Current = 2
+
+Compare arr[2] = 2 with arr[st.top()] = arr[1] = 5
+→ 2 ≤ 5 → stop.
+
+Push index 2.
+
+Stack = [1, 2] → (represents arr[1] = 5, arr[2] = 2)
+Result = [5, -1, -1, -1]
+
+
+Step 4: i = 3, Current = 25
+
+Compare arr[3] = 25 with arr[st.top()] = arr[2] = 2
+→ 25 > 2 → result[2] = 25 → pop 2.
+
+Compare arr[3] = 25 with arr[st.top()] = arr[1] = 5
+→ 25 > 5 → result[1] = 25 → pop 1.
+
+Stack empty now.
+
+Push index 3.
+
+Stack = [3] → (represents arr[3] = 25)
+Result = [5, 25, 25, -1]
+
+
+End of Array
+
+Remaining index = 3 → already has -1 (default).
+
+Stack = []
+Result = [5, 25, 25, -1]
+
+
+#include <iostream>
+#include <stack>
+#include <vector>
+using namespace std;
+
+vector<int> nextGreaterElementIndices(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> result(n, -1); // Initialize result with -1
+    stack<int> st;             // Stack stores indices
+
+    for (int i = 0; i < n; i++) {
+      
+    // While the stack is not empty and the current element is greater than the element at the stack's top index
+        while (!st.empty() && arr[i] > arr[st.top()]) {
+            result[st.top()] = arr[i]; // arr[i] is the NGE for the element at index st.top()
+            st.pop();
+        }
+     
+     st.push(i); // Push current index
+    
+  }
+    // Any indices left in the stack have no greater element
+   // Remaining indices in stack → NGE = -1 (already set)
+    return result;
+}
+
+
+
+
+
+
+
+Problem:  Previous Smaller Element:
+=================================
+
+--For each element, find the first element to its left that is smaller than it.
+
+Logic: Mirror of NGE. Iterate from left to right and maintain a monotonic stack of increasing elements.
+
+
+code:
+-----
+
+#include <vector>
+#include <stack>
+using namespace std;
+
+
+
+vector<int> prevSmaller(vector<int> & arr) {
+    int n = arr.size();
+    vector<int> result(n);
+    stack<int> st;
+
+    for (int i = 0; i < n; ++i) {
+        // Pop elements from the stack that are greater than or equal to the current
+        while (!st.empty() && st.top() >= arr[i]) {
+            st.pop();
+        }
+
+        if (st.empty()) {
+            result[i] = -1; // No smaller element to the left
+        } else {
+            result[i] = st.top();
+        }
+        st.push(arr[i]);
+    }
+    return result;
+}
+
+
+
+Problem 3: Next Greater Element II (Circular Array)
+Same as NGE, but the input array is circular.
+
+
+Problem 5: The Celebrity Problem
+
+
+ RPN Calculator Evaluator
+
+Lisp-style Prefix Expression Evaluator
+
+
+
+
+
+
+
+
 
 
 
