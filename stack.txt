@@ -659,7 +659,8 @@ bool isBalanced(string str){
             if(s.empty())
                 return false;
             
-            s.pop();
+             if(st.top() == '(')
+                st.pop();
         }
     }
 
@@ -703,7 +704,6 @@ using namespace std;
 			return false;
 
                 char top = s.top(); //getting the top 
-		s.pop(); // removing the top and making top down
 
                 if ((ch == ')' && top != '(') ||
                     (ch == '}' && top != '{') ||
@@ -711,6 +711,8 @@ using namespace std;
                     (ch == '>' && top != '<')) {
                     return false;
                 }
+
+		s.pop(); // removing the top and making top down
             }
         }
 
@@ -772,11 +774,11 @@ bool isBalanced(string str) {
 		return false;
 
             char top = s.top();
-            s.pop();
 
             if (!bracketsMatch(top, ch)) {
                 return false;
             }
+	    s.pop();
         }
     }
     return s.empty();
@@ -1250,11 +1252,13 @@ Output: AB+C*
 
 Student Task: DRY RUN the following expression:
 
-(A+B*C)+D
+1. (A+B*C)+D
 
 expected postfix: ABC*+D+
 
+2. (A+B)*(C-D)/E
 
+expected postfix: AB+CD-*E/
 
 
 
@@ -1443,8 +1447,169 @@ int main() {
 
 
 
+Bug in above Postfix and prefix code:
+======================================
+
+
+Issue with ^ Operator:
+
+example: in postfix code: 
+
+for the expression: A^(B^C)
+
+the output should be: ABC^^
+
+because: ^ exponent operator associtivity is right-associative.
+
+But in our code, we are treating all operators as left-associative because of this line:
+
+while (!st.empty() && precedence(st.top()) >= precedence(ch)) {
+    result += st.top();
+    st.pop();
+}
+
+
+--For ^, this will wrongly pop earlier instead of allowing right-to-left evaluation.
+
+
+Fixing: Handle Associativity:
+----------------------------
+
+Here We need to check associativity.
+
+1. Left-associative operators → pop if precedence(top) >= precedence(current)
+
+2. Right-associative operators (like ^) → pop if precedence(top) > precedence(current)
+
+
+
+final code:
+-------------
+
+#include <iostream>
+#include <stack>
+#include <cctype>  // for isalnum
+using namespace std;
+
+// Function to return precedence of operators
+int precedence(char op) {
+    if (op == '^') return 3;
+    if (op == '*' || op == '/' || op == '%') return 2;
+    if (op == '+' || op == '-') return 1;
+    
+    // for any other charecter except: above operators
+    return -1;
+}
+
+
+// Function to check if operator is right-associative
+bool isRightAssociative(char op) {
+    return op == '^';
+}
+
+
+// Function to convert Infix to Postfix
+string infixToPostfix(string exp) {
+    stack<char> st;
+    string result = "";
+
+    for (char ch : exp) {
+        // 1. If operand, add to result
+        if (isalnum(ch)) {
+            result += ch;
+        }
+        // 2. If '(', push to stack
+        else if (ch == '(') {
+            st.push(ch);
+        }
+        // 3. If ')', pop until '('
+        else if (ch == ')') {
+            while (!st.empty() && st.top() != '(') {
+                result += st.top();
+                st.pop();
+            }
+            if (!st.empty()) 
+		        st.pop(); // pop '('
+        }
+        // 4. If operator
+        else { // operator
+            while (!st.empty() && 
+                   ((isRightAssociative(ch) && precedence(st.top()) > precedence(ch)) ||
+                   (!isRightAssociative(ch) && precedence(st.top()) >= precedence(ch)))) {
+                result += st.top();
+                st.pop();
+            }
+            st.push(ch);
+        }
+
+    }
+
+    // Pop remaining operators
+    while (!st.empty()) {
+        result += st.top();
+        st.pop();
+    }
+
+    return result;
+}
+
+int main() {
+    string exp = "A^(B^C)";
+    cout << "Infix Expression: " << exp << endl;
+    cout << "Postfix Expression: " << infixToPostfix(exp) << endl;
+    
+    return 0;
+}
+
+
+
+
+
+
+
+
+Student task: fix the prefix conversion also.
+
+
+
 Evaluating the PostFix expression:
 ==================================
+
+
+--Postfix notations are also called as Reverse Polish Notation (RPN)
+
+--Opertor comes after operands.
+
+Example:
+
+Infix: (2+3)*5
+
+Postfix: 23+5*
+
+
+
+Postfix Evaluation Algorithm:
+----------------------------
+
+1. Create an empty stack.
+
+2. Traverse the expression from left to right
+
+--If the symbol is an operand(number) : push into the stack
+
+--If the symbol is an operator (+,-,/,^,%): 
+
+---pop the top two operands from the stack.
+---Apply operator
+---push the result back into the stack.
+
+
+3. After processing the expression, the top of the stack will contains the result.
+
+
+
+Code: Single digit version:
+--------------------------
 
 
 #include <iostream>
@@ -1497,7 +1662,26 @@ int main() {
 Evaluating the Prefix expression:
 ==================================
 
+--The prefix expression is also called as Polish Notation.
+
+--Here Operator comes before the operands
+
+Example: 
+
+Infix: (2+3)*5
+Prefix: *+235
+
+
+Prefix Evaluation Algorithm:
+----------------------------
+
 --Trick: Process expression right → left (reverse direction).
+
+
+
+Code: Single digit version:
+---------------------------
+
 
 #include <iostream>
 #include <stack>
@@ -1546,6 +1730,105 @@ int main() {
 
 
 
+
+Note: The above version of the code for Postfix and Prefix will work only with the Single digit numbers (0-9).
+
+--They cannot evaluate "10 20 + 30 *" directly;
+
+
+
+Generalized Version (Multi-digit Numbers with Tokens): RPN calculator
+===================================================
+
+Instead of reading character by character, we read tokens (strings) such as "10", "20", "+".
+
+
+Postfix Evaluation (with tokens)
+------------------------------
+
+#include <iostream>
+#include <stack>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int applyOp(int a, int b, string op) {
+    if (op == "+") return a + b;
+    if (op == "-") return a - b;
+    if (op == "*") return a * b;
+    if (op == "/") return a / b;
+    if (op == "%") return a % b;
+    if (op == "^") return pow(a, b);
+    return 0;
+}
+
+int evaluatePostfix(vector<string> tokens) {
+    stack<int> st;
+
+    for (string token : tokens) {
+        if (token == "+" || token == "-" || token == "*" || token == "/" || token == "%" || token == "^") {
+            int val2 = st.top(); st.pop();
+            int val1 = st.top(); st.pop();
+            st.push(applyOp(val1, val2, token));
+        }
+        else {
+            st.push(stoi(token)); // convert string → int
+        }
+    }
+    return st.top();
+}
+
+int main() {
+    vector<string> exp = {"10", "20", "+", "30", "*"};  // (10+20)*30
+    cout << "Result: " << evaluatePostfix(exp) << endl;
+    return 0;
+}
+
+
+Prefix Evaluation (with tokens):
+-------------------------------
+
+#include <iostream>
+#include <stack>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int applyOp(int a, int b, string op) {
+    if (op == "+") return a + b;
+    if (op == "-") return a - b;
+    if (op == "*") return a * b;
+    if (op == "/") return a / b;
+    if (op == "%") return a % b;
+    if (op == "^") return pow(a, b);
+    return 0;
+}
+
+int evaluatePrefix(vector<string> tokens) {
+    stack<int> st;
+    for (int i = tokens.size() - 1; i >= 0; i--) {
+        string token = tokens[i];
+        if (token == "+" || token == "-" || token == "*" || token == "/" || token == "%" || token == "^") {
+            int val1 = st.top(); st.pop();
+            int val2 = st.top(); st.pop();
+            st.push(applyOp(val1, val2, token));
+        }
+        else {
+            st.push(stoi(token));
+        }
+    }
+    return st.top();
+}
+
+int main() {
+    vector<string> exp = {"*", "+", "10", "20", "30"};  // (10+20)*30
+    cout << "Result: " << evaluatePrefix(exp) << endl;
+    return 0;
+}
+
+
+
+
 Next Greater Element (NGE):
 ===========================
 
@@ -1577,7 +1860,7 @@ Explanation:
 
 
 
-Solution Approach using Stack:
+Solution Approach1 using Stack:
 ------------------------------
 
 --We can also solve this efficiently using a stack by traversing from right to left:
@@ -1827,8 +2110,9 @@ vector<int> nextGreaterElementIndices(vector<int>& arr) {
       
     // While the stack is not empty and the current element is greater than the element at the stack's top index
         while (!st.empty() && arr[i] > arr[st.top()]) {
-            result[st.top()] = arr[i]; // arr[i] is the NGE for the element at index st.top()
-            st.pop();
+		int idx = st.top();
+		st.pop();
+            result[idx] = arr[i]; // arr[i] is the NGE for the element at index st.top()
         }
      
      st.push(i); // Push current index
@@ -1885,19 +2169,199 @@ vector<int> prevSmaller(vector<int> & arr) {
 
 
 
-Problem 3: Next Greater Element II (Circular Array)
-Same as NGE, but the input array is circular.
+
+Circular Array:
+================
+
+--A circular array is an array where the end of the array "wraps around" to connect back to the beginning. (after the last index we come again to the starting index)
+
+--It is used to efficiently utilize memory in fixed-size data structures like circular queues.
+
+--In a normal array (linear), once we reach the end, we cannot insert more elements.
+
+--But in a circular array, after reaching the last index, we can wrap around and start from index 0 (if space is available).
 
 
-Problem 5: The Celebrity Problem
+--To achieve this wrapping, we use the modulus operator (%).
 
 
- RPN Calculator Evaluator
+formular for circular indexing:
+-----------------------------
 
-Lisp-style Prefix Expression Evaluator
+Example:
+
+--Suppose we have an array of size 5:
+
+Index:  0   1   2   3   4
+
+If we insert sequentially:
+
+arr[0] = 10
+arr[1] = 20
+arr[2] = 30
+arr[3] = 40
+arr[4] = 50
+
+
+--Now in a normal array, we cannot insert more values.
+
+--But in a circular array, if some space is freed at the front (e.g., we remove elements from start, here slots are available), then we can reuse that space by wrapping around it.
 
 
 
+index = (start + i) % SIZE;   //i start with 0
+
+--If index reaches the end, then next index will become 0.
+
+
+Example: SIZE = 5
+
+(0+0) % 5 = 0
+
+(0+1) % 5 = 1
+
+(0+2) % 5 = 2
+
+(0+3) % 5 = 3
+
+(0+4) % 5 = 4
+
+(0+ 5) % 5= 0 ( wrap around)
+
+
+
+lets take :
+
+Index:   0   1   2   3   4
+Array: [10, 20, 30, 40, 50]
+
+
+Linear way: after 50 nothing is there 
+Circular way: after 50 we reach to the the 10
+
+
+Example: 
+
+
+int arr[5] = {10,20,30,40,50};
+
+int size= sizeof(arr)/sizeof(arr[0]);
+
+cout<<"Normal array printing \n";
+for(int i=0;i<size;i++){
+
+	cout<<arr[i] <<" "; 
+
+}
+
+cout<<endl;
+
+
+
+cout<<"Circular array printing starting from index 2: \n";
+int start = 2;
+
+for(int i=0;i<size;i++){
+
+	int ci= (start+i) % size;
+	cout<<arr[ci] <<" ";
+}
+
+cout<<endl;
+
+
+
+Problem 3 : Next Greater Element II (Circular Array)
+===================================================
+
+
+--Given a circular array, for each element, find the next greater element. If no such element exists, return -1.
+
+--Same as NGE, but the input array is circular.
+
+--Difference from normal NGE: After the last element, you can wrap around and continue checking from the beginning.
+
+
+Example:
+
+Input: arr = [1, 2, 1]
+Output: [2, -1, 2]
+
+Explanation:
+1 → next greater is 2
+2 → no greater → -1
+1 → wrap around → next greater is 2
+
+
+IDEA:
+-----
+
+1. Use the same logic as NGE.
+2. Since the array is circular, traverse the array twice (2 * n).
+3. Use modulus % to wrap indices.
+4. Only fill results during the first pass (i < n).
+
+
+Code:
+------
+
+#include <iostream>
+#include <vector>
+#include <stack>
+using namespace std;
+
+vector<int> nextGreaterElementsCircular(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> result(n, -1); // initialize with -1
+    stack<int> st;             // stores indices
+
+    // Traverse the array twice (simulate circular)
+    for (int i = 0; i < 2 * n; i++) {
+        int current = nums[i % n];  // wrap around using %
+        
+        // While stack not empty and current > element at stack top
+        while (!st.empty() && nums[st.top()] < current) {
+            result[st.top()] = current;
+            st.pop();
+        }
+
+        // Only push indices in the first pass
+        if (i < n) st.push(i);
+    }
+
+    return result;
+}
+
+int main() {
+    vector<int> arr = {1, 2, 1};
+    vector<int> res = nextGreaterElementsCircular(arr);
+
+    cout << "Next Greater Elements (Circular): ";
+    for (int x : res) cout << x << " ";
+    cout << endl;
+    return 0;
+}
+
+
+Dry Run:
+--------
+
+Array = [1, 2, 1]
+Double traversal = [1, 2, 1, 1, 2, 1]
+
+i=0 → push index 0 (value 1)
+
+i=1 → current=2 > arr[0]=1 → result[0]=2 → push index 1
+
+i=2 → current=1, not > 2 → push index 2
+
+i=3 → current=1, check index 2 → arr[2]=1 == 1 → nothing
+
+i=4 → current=2 > arr[2]=1 → result[2]=2, pop
+
+i=5 → stop (don’t push because >n)
+
+ Final Result = [2, -1, 2]
 
 
 
