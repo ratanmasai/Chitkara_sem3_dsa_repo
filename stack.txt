@@ -849,6 +849,9 @@ int main() {
 DRY RUN:
 --------
 
+exp = [(a+b)]
+
+
 Step 1: char = '['
 
 It's an opening bracket.
@@ -2306,41 +2309,54 @@ IDEA:
 
 Code:
 ------
-
 #include <iostream>
 #include <vector>
 #include <stack>
 using namespace std;
 
-vector<int> nextGreaterElementsCircular(vector<int>& nums) {
-    int n = nums.size();
-    vector<int> result(n, -1); // initialize with -1
-    stack<int> st;             // stores indices
+// Function to find Next Greater Elements in a Circular Array
+vector<int> nextGreaterElementCircular(vector<int>& arr) {
 
-    // Traverse the array twice (simulate circular)
+    int n = arr.size();
+    vector<int> result(n, -1); // Initialize result with -1 (default if no NGE)
+    stack<int> st;             // Stack stores indices of elements
+
+    // Traverse the array twice to simulate circular behavior
     for (int i = 0; i < 2 * n; i++) {
-        int current = nums[i % n];  // wrap around using %
-        
-        // While stack not empty and current > element at stack top
-        while (!st.empty() && nums[st.top()] < current) {
-            result[st.top()] = current;
-            st.pop();
+
+        int current = arr[i % n];  // Wrap around using modulo
+
+        // Pop all indices whose elements are smaller than current
+        // Current element is the NGE for all such indices
+
+        while (!st.empty() && current > arr[st.top()]) {
+
+            int idx = st.top();    // Index of element waiting for NGE
+            st.pop();              // Remove it from stack
+            result[idx] = current; // Assign current as NGE
         }
 
-        // Only push indices in the first pass
-        if (i < n) st.push(i);
+        // Push index into stack only during the first pass
+        // Second pass is just to resolve circular elements
+        if (i < n) {
+            st.push(i);
+        }
     }
 
     return result;
 }
 
+
 int main() {
     vector<int> arr = {1, 2, 1};
-    vector<int> res = nextGreaterElementsCircular(arr);
+    vector<int> res = nextGreaterElementCircular(arr);
 
     cout << "Next Greater Elements (Circular): ";
-    for (int x : res) cout << x << " ";
+    for (int x : res) {
+        cout << x << " ";
+    }
     cout << endl;
+
     return 0;
 }
 
