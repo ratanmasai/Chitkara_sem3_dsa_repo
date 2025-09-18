@@ -933,7 +933,8 @@ Types of Polish Notation:
 -------------------------
 
 
---Polish Notations are generally of 2 types:
+--Polish Notations are generally of 2 types: B + C *     // equivalent to (A + B) * C
+
 
 1. Prefix Notation(Polish Notation): Operator comes before operands.
 Example:
@@ -943,8 +944,7 @@ Example:
 2. Postfix Notation(Reverse Polish notation): Operator comes after operands.
 Example:
 
-A B + C *     // equivalent to (A + B) * C
-
+A
 
 Note: Computers often use Postfix (RPN) internally because it is easier to evaluate using a stack, without needing parentheses or complex precedence rules.
 
@@ -982,7 +982,7 @@ Infix → Postfix Conversion (Step-by-Step Rules):
 Rules:
 ------
 
-1. Operands (A-Z, 0-9): Directly add to the result.
+1. Operands (A-Z, 0-9): Directly add to the result. isalnum(ch) <cctype>  result+=ch 
 
 2. Left Parenthesis ‘(’: Push onto stack.
 
@@ -1455,7 +1455,7 @@ Issue with ^ Operator:
 
 example: in postfix code: 
 
-for the expression: A^(B^C)
+for the expression: A^B^C
 
 the output should be: ABC^^
 
@@ -1585,6 +1585,8 @@ Example:
 Infix: (2+3)*5
 
 Postfix: 23+5*
+
+After evaluating the result is: 25
 
 
 
