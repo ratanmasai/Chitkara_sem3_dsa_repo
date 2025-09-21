@@ -1974,6 +1974,7 @@ Code:
 using namespace std;
 
 vector<int> nextGreaterElement(vector<int>& arr) {
+
     int n = arr.size();
     vector<int> result(n);
     stack<int> st; // stack stores potential NGEs
@@ -2014,6 +2015,30 @@ int main() {
 
 
 
+
+Time complexity:
+
+--Outer loop runs n times.
+
+--Inner while loop: Each element is pushed once and popped once from the stack → O(n) overall.
+
+So total = O(n) + O(n) = O(n)
+
+Space Complexity: O(n)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Approach2: Left-to-Right Traversal (Using Stack of Indices)
 -------------------------------------------------------
 
@@ -2022,15 +2047,20 @@ Approach2: Left-to-Right Traversal (Using Stack of Indices)
 Idea:
 -----
 
---Traverse the array from left to right.
+1. Traverse the array from left to right.
 
---Use a stack to store indices of elements for which the NGE hasn’t been found yet.
+2. Use a stack to store indices of elements for which the NGE hasn’t been found yet.
 
---For each new element, check if it’s greater than the element at the index on top of the stack.
+3. For each new element: 
 
-If yes → this new element is the NGE for that index → update result and pop.
+--check if it’s greater than the element at the index on top of the stack.
 
-Repeat until stack is empty or top element is greater.
+--If yes → this new element is the NGE for that index stored inside the top of the stack → update result and pop the stack.
+
+--Repeat until stack is empty or top element is greater than or equal to the current element.
+
+4. push the current element index onto the stack.
+
 
 --At the end, indices left in stack have no greater element → assign -1.
 
@@ -2175,10 +2205,13 @@ vector<int> prevSmaller(vector<int> & arr) {
 
 
 
+
+
+
 Circular Array:
 ================
 
---A circular array is an array where the end of the array "wraps around" to connect back to the beginning. (after the last index we come again to the starting index)
+--A circular array is an array where the end of the array "wraps around" to connect back to the beginning. (After the last index, we can continue from index 0.)
 
 --It is used to efficiently utilize memory in fixed-size data structures like circular queues.
 
@@ -2212,7 +2245,9 @@ arr[4] = 50
 
 --But in a circular array, if some space is freed at the front (e.g., we remove elements from start, here slots are available), then we can reuse that space by wrapping around it.
 
+formula is: index = i % size;
 
+--if we are starting with any value then: 
 
 index = (start + i) % SIZE;   //i start with 0
 
@@ -2301,10 +2336,25 @@ Explanation:
 IDEA:
 -----
 
-1. Use the same logic as NGE.
-2. Since the array is circular, traverse the array twice (2 * n).
+1. Use the same logic as NGE first approach.
+2. Since the array is circular, traverse the array twice (2 * n) to simulate the circular behaviour.(instead of traversing the array circularly for each element again to find the NGE, it will raise the TC to O(n^2), to get the result optamized way we can traverse the array 2 times).
+
+example:
+
+for the array: [4,5,2,15,14]
+
+
+result: [5,15,15,-1,15]
+
+for 4: traverse all the right side (5,2,15,14): left: no element
+for 5: traverse all the right side (2,15,14): left: (4)
+for 2: traverse all the right side (15,14): left: (4,5)
+for 15: traverse all the right side (14): left: (4,5,2)
+for 14: traverse all the right side: nothing : left: (4,5,2,15)
+
 3. Use modulus % to wrap indices.
-4. Only fill results during the first pass (i < n).
+
+4. here inside the stack store the indexes instead of storing the value directly otherwise duplicate value may cause the problem.
 
 
 Code:
@@ -2317,31 +2367,31 @@ using namespace std;
 // Function to find Next Greater Elements in a Circular Array
 vector<int> nextGreaterElementCircular(vector<int>& arr) {
 
-    int n = arr.size();
-    vector<int> result(n, -1); // Initialize result with -1 (default if no NGE)
-    stack<int> st;             // Stack stores indices of elements
+  int n= arr.size();
 
-    // Traverse the array twice to simulate circular behavior
-    for (int i = 0; i < 2 * n; i++) {
+    vector<int> result(n);
 
-        int current = arr[i % n];  // Wrap around using modulo
+    stack<int> st;
 
-        // Pop all indices whose elements are smaller than current
-        // Current element is the NGE for all such indices
+    for(int i=2*n-1; i>=0;i--){
 
-        while (!st.empty() && current > arr[st.top()]) {
+	int idx= i % n;
 
-            int idx = st.top();    // Index of element waiting for NGE
-            st.pop();              // Remove it from stack
-            result[idx] = current; // Assign current as NGE
+        while(!st.empty() && arr[st.top()] <= arr[idx]){
+            st.pop();
         }
 
-        // Push index into stack only during the first pass
-        // Second pass is just to resolve circular elements
-        if (i < n) {
-            st.push(i);
+        if(st.empty()){
+            result[idx] = -1;
+        }else{
+            result[idx] = arr[st.top()];
         }
+
+        st.push(idx);
     }
+
+
+
 
     return result;
 }
@@ -2364,28 +2414,73 @@ int main() {
 Dry Run:
 --------
 
-Array = [1, 2, 1]
-Double traversal = [1, 2, 1, 1, 2, 1]
+Array: arr = [1, 2, 1]
+Length: n = 3
+Result: [?, ?, ?]
+Stack: stores indices.
 
-i=0 → push index 0 (value 1)
+Step 1: 
 
-i=1 → current=2 > arr[0]=1 → result[0]=2 → push index 1
+i = 5 → idx = 5 % 3 = 2 → arr[2] = 1
 
-i=2 → current=1, not > 2 → push index 2
+Stack empty → no pop
+Stack empty → result[2] = -1
+Push 2 → stack = [2]
+Result: [?, ?, -1]
 
-i=3 → current=1, check index 2 → arr[2]=1 == 1 → nothing
+Step 2: 
 
-i=4 → current=2 > arr[2]=1 → result[2]=2, pop
+i = 4 → idx = 4 % 3 = 1 → arr[1] = 2
 
-i=5 → stop (don’t push because >n)
-
- Final Result = [2, -1, 2]
-
-
-
-
-
-
-
+Compare arr[st.top()] = arr[2] = 1
+1 <= 2 → pop 2 → stack = []
+Stack empty → result[1] = -1
+Push 1 → stack = [1]
+Result: [?, -1, -1]
 
 
+Step 3: 
+
+i = 3 → idx = 3 % 3 = 0 → arr[0] = 1
+
+Compare arr[st.top()] = arr[1] = 2
+2 > 1 → stop
+Stack not empty → result[0] = arr[1] = 2
+Push 0 → stack = [1, 0]
+Result: [2, -1, -1]
+
+
+Step 4: 
+
+i = 2 → idx = 2 % 3 = 2 → arr[2] = 1
+Compare arr[st.top()] = arr[0] = 1
+1 <= 1 → pop 0 → stack = [1]
+Compare arr[st.top()] = arr[1] = 2
+2 > 1 → stop
+Stack not empty → result[2] = arr[1] = 2
+Push 2 → stack = [1, 2]
+Result: [2, -1, 2]
+
+
+Step 5: 
+
+i = 1 → idx = 1 % 3 = 1 → arr[1] = 2
+Compare arr[st.top()] = arr[2] = 1
+1 <= 2 → pop 2 → stack = [1]
+Compare arr[st.top()] = arr[1] = 2
+2 <= 2 → pop 1 → stack = []
+Stack empty → result[1] = -1
+Push 1 → stack = [1]
+Result: [2, -1, 2]
+
+
+Step 6: 
+
+i = 0 → idx = 0 % 3 = 0 → arr[0] = 1
+Compare arr[st.top()] = arr[1] = 2
+2 > 1 → stop
+Stack not empty → result[0] = arr[1] = 2
+Push 0 → stack = [1, 0]
+Result: [2, -1, 2]
+
+Final Output: [2, -1, 2]
