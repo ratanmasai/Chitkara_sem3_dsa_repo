@@ -1,0 +1,2372 @@
+Queue DataStructure:
+====================
+
+The Ticket Counter Line: 
+
+--Imagine you’re at a movie ticket counter. People arrive one by one, stand in a line, and get served in the order they arrived. This is how a Queue works in programming.
+
+First Come, First Served (FCFS) – or in nerdy terms: FIFO (First In, First Out).
+
+Queue Introduction:
+-------------------
+
+A Queue is a linear data structure that works on FIFO principle.
+
+--The first element inserted is the first one removed.
+
+--Think of it as a line at the ticket counter: the first person in line gets their ticket first.
+
+
+
+Types of Queues:
+----------------
+
+Like ticket lines, queues also come in different varieties (some normal, some "special customers only"):
+
+1. Simple Queue – Normal line, FIFO.
+
+2. Circular Queue: It connects the end of the queue back to the front, like a loop. This helps reuse the empty spaces left behind when elements are removed from the front.
+
+Example:
+
+--Think of a merry-go-round in an amusement park:
+--People sit in seats one after another.
+--When the last seat is taken, the next person doesn’t wait for a “new” ride — they can sit in the first seat again (if it’s empty).
+--The queue “wraps around” instead of wasting seats.
+
+
+3. Priority Queue: VIPs who always get tickets before normal people. (Annoying in real life, useful in code!)
+
+--A Priority Queue is a special kind of queue where each element has a priority.
+--Unlike a normal queue (FIFO), the highest priority element is served first, regardless of when it entered.
+--If two elements have the same priority, then FIFO order applies among them.
+
+Example:
+
+Airport Check-in Counter:
+
+--Normal passengers stand in a regular queue.
+--Suddenly a VIP passenger (first-class ticket holder) comes. The staff calls them first, even though they just arrived.
+--That’s exactly how a Priority Queue works — priority matters more than arrival order.
+
+
+
+4. Deque (Double Ended Queue): A Deque (pronounced “deck”) allows insertion and deletion from both ends — front and rear.
+
+Example:
+
+A Bus with Two Doors:
+
+--Imagine a long bus with two doors:
+
+--People can get in from the front door or the rear door.
+
+--People can also exit from both doors.
+
+That’s a Deque: entry and exit possible at both ends.
+
+
+
+Core Operations of Queue:
+========================
+
+1. enqueue(item) → Add an item to the back of the line. O(1)
+
+2. dequeue() → Remove an item from the front of the line. O(1)
+
+3. peek()/front() → See who’s at the front without removing. O(1)
+
+4. back()/rear() → See who’s at the back without removing. O(1)
+
+5. isEmpty() → Is the queue empty? O(1)
+
+6. isFull() → (For fixed-size queues) Is the queue full? O(1)
+
+7. display() → To traverse from front to rear: Optional O(n)
+
+
+Note: queue supports only restricted operations: you cannot access elements in the middle.
+
+
+Queue Implementation Using Array: (Linear Way):
+------------------------------------------------
+
+Limitation: In this method, once rear reaches the end of the array, you cannot insert new elements even if there is space left at the beginning (because front moved forward). This leads to wasted space.
+
+
+#include <iostream>
+#define MAX 10
+using namespace std;
+
+
+class LinearQueue{
+
+    int front, rear, size;
+    int* arr;
+
+public:
+
+    //constructor
+    LinearQueue(){
+        size=0;
+        arr = new int[MAX];
+        front = 0;
+        rear = -1;
+    }
+
+    bool isEmpty(){
+        return size == 0;
+	//return front > rear 
+    }
+
+    bool isFull(){
+        return size == MAX;
+	//return rear == MAX-1;
+    }
+
+    void enqueue(int item){
+
+        if(isFull()){
+            cout<<"Queue is full \n";
+            return;
+        }
+
+        //adding new item
+        arr[++rear] = item;
+        size++;
+
+    }
+
+    int dequeue() {
+        if (isEmpty()) {
+            cout << "Queue is empty! \n";
+            return -1;
+        }
+
+        int dequeuedItem = arr[front];
+        cout << "Removed: " << dequeuedItem << endl;
+        //moved the front to the next position.
+        front++;
+        size--;
+
+        return dequeuedItem;
+
+    }
+
+    int getSize() {
+        return size;
+    }
+
+
+    //getting the front item
+    int peekFront(){
+        if(isEmpty()){
+            cout<<"Queue is empty \n";
+            return -1;
+        }
+        return arr[front];
+    }
+
+    //getting the rear item
+    int peekRear(){
+        if(isEmpty()){
+            cout<<"Queue is empty \n";
+            return -1;
+        }
+        return arr[rear];
+    }
+
+
+
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty!\n";
+            return;
+        }
+        cout << "Queue: ";
+        for (int i = front; i <= rear; i++) {
+            cout << arr[i] << " ";
+        }
+        cout << endl;
+    }
+
+
+
+
+};
+
+int main() {
+
+
+    LinearQueue q;
+
+    q.enqueue(10);
+    q.enqueue(20);
+    q.enqueue(30);
+    q.enqueue(40);
+    q.enqueue(50);
+
+    cout<<"Total elements are: " <<q.getSize() <<endl;
+    cout<<"Front element is: "<<q.peekFront() <<endl;
+    cout<<"Rear element is: "<<q.peekRear() <<endl;
+
+    q.dequeue();
+    q.dequeue();
+
+    cout<<"Total elements are: " <<q.getSize() <<endl;
+    cout<<"Front element is: "<<q.peekFront() <<endl;
+    cout<<"Rear element is: "<<q.peekRear() <<endl;
+
+    q.display();
+
+    return 0;
+}   
+
+
+
+
+Representation:
+---------------
+
+1. Initial state:
+
+MAX = 5
+Index:  0  1  2  3  4
+Queue: [ ][ ][ ][ ][ ]
+Front = 0
+Rear  = -1
+
+
+2. Enqueue 3 Elements
+
+enqueue(10)
+enqueue(20)
+enqueue(30)
+
+
+Index:  0   1   2   3  4
+Queue: [10][20][30][ ][ ]
+Front = 0
+Rear  = 2
+Size = 3
+
+
+3. Enqueue 40 and 50
+
+enqueue(40)
+enqueue(50)
+
+
+Index:   0   1   2   3   4
+Queue: [10][20][30][40][50]
+Front = 0
+Rear  = 4
+Size = 5
+
+
+4. Dequeue 2 Elements
+
+dequeue() → removes 10
+dequeue() → removes 20
+
+
+Index:  0   1  2   3   4
+Queue: [ ][ ][30][40][50]
+Front = 2
+Rear  = 4
+Size = 3
+
+
+Notice: There are empty spaces at indices 0 and 1, but rear is still at 4.
+
+5. Dequeue Remaining 3 Elements
+
+dequeue() → removes 30
+dequeue() → removes 40
+dequeue() → removes 50
+
+
+Index:  0  1  2  3  4
+Queue: [ ][ ][ ][ ][ ]
+Front = 5
+Rear  = 4
+Size = 0
+
+
+Queue is empty now.
+
+Problem: front = 5, rear = 4 → next enqueue will try arr[++rear] = newItem → rear = 5 → out of bounds! 
+
+Now if we try to enqueue again it will become invalid, it will give the undefined behavior or a runtime error.
+
+
+Key Takeaways:
+---------------
+
+--Linear queue cannot reuse freed spaces at the beginning.
+
+--After enough dequeues, rear eventually reaches MAX-1 → next enqueue causes undefined behavior.
+
+--To fix this, We can use Circular Queue (better approach) → rear wraps back to index 0.
+
+
+
+Using Circular Queue (better approach)
+---------------------------------------
+
+--Modify the enqueue, dequeue and the display function:
+
+
+code:
+------
+
+#include <iostream>
+#define MAX 5
+using namespace std;
+
+class CircularQueue {
+    int front, rear, size;
+    int* arr;
+
+public:
+    CircularQueue() {
+        front = 0;
+        rear = -1;
+        size = 0;
+        arr = new int[MAX];
+    }
+
+    bool isEmpty() { 
+	return size == 0; 
+    }
+
+    bool isFull() { 
+	return size == MAX; 
+    }
+
+    void enqueue(int item) {
+        if (isFull()) {
+            cout << "Queue is full\n";
+            return;
+        }
+
+        // Wrap rear around using modulo
+	// Calculate the new rear position in a circular way
+        rear = (rear + 1) % MAX;
+        arr[rear] = item;
+        size++;
+    }
+
+    int dequeue() {
+        if (isEmpty()) {
+            cout << "Queue is empty!\n";
+            return -1;
+        }
+        int val = arr[front];
+
+	// Move front to the next position in a circular way
+        front = (front + 1) % MAX; // wrap front
+        size--;
+        cout << "Removed: " << val << endl;
+        return val;
+    }
+
+    int peekFront() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return -1;
+        }
+        return arr[front];
+    }
+
+    int peekRear() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return -1;
+        }
+        return arr[rear];
+    }
+
+    int getSize() { return size; }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty!\n";
+            return;
+        }
+        cout << "Queue: ";
+        for (int i = 0; i < size; i++) {
+
+	    //Print elements from front, wrapping around the array if necessary
+            int index = (front + i) % MAX;
+            cout << arr[index] << " ";
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    CircularQueue q;
+
+    q.enqueue(10);
+    q.enqueue(20);
+    q.enqueue(30);
+    q.enqueue(40);
+    q.enqueue(50);
+
+    q.display();
+
+    q.dequeue();
+    q.dequeue();
+
+    q.display();
+
+    // Now enqueue new elements in the freed spaces
+    q.enqueue(60);
+    q.enqueue(70);
+
+    q.display(); // All elements fit correctly
+
+    return 0;
+}
+
+
+
+DRY RUN: 
+-------
+
+MAX = 5
+
+step1: Initial state:
+
+index:        0  1  2  3  4              
+Queue Array: [ ][ ][ ][ ][ ]
+Front = 0
+Rear = -1
+Size = 0
+
+
+Step 2: Enqueue 10, 20, 30
+
+enqueue(10)
+enqueue(20)
+enqueue(30)
+
+Index:	       0  1   2   3  4
+Queue Array: [10][20][30][ ][ ]
+Front = 0
+Rear = 2
+Size = 3
+
+Step 3: Dequeue 2 elements
+
+dequeue() → removes 10
+dequeue() → removes 20
+
+index:        0  1   2  3  4
+Queue Array: [ ][ ][30][ ][ ]
+Front = 2
+Rear = 2
+Size = 1
+
+--front has moved to index 2.
+--Index 0 and 1 are now free and ready to be reused.
+
+
+Step 4: Enqueue 40, 50, 60
+
+enqueue(40)
+enqueue(50)
+enqueue(60)
+
+--rear wraps around using (rear + 1) % MAX
+
+Enqueue 40 → rear = (2+1)%5 = 3
+
+Enqueue 50 → rear = (3+1)%5 = 4
+
+Enqueue 60 → rear = (4+1)%5 = 0 (wraps to beginning!)
+
+
+Index:        0   1  2   3   4
+Queue Array: [60][ ][30][40][50]
+Front = 2
+Rear = 0
+Size = 4
+
+The logical queue order is front → rear: 30, 40, 50, 60.
+
+
+Notice: Index 0 (60) is reused instead of wasting space.
+We can continue enqueue/dequeue until size = MAX.
+
+
+
+Student Task: Implementing the Queue using vector.
+
+
+Queue Using Linked List:
+========================
+
+--A Queue is a linear data structure following FIFO (First In, First Out).
+
+Using a Linked List:
+
+--Each element is a node containing:
+
+1. data → value of the element.
+
+2. next → pointer to the next node.
+
+--We maintain two pointers:
+
+front → points to the first node (head of queue, for dequeue)
+
+rear → points to the last node (tail of queue, for enqueue)
+
+
+
+Representation:
+---------------
+
+ front				       rear
+[10|next] -> [20|next] -> [30|next] -> NULL 
+
+
+Operations:
+-----------
+
+1. Enqueue (Insert at rear)
+
+--Create a new node.
+
+--If queue is empty: front = rear = newNode.
+
+--Else: rear->next = newNode; rear = newNode.
+
+--Time Complexity: O(1)
+
+
+2. Dequeue (Remove from front)
+
+--If queue is empty → underflow.
+
+--Else: remove node at front, move front to front->next.
+
+--If queue becomes empty after dequeue → rear = NULL.
+
+--Time Complexity: O(1)
+
+3. PeekFront
+
+Return front->data.
+
+Time Complexity: O(1)
+
+
+4. PeekRront
+
+Return rear->data.
+
+Time Complexity: O(1)
+
+
+5. isEmpty()
+
+Check if front == NULL.
+
+Time Complexity: O(1)
+
+
+6. Display
+
+Traverse from front to rear printing nodes.
+
+Time Complexity: O(n)
+
+
+
+
+Advantages of Linked List Implementation:
+-----------------------------------------
+
+1. Dynamic Size: No fixed size. Queue can grow and shrink dynamically.
+
+2. Efficient Memory Usage: No wasted space like in a linear array queue.
+
+3. No Overflow (unless memory exhausted): Unlike array-based queues which can overflow if full.
+
+
+Disadvantages:
+---------------
+
+1. Extra Memory: Each node needs extra memory for the next pointer.
+
+2. Cache Unfriendliness: Nodes may be scattered in memory → slower than arrays in practice.
+
+3. Slightly More Complex Implementation: Need to manage pointers carefully (front, rear).
+
+
+code:
+-----
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;     // Value of the node
+    Node* next;   // Pointer to next node
+
+    Node(int data) {
+        this->data = data;
+        this->next = NULL;
+    }
+};
+
+class LinkedListQueue {
+
+private:
+    Node* front;  // Points to first element (to dequeue)
+    Node* rear;   // Points to last element (to enqueue)
+    int size;
+
+public:
+
+    // Constructor: initialize empty queue
+    LinkedListQueue() {
+   
+        front = rear = NULL;
+        size=0;
+    }
+
+    // Check if queue is empty
+    bool isEmpty() {
+        return front == NULL;
+    }
+
+    // Add element at rear
+    void enqueue(int item) {
+        Node* newNode = new Node(item);
+
+        if (rear == NULL) {
+            // Queue is empty, front and rear point to new node
+            front = rear = newNode;
+        } else {
+            // Link new node at the end and update rear
+            rear->next = newNode;
+            rear = newNode;
+        }
+        size++;
+        cout << "Enqueued: " << item << endl;
+    }
+
+    // Remove element from front
+    int dequeue() {
+
+        if (isEmpty()) {
+            cout << "Queue is empty! Cannot dequeue.\n";
+            return -1;
+        }
+
+
+
+        Node* temp = front;
+        int val = temp->data;
+
+        // Move front to next node
+        front = front->next;
+
+        // If queue becomes empty, update rear to NULL
+        if (front == NULL)
+            rear = NULL;
+
+        delete temp;
+        size--;
+        cout << "Dequeued: " << val << endl;
+        return val;
+    }
+
+    // Get front element without removing
+    int peekFront() {
+        if (isEmpty()) {
+            cout << "Queue is empty!\n";
+            return -1;
+        }
+        return front->data;
+    }
+
+    // Get rear element without removing
+    int peekRear() {
+        if (isEmpty()) {
+            cout << "Queue is empty!\n";
+            return -1;
+        }
+        return rear->data;
+    }
+
+    int getSize(){
+        return size;
+    }
+
+    // Display all elements
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty!\n";
+            return;
+        }
+
+        cout << "Queue elements: ";
+        Node* temp = front;
+        while (temp != NULL) {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+// Driver code
+int main() {
+    LinkedListQueue q;
+
+    q.enqueue(10);
+    q.enqueue(20);
+    q.enqueue(30);
+    q.display();
+
+    q.dequeue();
+    q.display();
+
+    q.enqueue(40);
+    q.enqueue(50);
+    q.display();
+
+    cout << "Front element: " << q.peekFront() << endl;
+    cout << "Rear element: " << q.peekRear() << endl;
+
+    q.dequeue();
+    q.dequeue();
+    q.dequeue();
+    q.dequeue(); // Queue will become empty
+    q.display();
+
+    return 0;
+}
+
+
+
+Note: Implement a destructor to free memory when queue object is destroyed:
+
+~LinkedListQueue() {
+    while (!isEmpty()) {
+        dequeue();
+    }
+}
+
+
+
+
+STL Queue in C++:
+=================
+
+
+C++ STL library provides the readymade available queue container which we can include at header and use it to solve the FIFO requirements in our application.
+
+#include <queue>
+
+
+queue<int> q;         // Queue of integers
+queue<string> qStr;   // Queue of strings
+
+
+Common Member Functions:
+------------------------
+
+1. push(value): Adds element at the rear of the queue
+
+2. pop(): Removes element from the front of the queue
+
+3. front(): Returns the front element (without removing)
+
+4. back(): Returns the rear element (without removing)
+
+5. empty(): Returns true if the queue is empty
+
+6. size(): Returns the number of elements in the queue
+
+
+
+Example:
+-------
+
+#include <iostream>
+#include <queue>
+using namespace std;
+
+int main() {
+    queue<int> q;
+
+    // Insert elements
+    q.push(10);
+    q.push(20);
+    q.push(30);
+
+    cout << "Front: " << q.front() << ", Rear: " << q.back() << endl; // 10, 30
+    cout << "Size: " << q.size() << endl;// 3
+
+    q.pop(); // Remove front
+    cout << "After pop, Front: " << q.front() << endl;// 20
+
+    // Display all elements
+    cout << "Elements: ";
+    while (!q.empty()) {
+        cout << q.front() << " ";
+        q.pop();
+    }
+    cout << endl;
+
+    return 0;
+}
+
+
+
+
+Deque (Double-Ended Queue) in C++
+==================================
+
+
+Introduction:
+------------
+
+--A deque (pronounced “deck”) is a double-ended queue.
+
+--Unlike a normal queue (FIFO), a deque allows insertion and deletion at both ends — front and rear.
+
+--It combines the features of a stack (LIFO) and a queue (FIFO).
+
+
+Analogy:
+
+--Think of a deque like a train with doors at both ends:
+--Passengers can enter from the front or rear.
+--Passengers can exit from the front or rear.
+
+--Regular queue = only enter rear, exit front.
++
+--Stack = only enter and exit from one end.
+
+
+Operations:
+----------
+
+1. Insert at front → insertFront(val)
+
+--Update front = (front - 1 + MAX) % MAX  //Move the front backward
+--Add element at front
+--Increment size
+
+2. Insert at rear → insertRear(val)
+
+--Update rear = (rear + 1) % MAX //move the rear forward
+--Add element at rear
+--Increment size
+
+3. Delete from front → deleteFront()
+
+--Remove element at front
+--Update front = (front + 1) % MAX
+--Decrement size
+
+4. Delete from rear → deleteRear()
+
+--Remove element at rear
+--Update rear = (rear - 1 + MAX) % MAX
+--Decrement size
+
+5. Peek front / rear → peekFront(), peekRear()
+
+--Return the element at front or rear without removing
+
+
+6. Display → traverse elements from front to rear circularly
+
+
+Deque: using array:
+-------------------
+
+code:
+-----
+#include <iostream>
+#define MAX 5
+using namespace std;
+
+class CircularDeque {
+    int front, rear, size;
+    int* arr;
+
+public:
+    CircularDeque() {
+        front = 0;   // start at 0
+        rear = -1;   // nothing yet
+        size = 0;
+        arr = new int[MAX];
+    }
+
+    bool isEmpty() { 
+        return size == 0; 
+    }
+
+    bool isFull() { 
+        return size == MAX; 
+    }
+
+    // Insert at rear
+    void insertRear(int item) {
+        if (isFull()) {
+            cout << "Deque is full\n";
+            return;
+        }
+
+        rear = (rear + 1) % MAX;   // move rear circularly
+        arr[rear] = item;
+        size++;
+    }
+
+    // Insert at front
+    void insertFront(int item) {
+        if (isFull()) {
+            cout << "Deque is full\n";
+            return;
+        }
+
+        front = (front - 1 + MAX) % MAX;  // wrap backwards
+        arr[front] = item;
+        size++;
+    }
+
+    // Delete from front
+    int deleteFront() {
+        if (isEmpty()) {
+            cout << "Deque is empty!\n";
+            return -1;
+        }
+
+        int val = arr[front];
+        front = (front + 1) % MAX;  // move forward
+        size--;
+
+        cout << "Removed from front: " << val << endl;
+        return val;
+    }
+
+    // Delete from rear
+    int deleteRear() {
+        if (isEmpty()) {
+            cout << "Deque is empty!\n";
+            return -1;
+        }
+
+        int val = arr[rear];
+        rear = (rear - 1 + MAX) % MAX;  // move backwards
+        size--;
+
+        cout << "Removed from rear: " << val << endl;
+        return val;
+    }
+
+    int peekFront() {
+        if (isEmpty()) {
+            cout << "Deque is empty\n";
+            return -1;
+        }
+        return arr[front];
+    }
+
+    int peekRear() {
+        if (isEmpty()) {
+            cout << "Deque is empty\n";
+            return -1;
+        }
+        return arr[rear];
+    }
+
+    int getSize() { 
+        return size; 
+    }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Deque is empty!\n";
+            return;
+        }
+        cout << "Deque: ";
+        for (int i = 0; i < size; i++) {
+            int index = (front + i) % MAX;
+            cout << arr[index] << " ";
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    CircularDeque dq;
+
+    dq.insertRear(10);
+    dq.insertRear(20);
+    dq.insertRear(30);
+    dq.insertFront(5);
+    dq.insertFront(1);
+
+    dq.display(); // 1 5 10 20 30
+
+    dq.deleteFront(); // removes 1
+    dq.deleteRear();  // removes 30
+
+    dq.display(); // 5 10 20
+
+    dq.insertRear(40);
+    dq.insertFront(2);
+
+    dq.display(); // 2 5 10 20 40
+
+    return 0;
+}
+
+
+DRY RUN:
+--------
+
+Initial state:
+
+Deque: [ [], [], [], [], [] ]
+front = -1, rear = -1, size = 0
+
+1.insertFront(5)
+
+isEmpty() → true → front = rear = 0
+arr[front] = 5
+size = 1
+
+Deque: [ [5], [], [], [], [] ]
+front = 0, rear = 0, size = 1
+
+
+2. insertRear(10)
+
+isFull() → false
+rear = (rear + 1) % MAX = (0 + 1) % 5 = 1
+arr[rear] = 10
+size = 2
+
+Deque: [ [5], [10], [], [], [] ]
+front = 0, rear = 1, size = 2
+
+Deque order: front → rear = 5 10
+
+3. insertFront(2)
+
+front = (front - 1 + MAX) % MAX = (0 - 1 + 5) % 5 = 4
+arr[front] = 2
+size = 3
+
+Deque: [ [5], [10], [], [], [2] ]
+front = 4, rear = 1, size = 3
+
+Deque order: front → rear = 2 5 10
+
+Calculation for display:
+
+i=0 → (front + 0) % 5 = 4 → 2
+
+i=1 → (4 + 1) % 5 = 0 → 5
+
+i=2 → (4 + 2) % 5 = 1 → 10
+
+
+4. insertRear(20)
+
+rear = (1 + 1) % 5 = 2
+arr[rear] = 20
+size = 4
+
+Deque: [ [5], [10], [20], [], [2] ]
+front = 4, rear = 2, size = 4
+
+Deque order: front → rear = 2 5 10 20
+
+
+5. insertFront(1)
+
+front = (4 - 1 + 5) % 5 = 3
+arr[front] = 1
+size = 5 → deque now full
+
+Deque: [ [5], [10], [20], [1], [2] ]
+front = 3, rear = 2, size = 5
+
+Deque order: front → rear = 1 2 5 10 20
+
+
+6. insertRear(30)
+
+isFull() → true
+Output: "Deque is full"
+No change in deque.
+
+
+
+Custom Deque Implementation using Doubly Linked List:
+====================================================
+
+Note: already covered in Doubly Linked List notes.
+
+
+#include <iostream>
+using namespace std;
+
+// Node class for doubly linked list
+class Node {
+public:
+    int data;
+    Node* next;
+    Node* prev;
+
+    Node(int data) {
+        this->data = data;
+        this->next = NULL;
+        this->prev = NULL;
+    }
+};
+
+// Deque using doubly linked list
+class LinkedListDeque {
+private:
+    Node* front; // front of deque
+    Node* rear;  // rear of deque
+    int size;    // number of elements
+
+public:
+    LinkedListDeque() {
+        front = rear = NULL;
+        size = 0;
+    }
+
+    bool isEmpty() { 
+	return front == NULL; 
+     }
+    int getSize() {
+	 return size; 
+     }
+
+    // Insert at front
+    void insertFront(int val) {
+        Node* newNode = new Node(val);
+        if (isEmpty()) {
+            front = rear = newNode;
+        } else {
+            newNode->next = front;
+            front->prev = newNode;
+            front = newNode;
+        }
+        size++;
+        cout << "Inserted at front: " << val << endl;
+    }
+
+    // Insert at rear
+    void insertRear(int val) {
+        Node* newNode = new Node(val);
+     
+       if (isEmpty()) {
+            front = rear = newNode;
+        } else {
+            rear->next = newNode;
+            newNode->prev = rear;
+            rear = newNode;
+        }
+        size++;
+        cout << "Inserted at rear: " << val << endl;
+    }
+
+    // Delete from front
+    int deleteFront() {
+        if (isEmpty()) {
+            cout << "Deque is empty! Cannot delete front.\n";
+            return -1;
+        }
+
+        Node* current = front;
+        int val = current->data;
+
+        if (front == rear) {  // only one node
+            front = rear = NULL;
+        } else {
+            front = front->next;
+            front->prev = NULL;
+        }
+
+        delete current;
+        size--;
+        cout << "Deleted from front: " << val << endl;
+        return val;
+    }
+
+    // Delete from rear
+    int deleteRear() {
+        if (isEmpty()) {
+            cout << "Deque is empty! Cannot delete rear.\n";
+            return -1;
+        }
+
+        Node* current = rear;
+        int val = current->data;
+
+        if (front == rear) {  // only one node
+            front = rear = NULL;
+        } else {
+            rear = rear->prev;
+            rear->next = NULL;
+        }
+
+        delete current;
+        size--;
+        cout << "Deleted from rear: " << val << endl;
+        return val;
+    }
+
+    // Peek front
+    int peekFront() {
+        if (isEmpty()) {
+            cout << "Deque is empty!\n";
+            return -1;
+        }
+        return front->data;
+    }
+
+    // Peek rear
+    int peekRear() {
+        if (isEmpty()) {
+            cout << "Deque is empty!\n";
+            return -1;
+        }
+        return rear->data;
+    }
+
+    // Display deque
+    void display() {
+        if (isEmpty()) {
+            cout << "Deque is empty!\n";
+            return;
+        }
+        cout << "Deque elements: ";
+        Node* temp = front;
+        while (temp != NULL) {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+
+int main() {
+    LinkedListDeque dq;
+
+    dq.insertRear(10);
+    dq.insertRear(20);
+    dq.insertFront(5);
+    dq.insertFront(2);
+    dq.display();  // 2 5 10 20
+
+    dq.deleteFront(); // removes 2
+    dq.deleteRear();  // removes 20
+    dq.display();     // 5 10
+
+    cout << "Front element: " << dq.peekFront() << endl; // 5
+    cout << "Rear element: " << dq.peekRear() << endl;   // 10
+
+    dq.insertRear(30);
+    dq.insertFront(1);
+    dq.display(); // 1 5 10 30
+
+    return 0;
+}
+
+
+
+STL Deque in C++:
+==================
+
+#include <deque>
+using namespace std;
+
+deque<int> dq;        // integer deque
+deque<string> dqStr;  // string deque
+
+
+Common Operations:
+-------------------
+
+
+1. push_back(value): Adds element to the rear (like queue::push)
+
+2. push_front(value): Adds element to the front
+
+3. pop_back(): Removes element from the rear
+
+4. pop_front(): Removes element from the front (like queue::pop)
+
+5. front(): Returns the first element
+
+6. back(): Returns the last element
+
+7. empty(): Returns true if deque is empty
+
+8. size(): Returns number of elements
+
+
+Example:
+--------
+
+#include <iostream>
+#include <deque>
+using namespace std;
+
+int main() {
+    deque<int> dq;
+
+    // Insert elements at rear
+    dq.push_back(10);
+    dq.push_back(20);
+    dq.push_back(30);
+
+    // Insert elements at front
+    dq.push_front(5);
+    dq.push_front(2);
+
+    cout << "Front: " << dq.front() << ", Rear: " << dq.back() << endl;
+    cout << "Size: " << dq.size() << endl;
+
+    // Remove elements
+    dq.pop_front(); // removes 2
+    dq.pop_back();  // removes 30
+
+    cout << "After pop operations, elements: ";
+    for (int x : dq) {
+        cout << x << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
+
+
+Priority Queue:
+==============
+
+Introduction:
+-------------
+
+
+--A Priority Queue (PQ) is a special type of queue in which each element has a priority associated with it.
+
+--Elements with higher priority are served before elements with lower priority, regardless of their insertion order.
+
+--Unlike a normal queue (FIFO), a priority queue does not follow strict arrival order.
+
+
+Analogy:
+
+
+Think of a hospital emergency room:
+
+--Patients come in, but doctors treat critical cases first, not necessarily the ones who arrived first.
+
+Example:
+
+--Patient A (minor cut) arrives → low priority
+
+--Patient B (heart attack) arrives → high priority
+
+--Patient B is treated before Patient A, even if Patient A came first.
+
+This is exactly how a priority queue works.
+
+
+
+Types of Priority Queues:
+-------------------------
+
+
+1. Max-Priority Queue (Max-Heap)
+
+--The element with the highest priority is dequeued first.
+
+--Analogy: Emergency room where the most critical patient is treated first.
+
+2. Min-Priority Queue (Min-Heap)
+
+--The element with the lowest priority is dequeued first.
+
+--Analogy: Task scheduler that executes the shortest/least important tasks first.
+
+
+
+Priority Queue Operations:
+--------------------------
+
+1. Insertion (enqueue with priority)
+
+--Add a new element with its priority.
+--Depending on the implementation, the queue may reorder itself.
+
+Example:
+
+A : Priority 2
+B : Priority 5
+C : Priority 1
+
+After insertion in a max-priority queue, the order of serving: B → A → C
+
+
+
+2. Deletion (dequeue the highest priority)
+
+--Remove the element with the highest priority.
+
+--In case of a tie (same priority), different implementations may choose:
+
+-The element that arrived first (stable PQ)
+-Any element arbitrarily
+
+
+3. Peek / Top:
+
+--View the element with highest priority without removing it.
+
+4. Check Empty / Size:
+
+
+--isEmpty() → returns true if the queue has no elements
+
+--size() → returns the number of elements
+
+
+
+Example: Scenario: Emergency Room Queue:
+----------------------------------------
+
+--Patients arrive with severity as priority (higher number → more severe):
+
+
+Raj: 	Priority 2
+Sunil:	Priority 5
+Rahul:	Priority 1
+Dinesh:	Priority 3
+
+Steps:
+
+Insert Raj (2) → queue: [Raj]
+
+Insert Sunil (5) → queue: [Sunil, Raj] (Sunil has higher priority)
+
+Insert Rahul (1) → queue: [Sunil, Raj, Rahul]
+
+Insert Dinesh (3) → queue: [Sunil, Raj, Rahul, Dinesh]
+
+Dequeue: Sunil (priority 5) goes first
+
+Next Dequeue: Dinesh (priority 3) goes next
+
+--This clearly demonstrates how priority matters more than arrival order.
+
+
+
+
+
+Priority Queue using array:
+---------------------------
+
+
+Idea
+
+--Each element has a value and a priority.
+
+For enqueue:
+
+--Insert element at the end.
+
+For dequeue:
+
+--Find element with highest priority, remove it, and shift elements left.
+
+--Simple but dequeue is O(n) because we have to search for the max priority.
+
+
+code:
+-------
+
+
+#include <iostream>
+using namespace std;
+
+#define MAX 100
+
+struct Element {
+    int value;
+    int priority;
+};
+
+class ArrayPriorityQueue {
+    Element arr[MAX];
+    int size;
+
+public:
+    ArrayPriorityQueue() {
+        size = 0;
+    }
+
+    bool isEmpty() {
+        return size == 0;
+    }
+
+    bool isFull() {
+        return size == MAX;
+    }
+
+    void enqueue(int val, int prio) {
+        if (isFull()) {
+            cout << "Queue is full\n";
+            return;
+        }
+        arr[size].value = val;
+        arr[size].priority = prio;
+        size++;
+        cout << "Inserted: " << val << " with priority " << prio << endl;
+    }
+
+    void dequeue() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return;
+        }
+        // Find index of max priority
+        int maxIndex = 0;
+        for (int i = 1; i < size; i++) {
+            if (arr[i].priority > arr[maxIndex].priority)
+                maxIndex = i;
+        }
+
+        cout << "Dequeued: " << arr[maxIndex].value << " with priority " << arr[maxIndex].priority << endl;
+
+        // Shift elements
+        for (int i = maxIndex; i < size - 1; i++) {
+            arr[i] = arr[i + 1];
+        }
+        size--;
+    }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return;
+        }
+        cout << "Queue elements: ";
+        for (int i = 0; i < size; i++) {
+            cout << "(" << arr[i].value << "," << arr[i].priority << ") ";
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    ArrayPriorityQueue pq;
+
+    pq.enqueue(10, 2);
+    pq.enqueue(20, 5);
+    pq.enqueue(30, 3);
+    pq.display();
+
+    pq.dequeue();
+    pq.display();
+
+    pq.dequeue();
+    pq.display();
+
+    return 0;
+}
+
+
+
+Priority Queue Using Linked List:
+---------------------------------
+
+Idea
+
+--Each node stores a value and priority.
+
+--Maintain the list sorted by priority (descending for max-priority).
+
+--Enqueue is O(n) (find the right position), dequeue is O(1) (remove head).
+
+
+
+Code:
+-----
+
+#include <iostream>
+using namespace std;
+
+// Node class for linked list
+class Node {
+public:
+    int value;
+    int priority;
+    Node* next;
+
+    Node(int v, int p) {
+        value = v;
+        priority = p;
+        next = nullptr;
+    }
+};
+
+// Priority Queue class
+class LinkedListPriorityQueue {
+private:
+    Node* head; // points to highest priority element
+
+public:
+    LinkedListPriorityQueue() {
+        head = nullptr;
+    }
+
+    bool isEmpty() {
+        return head == nullptr;
+    }
+
+    // Enqueue based on priority
+    void enqueue(int val, int prio) {
+        Node* newNode = new Node(val, prio);
+
+        // If empty or new node has higher priority than head
+        if (!head || prio > head->priority) {
+            newNode->next = head;
+            head = newNode;
+        } else {
+            Node* temp = head;
+            // Traverse to find correct position
+            while (temp->next && temp->next->priority >= prio) {
+                temp = temp->next;
+            }
+            newNode->next = temp->next;
+            temp->next = newNode;
+        }
+
+        cout << "Inserted: " << val << " with priority " << prio << endl;
+    }
+
+    // Dequeue (remove highest priority)
+    void dequeue() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return;
+        }
+
+        Node* temp = head;
+        cout << "Dequeued: " << temp->value << " with priority " << temp->priority << endl;
+        head = head->next;
+        delete temp;
+    }
+
+    // Display queue
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return;
+        }
+
+        Node* temp = head;
+        cout << "Queue elements: ";
+        while (temp) {
+            cout << "(" << temp->value << "," << temp->priority << ") ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+// Main function to test
+int main() {
+    LinkedListPriorityQueue pq;
+
+    pq.enqueue(10, 2);
+    pq.enqueue(20, 5);
+    pq.enqueue(30, 3);
+    pq.enqueue(25, 5); // same priority as 20
+    pq.display();
+
+    pq.dequeue();
+    pq.display();
+
+    pq.dequeue();
+    pq.display();
+
+    pq.dequeue();
+    pq.display();
+
+    pq.dequeue();
+    pq.display();
+
+    pq.dequeue(); // queue empty check
+
+    return 0;
+}
+
+
+
+Comparison: Array vs Linked List:
+----------------------------------
+
+Feature		  			Array					Linked List
+
+1. Insert				O(1) unsorted / O(n) sorted		O(n) (to maintain sorted order)
+2. Delete (max priority)		O(n)					O(1) (head removal)
+3. Memory				Fixed size (MAX)			Dynamic size
+4. Complexity				Simple, fast enqueue if unsorted	Slightly slower enqueue, fast dequeue
+
+
+
+Priority Queue in C++ (Using STL):
+----------------------------------
+
+#include <iostream>
+#include <queue>
+using namespace std;
+
+int main() {
+    // Max Priority Queue (default)
+    priority_queue<int> pq;
+
+    pq.push(10);
+    pq.push(30);
+    pq.push(20);
+    pq.push(5);
+
+    cout << "Max-Priority Queue: ";
+    while (!pq.empty()) {
+        cout << pq.top() << " "; // highest priority first
+        pq.pop();
+    }
+    cout << endl;
+
+    // Min Priority Queue
+    priority_queue<int, vector<int>, greater<int>> minPQ;
+
+    minPQ.push(10);
+    minPQ.push(30);
+    minPQ.push(20);
+    minPQ.push(5);
+
+    cout << "Min-Priority Queue: ";
+    while (!minPQ.empty()) {
+        cout << minPQ.top() << " "; // lowest priority first
+        minPQ.pop();
+    }
+    cout << endl;
+
+    return 0;
+}
+
+
+
+Explaination: 
+-------------
+
+priority_queue<int, vector<int>, greater<int>> minPQ;
+
+
+--Here, we are creating a min-priority queue. with 3 template parameters:
+
+1. int → The type of elements stored in the priority queue. Here, it stores integers.
+
+2. vector<int> → The underlying container used to store elements.
+
+--By default, priority_queue uses a vector as the storage, we could also use our own container.
+
+3. greater<int> → The comparison function (functor) that determines priority.
+
+--By default, priority_queue in C++ is a max-heap (largest element has highest priority).
+
+--Using greater<int> turns it into a min-heap, so smallest element has highest priority.
+
+
+Note: inbuilt priority_queue of STL uses the heap data-structure, to optamize the time complexity with O(log n).
+
+--The heap automatically reorders elements to satisfy min-heap property.
+
+
+Customizing the priority:
+-------------------------
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+// Patient class
+class Patient {
+public:
+    string name;
+    int severity; // higher = more critical
+    int arrivalTime;
+
+    Patient(string n, int s, int t){
+	name = n;
+	severity = s;
+	arrivalTime = t;
+    }
+};
+
+// Custom comparator for priority queue
+class ComparePatient {
+
+public:
+
+    bool operator()(const Patient& p1, const Patient& p2) {
+        // Higher severity first
+        if (p1.severity != p2.severity)
+            return p1.severity < p2.severity; // max-heap
+        else
+            return p1.arrivalTime > p2.arrivalTime; // earlier arrival first
+    }
+};
+
+int main() {
+    priority_queue<Patient, vector<Patient>, ComparePatient> erQueue;
+
+    // Adding patients (name, severity, arrival time)
+    erQueue.push(Patient("Raj", 2, 1));
+    erQueue.push(Patient("Sunil", 5, 2));
+    erQueue.push(Patient("Rahul", 5, 1));
+    erQueue.push(Patient("Dinesh", 3, 3));
+
+    cout << "Emergency Room Treatment Order:" << endl;
+    while (!erQueue.empty()) {
+        Patient p = erQueue.top();
+        cout << p.name << " (Severity: " << p.severity 
+             << ", Arrival Time: " << p.arrivalTime << ")" << endl;
+        erQueue.pop();
+    }
+
+    return 0;
+}
+
+
+Queue & Stack Crossover Problems:
+=================================
+
+1. Implement a Queue using Stacks
+2. Implement a Stack using Queue
+
+
+
+Implement a Queue using Stacks:
+-------------------------------
+
+Problem:
+
+Queue rule → FIFO (First In, First Out)
+
+Stack rule → LIFO (Last In, First Out)
+
+--We need to simulate queue behavior using one or two stacks.
+
+
+
+Analogy:
+
+--Imagine you have two trays (stacks) in the canteen.
+
+--You put plates in one tray (push).
+
+--To serve in queue order (first plate should come out first), you might need to transfer plates between trays to reverse the order.
+
+
+Approaches:
+------------
+
+
+There are 2 common methods:
+
+Method 1: Make Enqueue Costly (Insertion slow, Deletion fast)
+---------
+
+--Always maintain the newest element at the bottom of the main stack.
+
+For every enqueue:
+
+1. Move all elements from stack1 → stack2
+
+2. Push new element into stack1
+
+3. Move everything back from stack2 → stack1
+
+--Now stack1.top() will always be the front of the queue.
+
+--Dequeue is just pop() from stack1 (fast).
+
+
+Time complexity: 
+
+O(n) for enqueue
+O(1) for dequeue 
+
+Space complexity: O(n)
+
+
+Code:
+------
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+class QueueUsingStacks {
+    stack<int> s1, s2;
+
+
+public:
+
+    void enqueue(int x) {
+        // Step 1: Move all from s1 to s2
+        while (!s1.empty()) {
+            s2.push(s1.top());
+            s1.pop();
+        }
+
+        // Step 2: Push new element into s1
+        s1.push(x);
+
+        // Step 3: Move everything back
+        while (!s2.empty()) {
+            s1.push(s2.top());
+            s2.pop();
+        }
+    }
+
+    int dequeue() {
+        if (s1.empty()) {
+            cout << "Queue is empty\n";
+            return -1;
+        }
+        int val = s1.top();
+        s1.pop();
+        return val;
+    }
+
+    bool empty() {
+        return s1.empty();
+    }
+};
+
+int main() {
+    QueueUsingStacks q;
+    q.enqueue(10);
+    q.enqueue(20);
+    q.enqueue(30);
+
+    cout << q.dequeue() << endl; // 10
+    cout << q.dequeue() << endl; // 20
+    cout << q.dequeue() << endl; // 30
+}
+
+
+
+Method 2: Make Dequeue Costly (Insertion fast, Deletion slow)
+---------
+
+--Push new elements directly into stack1 (fast).
+
+--When dequeue is required:
+
+1. If stack2 is empty → move all from stack1 to stack2 (reverses order).
+
+2. Pop from stack2.
+
+Ensures FIFO order.
+
+--This method is usually preferred in practice because enqueue is O(1).
+
+
+Code:
+-----
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+class QueueUsingStacks {
+    stack<int> stack1, stack2;
+
+public:
+    // Enqueue operation (fast)
+    void enqueue(int x) {
+        stack1.push(x);
+    }
+
+    // Dequeue operation (slow if stack2 empty)
+    int dequeue() {
+        if (stack2.empty()) {
+            if (stack1.empty()) {
+                cout << "Queue is empty\n";
+                return -1;
+            }
+            // Move all elements from stack1 to stack2
+            while (!stack1.empty()) {
+                stack2.push(stack1.top());
+                stack1.pop();
+            }
+        }
+        int val = stack2.top();
+        stack2.pop();
+        return val;
+    }
+
+    bool empty() {
+        return stack1.empty() && stack2.empty();
+    }
+};
+
+int main() {
+    QueueUsingStacks q;
+    q.enqueue(10);
+    q.enqueue(20);
+    q.enqueue(30);
+
+    cout << q.dequeue() << endl; // 10
+    cout << q.dequeue() << endl; // 20
+
+    q.enqueue(40);
+    cout << q.dequeue() << endl; // 30
+    cout << q.dequeue() << endl; // 40
+}
+
+
+
+
+Time complexity: 
+
+O(1) for enqueue
+O(n) for dequeue 
+
+Space complexity: O(n)
+
+
+
+
+
+Implement a Stack using Queues:
+--------------------------------
+
+Problem:
+
+Stack rule → LIFO (Last In, First Out)
+
+Queue rule → FIFO (First In, First Out)
+
+--We need to simulate stack behavior using one or two queues.
+
+
+Analogy:
+--------
+
+--Imagine people standing in a line (queue).
+
+--Normally, first person is served first (FIFO).
+
+--But if you want stack-like behavior (last person served first), you need to rearrange the line after each insertion.
+
+
+
+Approaches:
+-----------
+
+
+1. Push costly (Insertion slow, Deletion fast)
+
+2. Pop costly (Insertion fast, Deletion slow)
+
+
+
+Method 1: Push Costly
+---------------------
+
+--Always keep the newest element at the front of the queue.
+
+--For every push:
+
+1. Enqueue the new element to q2.
+
+2. Move all elements of q1 into q2.
+
+3. Swap names of q1 and q2. (q1 now points to the data that was in q2 and q2 now points to the old q1)
+
+--Now q1.front() is always the top of stack.
+
+--Pop is just dequeue from q1.
+
+
+Code:
+-----
+
+#include <iostream>
+#include <queue>
+using namespace std;
+
+class StackUsingQueues {
+    queue<int> q1, q2;
+
+public:
+    void push(int x) {
+        // Step 1: Push to q2
+        q2.push(x);
+
+        // Step 2: Move all from q1 to q2
+        while (!q1.empty()) {
+            q2.push(q1.front());
+            q1.pop();
+        }
+
+        // Step 3: Swap q1 and q2
+        swap(q1, q2);
+    }
+
+    int pop() {
+        if (q1.empty()) {
+            cout << "Stack is empty\n";
+            return -1;
+        }
+        int val = q1.front();
+        q1.pop();
+        return val;
+    }
+
+    bool empty() {
+        return q1.empty();
+    }
+};
+
+int main() {
+    StackUsingQueues st;
+    st.push(10);
+    st.push(20);
+    st.push(30);
+
+    cout << st.pop() << endl; // 30
+    cout << st.pop() << endl; // 20
+    cout << st.pop() << endl; // 10
+}
+
+
+
+
+
+Method 2 – Pop Costly:
+----------------------
+
+--Use two queues: q1 (main) and q2 (temporary)
+
+--Push(x) → enqueue into q1 → O(1) (fast)
+
+--Pop() → move all elements except the last from q1 → q2, then dequeue the last element from q1 → O(n) (slow)
+
+--Swap q1 and q2 → now q1 has all remaining elements
+
+
+1. push(x): O(1)
+
+q1.push(x);
+
+
+2. Pop() → O(n)
+
+--While q1.size() > 1, move front of q1 → q2
+
+--Dequeue the last element from q1 → this is the top of stack
+
+--Swap q1 and q2 → q1 is ready for next operation
+
+
+code:
+-----
+
+#include <iostream>
+#include <queue>
+using namespace std;
+
+class StackUsingTwoQueues {
+    queue<int> q1, q2;
+
+public:
+    void push(int x) {
+        q1.push(x); // fast
+    }
+
+    int pop() {
+        if (q1.empty()) {
+            cout << "Stack is empty\n";
+            return -1;
+        }
+
+        // Move all except last to q2
+        while (q1.size() > 1) {
+            q2.push(q1.front());
+            q1.pop();
+        }
+
+        int val = q1.front(); // last inserted element
+        q1.pop();
+
+        // Swap q1 and q2
+        swap(q1, q2);
+
+        return val;
+    }
+
+    int top() {
+        if (q1.empty()) {
+            cout << "Stack is empty\n";
+            return -1;
+        }
+
+        while (q1.size() > 1) {
+            q2.push(q1.front());
+            q1.pop();
+        }
+
+        int val = q1.front(); // last inserted element
+        q2.push(val); // put it back
+
+        swap(q1, q2);
+
+        return val;
+    }
+
+    bool empty() {
+        return q1.empty();
+    }
+};
+
+int main() {
+    StackUsingTwoQueues st;
+    st.push(10);
+    st.push(20);
+    st.push(30);
+
+    cout << st.pop() << endl; // 30
+    cout << st.top() << endl; // 20
+    cout << st.pop() << endl; // 20
+    cout << st.pop() << endl; // 10
+}
+
+
+
+
+Q/- First Non-Repeating Character in a String
+
+
+Problem:
+--------
+
+--Given a string, find the first character that does not repeat as you scan the string from left to right.
+
+Example:
+
+Input:  "aabcbded"
+Output: 'c'  // first non-repeating character
+
+
+
+Approach:
+---------
+
+Idea:
+
+--Use a queue to keep track of characters in the order they appear.
+
+--Use a frequency array/map to count occurrences of each character.
+
+--While iterating the string:
+
+1. Push current character into the queue.
+
+2. Update its frequency.
+
+3. Remove characters from the front of the queue if their frequency > 1 (they repeat).
+
+--The front of the queue now is the first non-repeating character so far.
+
+
+
+Analogy:
+
+--Think of a line of people (queue):
+
+--Each new person comes in → count how many times they've appeared.
+
+--If someone is repeated → remove from front of line.
+
+--The person at the front is the first unique one.
+
+
+
+code:
+-----
+
+#include <iostream>
+#include <queue>
+#include <unordered_map>
+using namespace std;
+
+char firstNonRepeatingChar(string s) {
+
+    unordered_map<char, int> freq;
+    queue<char> q;
+
+    for (char ch : s) {
+        // Update frequency
+        freq[ch]++;
+
+        // Push to queue
+        q.push(ch);
+
+        // Remove repeated characters from front
+        while (!q.empty() && freq[q.front()] > 1) {
+            q.pop();
+        }
+
+        // At this point, front of queue is first non-repeating character
+        if (!q.empty()) {
+            cout << "First non-repeating so far: " << q.front() << endl;
+        } else {
+            cout << "No non-repeating character so far\n";
+        }
+    }
+
+    return q.empty() ? '#' : q.front(); // return final first non-repeating
+}
+
+int main() {
+    string s = "aabcbded";
+    char result = firstNonRepeatingChar(s);
+    cout << "\nFirst non-repeating character in the string: " << result << endl;
+}
+
+
+Time Complexity:
+
+O(n), each character is pushed/popped at most once.
+
+Space Complexity:
+
+O(n) → queue + frequency map
