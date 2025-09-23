@@ -114,6 +114,8 @@ public:
         rear = -1;
     }
 
+
+
     bool isEmpty(){
         return size == 0;
 	//return front > rear 
@@ -649,7 +651,7 @@ public:
     void enqueue(int item) {
         Node* newNode = new Node(item);
 
-        if (rear == NULL) {
+        if (front == NULL) {
             // Queue is empty, front and rear point to new node
             front = rear = newNode;
         } else {
@@ -1361,6 +1363,18 @@ int main() {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 Priority Queue:
 ==============
 
@@ -1466,13 +1480,13 @@ Dinesh:	Priority 3
 
 Steps:
 
-Insert Raj (2) → queue: [Raj]
+Insert Raj (2) → queue: [Raj(2)]
 
-Insert Sunil (5) → queue: [Sunil, Raj] (Sunil has higher priority)
+Insert Sunil (5) → queue: [Sunil(5), Raj(2)] (Sunil has higher priority)
 
-Insert Rahul (1) → queue: [Sunil, Raj, Rahul]
+Insert Rahul (1) → queue: [Sunil(5), Raj(2), Rahul(1)]
 
-Insert Dinesh (3) → queue: [Sunil, Raj, Rahul, Dinesh]
+Insert Dinesh (3) → queue: [Sunil(5), Dinesh(3), Rahul(2), Raj(1)]
 
 Dequeue: Sunil (priority 5) goes first
 
@@ -1506,11 +1520,9 @@ For dequeue:
 code:
 -------
 
-
 #include <iostream>
+#define MAX 10
 using namespace std;
-
-#define MAX 100
 
 struct Element {
     int value;
@@ -1518,60 +1530,103 @@ struct Element {
 };
 
 class ArrayPriorityQueue {
+
+private:
     Element arr[MAX];
     int size;
 
 public:
-    ArrayPriorityQueue() {
-        size = 0;
+    ArrayPriorityQueue() { size = 0; }
+
+    bool isEmpty() { 
+	return size == 0; 
     }
 
-    bool isEmpty() {
-        return size == 0;
+    bool isFull() { 
+	return size == MAX; 
     }
 
-    bool isFull() {
-        return size == MAX;
-    }
-
-    void enqueue(int val, int prio) {
+    void enqueue(int item, int prio) {
         if (isFull()) {
-            cout << "Queue is full\n";
+            cout << "PQ is full\n";
             return;
         }
-        arr[size].value = val;
+        arr[size].value = item;
         arr[size].priority = prio;
         size++;
-        cout << "Inserted: " << val << " with priority " << prio << endl;
+        cout << "Inserted: " << item << " with priority: " << prio << endl;
     }
 
-    void dequeue() {
+    int dequeue() {
         if (isEmpty()) {
-            cout << "Queue is empty\n";
-            return;
+            cout << "PQ is empty\n";
+            return -1;
         }
-        // Find index of max priority
+
         int maxIndex = 0;
-        for (int i = 1; i < size; i++) {
-            if (arr[i].priority > arr[maxIndex].priority)
+
+        for (int i = 0; i < size; i++) {
+            if (arr[i].priority > arr[maxIndex].priority) {
                 maxIndex = i;
+            }
         }
 
-        cout << "Dequeued: " << arr[maxIndex].value << " with priority " << arr[maxIndex].priority << endl;
+        int result = arr[maxIndex].value;
 
-        // Shift elements
+        cout << "Dequeued: " << result  << " with priority: " << arr[maxIndex].priority << endl;
+
+	//Shifting the elements
         for (int i = maxIndex; i < size - 1; i++) {
             arr[i] = arr[i + 1];
         }
         size--;
+
+        return result;
     }
+
+    int peekFront() {
+        if (isEmpty()) {
+            cout << "PQ is empty\n";
+            return -1;
+        }
+
+        int maxIndex = 0;
+        for (int i = 0; i < size; i++) {
+            if (arr[i].priority > arr[maxIndex].priority) {
+                maxIndex = i;
+            }
+        }
+
+        cout << "Front element: " << arr[maxIndex].value  << " with priority " << arr[maxIndex].priority << endl;
+
+        return arr[maxIndex].value;
+    }
+
+  int peekRear() {
+    if (isEmpty()) {
+        cout << "PQ is empty\n";
+        return -1;
+    }
+
+    int minIndex = 0;
+    for (int i = 1; i < size; i++) {
+        if (arr[i].priority < arr[minIndex].priority) {
+            minIndex = i;
+        }
+    }
+
+    cout << "Rear element: " << arr[minIndex].value << " with priority " << arr[minIndex].priority << endl;
+
+    return arr[minIndex].value;
+}
+
 
     void display() {
         if (isEmpty()) {
-            cout << "Queue is empty\n";
+            cout << "PQ is empty\n";
             return;
         }
-        cout << "Queue elements: ";
+        cout << "Priority Queue elements: ";
         for (int i = 0; i < size; i++) {
             cout << "(" << arr[i].value << "," << arr[i].priority << ") ";
         }
@@ -1579,12 +1634,31 @@ public:
     }
 };
 
+
 int main() {
     ArrayPriorityQueue pq;
 
+    // Enqueue some elements
     pq.enqueue(10, 2);
     pq.enqueue(20, 5);
-    pq.enqueue(30, 3);
+    pq.enqueue(30, 1);
+    pq.enqueue(40, 3);
+    pq.enqueue(50, 5);  // Another element with same highest priority
+
+    cout << endl;
+    pq.display();  // Display the queue
+
+    cout << endl;
+    // Peek front and rear
+    pq.peekFront(); // Should show element with highest priority (20 or 50)
+    pq.peekRear();  // Should show element with lowest priority (30)
+
+    cout << endl;
+    // Dequeue elements
+    pq.dequeue();  // Removes highest priority
+    pq.display();
+
+    pq.dequeue();  // Removes next highest priority
     pq.display();
 
     pq.dequeue();
@@ -1592,9 +1666,18 @@ int main() {
 
     pq.dequeue();
     pq.display();
+
+    pq.dequeue();  // Last element
+    pq.display();
+
+    // Try dequeue from empty queue
+    pq.dequeue();
 
     return 0;
 }
+
+
+
 
 
 
@@ -1614,10 +1697,11 @@ Idea
 Code:
 -----
 
+
 #include <iostream>
 using namespace std;
 
-// Node class for linked list
+// Node class for LinkedList PQ
 class Node {
 public:
     int value;
@@ -1631,64 +1715,112 @@ public:
     }
 };
 
-// Priority Queue class
-class LinkedListPriorityQueue {
+// Linked-list based Priority Queue
+class LinkedListPQ {
 private:
-    Node* head; // points to highest priority element
+    Node* front;  // points to highest priority node
+    Node* rear;   // points to lowest priority node
+    int size;
 
 public:
-    LinkedListPriorityQueue() {
-        head = nullptr;
+    LinkedListPQ() {
+        front = rear = NULL;
+        size = 0;
     }
 
     bool isEmpty() {
-        return head == nullptr;
+        return size == 0;
     }
 
-    // Enqueue based on priority
-    void enqueue(int val, int prio) {
-        Node* newNode = new Node(val, prio);
+  void enqueue(int value, int prio){
 
-        // If empty or new node has higher priority than head
-        if (!head || prio > head->priority) {
-            newNode->next = head;
-            head = newNode;
-        } else {
-            Node* temp = head;
-            // Traverse to find correct position
-            while (temp->next && temp->next->priority >= prio) {
-                temp = temp->next;
+        Node* newNode = new Node(value, prio);
+
+
+        //Case1: insert at front if empty
+        if(front == NULL ){
+            front = rear = newNode;
+            cout<<"Inserted: "<<value <<" With Priority "<<prio <<endl;
+        }
+        //case2: Higher priority than front
+        else if(prio > front->priority){
+            newNode->next = front;
+            front = newNode;
+            cout<<"Inserted: "<<value <<" With Priority "<<prio <<endl;
+        }else{ //case 3: find the correct position
+
+            Node* current = front;
+            
+            while(current->next != NULL && current->next->priority >= prio){
+                current = current->next;
             }
-            newNode->next = temp->next;
-            temp->next = newNode;
+
+            newNode->next = current->next;
+            current->next = newNode;
+
+ 	    // Update rear if inserted at the end
+            if(newNode->next == NULL){
+                rear = newNode;
+            }
+
+            cout << "Inserted: " << value << " with priority " << prio << endl;
+
         }
 
-        cout << "Inserted: " << val << " with priority " << prio << endl;
+        size++;
     }
 
-    // Dequeue (remove highest priority)
-    void dequeue() {
+
+    // Dequeue highest priority element
+    int dequeue() {
         if (isEmpty()) {
-            cout << "Queue is empty\n";
-            return;
+            cout << "PQ is empty\n";
+            return -1;
         }
 
-        Node* temp = head;
-        cout << "Dequeued: " << temp->value << " with priority " << temp->priority << endl;
-        head = head->next;
+        Node* temp = front;
+        int result = temp->value;
+
+        cout << "Dequeued: " << result << " with priority " << temp->priority << endl;
+
+        front = front->next;
         delete temp;
+        size--;
+
+        if (front == NULL) rear = NULL;  // Queue became empty
+
+        return result;
     }
 
-    // Display queue
+    // Peek front (highest priority)
+    int peekFront() {
+        if (isEmpty()) {
+            cout << "PQ is empty\n";
+            return -1;
+        }
+        cout << "Front element: " << front->value << " with priority " << front->priority << endl;
+        return front->value;
+    }
+
+    // Peek rear (lowest priority)
+    int peekRear() {
+        if (isEmpty()) {
+            cout << "PQ is empty\n";
+            return -1;
+        }
+        cout << "Rear element: " << rear->value << " with priority " << rear->priority << endl;
+        return rear->value;
+    }
+
+    // Display all elements
     void display() {
         if (isEmpty()) {
-            cout << "Queue is empty\n";
+            cout << "PQ is empty\n";
             return;
         }
-
-        Node* temp = head;
-        cout << "Queue elements: ";
-        while (temp) {
+        cout << "Priority Queue elements: ";
+        Node* temp = front;
+        while (temp != NULL) {
             cout << "(" << temp->value << "," << temp->priority << ") ";
             temp = temp->next;
         }
@@ -1698,14 +1830,21 @@ public:
 
 // Main function to test
 int main() {
-    LinkedListPriorityQueue pq;
+    LinkedListPQ pq;
 
     pq.enqueue(10, 2);
     pq.enqueue(20, 5);
-    pq.enqueue(30, 3);
-    pq.enqueue(25, 5); // same priority as 20
+    pq.enqueue(30, 1);
+    pq.enqueue(40, 3);
+    pq.enqueue(50, 5);
+
+    cout << endl;
     pq.display();
 
+    pq.peekFront();
+    pq.peekRear();
+
+    cout << endl;
     pq.dequeue();
     pq.display();
 
@@ -1718,7 +1857,11 @@ int main() {
     pq.dequeue();
     pq.display();
 
-    pq.dequeue(); // queue empty check
+    pq.dequeue();
+    pq.display();
+
+    // Dequeue from empty queue
+    pq.dequeue();
 
     return 0;
 }
@@ -1734,6 +1877,9 @@ Feature		  			Array					Linked List
 2. Delete (max priority)		O(n)					O(1) (head removal)
 3. Memory				Fixed size (MAX)			Dynamic size
 4. Complexity				Simple, fast enqueue if unsorted	Slightly slower enqueue, fast dequeue
+
+
+
 
 
 
@@ -2268,6 +2414,56 @@ int main() {
     cout << st.pop() << endl; // 20
     cout << st.pop() << endl; // 10
 }
+
+
+
+
+
+
+Q/- Reversing a Queue without using predefined reverse function:
+
+
+Step 1: Move from queue → stack
+
+--Keep popping elements from the queue’s front.
+
+--Push each popped element into the stack.
+
+--At the end, the stack will contain elements in reverse order.
+
+Step 2: Move from stack → queue
+
+--Keep popping elements from the stack’s top.
+
+--Push each element back into the queue.
+
+--Now the queue has elements in reversed order.
+
+
+
+#include <iostream>
+#include <queue>   // for std::queue
+#include <stack>   // for std::stack
+using namespace std;
+
+// Function to reverse a queue
+void reverseQueue(queue<int>& q) {
+    stack<int> st;
+
+    // Step 1: Remove all elements from the queue and push them onto the stack
+    while (!q.empty()) {
+        st.push(q.front());  // take front element of queue
+        q.pop();             // remove it from queue
+    }
+
+    // Step 2: Pop all elements from the stack and push them back into the queue
+    while (!st.empty()) {
+        q.push(st.top());   // take top element of stack
+        st.pop();           // remove it from stack
+    }
+}
+
+
 
 
 
