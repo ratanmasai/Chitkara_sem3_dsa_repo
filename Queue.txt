@@ -2008,6 +2008,62 @@ int main() {
 }
 
 
+
+
+
+
+
+Q/- Reversing a Queue without using predefined reverse function:
+
+
+Step 1: Move from queue → stack
+
+--Keep popping elements from the queue’s front.
+
+--Push each popped element into the stack.
+
+--At the end, the stack will contain elements in reverse order.
+
+Step 2: Move from stack → queue
+
+--Keep popping elements from the stack’s top.
+
+--Push each element back into the queue.
+
+--Now the queue has elements in reversed order.
+
+
+
+#include <iostream>
+#include <queue>   // for std::queue
+#include <stack>   // for std::stack
+using namespace std;
+
+// Function to reverse a queue
+void reverseQueue(queue<int>& q) {
+    stack<int> st;
+
+    // Step 1: Remove all elements from the queue and push them onto the stack
+    while (!q.empty()) {
+        st.push(q.front());  // take front element of queue
+        q.pop();             // remove it from queue
+    }
+
+    // Step 2: Pop all elements from the stack and push them back into the queue
+    while (!st.empty()) {
+        q.push(st.top());   // take top element of stack
+        st.pop();           // remove it from stack
+    }
+}
+
+
+
+
+
+
+
+
+
 Queue & Stack Crossover Problems:
 =================================
 
@@ -2416,52 +2472,6 @@ int main() {
 }
 
 
-
-
-
-
-Q/- Reversing a Queue without using predefined reverse function:
-
-
-Step 1: Move from queue → stack
-
---Keep popping elements from the queue’s front.
-
---Push each popped element into the stack.
-
---At the end, the stack will contain elements in reverse order.
-
-Step 2: Move from stack → queue
-
---Keep popping elements from the stack’s top.
-
---Push each element back into the queue.
-
---Now the queue has elements in reversed order.
-
-
-
-#include <iostream>
-#include <queue>   // for std::queue
-#include <stack>   // for std::stack
-using namespace std;
-
-// Function to reverse a queue
-void reverseQueue(queue<int>& q) {
-    stack<int> st;
-
-    // Step 1: Remove all elements from the queue and push them onto the stack
-    while (!q.empty()) {
-        st.push(q.front());  // take front element of queue
-        q.pop();             // remove it from queue
-    }
-
-    // Step 2: Pop all elements from the stack and push them back into the queue
-    while (!st.empty()) {
-        q.push(st.top());   // take top element of stack
-        st.pop();           // remove it from stack
-    }
-}
 
 
 
