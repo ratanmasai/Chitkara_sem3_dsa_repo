@@ -1402,7 +1402,7 @@ Example:
 
 --Patient B (heart attack) arrives → high priority
 
---Patient B is treated before Patient A, even if Patient A came first.
+--PatientB is treated before Patient A, even if Patient A came first.
 
 This is exactly how a priority queue works.
 
@@ -1498,6 +1498,10 @@ Next Dequeue: Dinesh (priority 3) goes next
 
 
 
+
+
+
+
 Priority Queue using array:
 ---------------------------
 
@@ -1546,6 +1550,8 @@ public:
 	return size == MAX; 
     }
 
+
+   
     void enqueue(int item, int prio) {
         if (isFull()) {
             cout << "PQ is full\n";
@@ -1609,7 +1615,7 @@ public:
     }
 
     int minIndex = 0;
-    for (int i = 1; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         if (arr[i].priority < arr[minIndex].priority) {
             minIndex = i;
         }
@@ -1711,7 +1717,7 @@ public:
     Node(int v, int p) {
         value = v;
         priority = p;
-        next = nullptr;
+        next = NULL;
     }
 };
 
@@ -2134,7 +2140,10 @@ Code:
 using namespace std;
 
 class QueueUsingStacks {
-    stack<int> s1, s2;
+
+private:
+
+    stack<int> s1, s2; //here s1 will be the main stack and s2 will be the helper stack
 
 
 public:
@@ -2150,6 +2159,7 @@ public:
         s1.push(x);
 
         // Step 3: Move everything back
+	// s1.swap(s2);
         while (!s2.empty()) {
             s1.push(s2.top());
             s2.pop();
@@ -2169,6 +2179,18 @@ public:
     bool empty() {
         return s1.empty();
     }
+
+    int peekFront() {
+        if (s1.empty()) {
+            cout << "Queue is empty\n";
+            return -1;
+        }
+        return s1.top();
+    }
+	
+
+
+
 };
 
 int main() {
@@ -2181,6 +2203,63 @@ int main() {
     cout << q.dequeue() << endl; // 20
     cout << q.dequeue() << endl; // 30
 }
+
+
+
+Note: To implement the peekRear() function we can use either one of the following approaches:
+
+1. Keep track of the last enqueued element separately (simplest).
+
+2. Traverse the stack to get the bottom element (less efficient). 
+
+
+Option1: 
+--------
+
+class QUsingStack {
+
+private:
+    stack<int> s1, s2;
+    int rearElement; // track rear
+
+public:
+
+    void enqueue(int item) {
+
+        rearElement = item; // update rear
+
+        while (!s1.empty()) {
+            s2.push(s1.top());
+            s1.pop();
+        }
+
+        s1.push(item);
+
+        while (!s2.empty()) {
+            s1.push(s2.top());
+            s2.pop();
+        }
+    }
+
+   int peekRear() {
+        if (s1.empty()) {
+            cout << "Queue is empty\n";
+            return -1;
+        }
+        return rearElement; // tracked separately
+    }
+
+
+
+Option2:
+--------
+
+--here again we need to take the help of the second stack and swap the values.
+
+
+
+
+
 
 
 
@@ -2199,43 +2278,72 @@ Ensures FIFO order.
 
 --This method is usually preferred in practice because enqueue is O(1).
 
+--elements are split across stack1 and stack2. so the Queue elements might be in either stack.(here there is no helper stack)
+
+
+
 
 Code:
 -----
-
-#include <iostream>
-#include <stack>
-using namespace std;
-
 class QueueUsingStacks {
     stack<int> stack1, stack2;
+    int rearElement;  // Track the rear
 
 public:
+    // Check if queue is empty
+    bool empty() {
+        return stack1.empty() && stack2.empty();
+    }
+
     // Enqueue operation (fast)
     void enqueue(int x) {
         stack1.push(x);
+        rearElement = x; // Update rear
     }
 
-    // Dequeue operation (slow if stack2 empty)
+    // Dequeue operation
     int dequeue() {
+        if (empty()) {
+            cout << "Queue is empty\n";
+            return -1;
+        }
+
         if (stack2.empty()) {
-            if (stack1.empty()) {
-                cout << "Queue is empty\n";
-                return -1;
-            }
-            // Move all elements from stack1 to stack2
             while (!stack1.empty()) {
                 stack2.push(stack1.top());
                 stack1.pop();
             }
         }
+
         int val = stack2.top();
         stack2.pop();
         return val;
     }
 
-    bool empty() {
-        return stack1.empty() && stack2.empty();
+    // Peek front element
+    int peekFront() {
+        if (empty()) {
+            cout << "Queue is empty\n";
+            return -1;
+        }
+
+        if (stack2.empty()) {
+            while (!stack1.empty()) {
+                stack2.push(stack1.top());
+                stack1.pop();
+            }
+        }
+
+        return stack2.top();
+    }
+
+    // Peek rear element (O(1) now)
+    int peekRear() {
+        if (empty()) {
+            cout << "Queue is empty\n";
+            return -1;
+        }
+        return rearElement;
     }
 };
 
@@ -2567,6 +2675,106 @@ int main() {
     char result = firstNonRepeatingChar(s);
     cout << "\nFirst non-repeating character in the string: " << result << endl;
 }
+
+
+
+DRY RUN:
+----------
+
+string s = "aabcbded";
+
+We’ll track:
+
+1. freq map → frequency of each character
+
+2. q queue → keeps track of characters in order
+
+3. First non-repeating so far
+
+
+Initial state:
+
+freq = {}
+q = []
+
+
+Step 1: ch = 'a': 
+
+Update frequency: freq['a'] = 1
+Push to queue: q = [a]
+Remove repeated from front: freq[q.front()] = 1 → keep
+First non-repeating so far: 'a'
+
+
+Step 2: ch = 'a':
+
+Update frequency: freq['a'] = 2
+Push to queue: q = [a, a]
+Remove repeated from front:
+ q.front() = 'a' → freq['a'] = 2 → pop → q = [a]
+ q.front() = 'a' → freq['a'] = 2 → pop → q = []
+
+Queue empty → No non-repeating character so far
+
+
+
+Step 3: ch = 'b':
+
+Update frequency: freq['b'] = 1
+Push to queue: q = [b]
+Remove repeated from front: freq['b'] = 1 → keep
+First non-repeating so far: 'b'
+
+Step 4: ch = 'c':
+
+Update frequency: freq['c'] = 1
+Push to queue: q = [b, c]
+Remove repeated from front: freq['b'] = 1 → keep
+First non-repeating so far: 'b'
+
+
+Step 5: ch = 'b':
+
+Update frequency: freq['b'] = 2
+Push to queue: q = [b, c, b]
+Remove repeated from front:
+ q.front() = 'b' → freq['b'] = 2 → pop → q = [c, b]
+First non-repeating so far: 'c'
+
+
+Step 6: ch = 'd':
+
+Update frequency: freq['d'] = 1
+Push to queue: q = [c, b, d]
+Remove repeated from front: freq['c'] = 1 → keep
+First non-repeating so far: 'c'
+
+
+Step 7: ch = 'e':
+
+Update frequency: freq['e'] = 1
+Push to queue: q = [c, b, d, e]
+Remove repeated from front: freq['c'] = 1 → keep
+First non-repeating so far: 'c'
+
+
+Step 8: ch = 'd':
+
+Update frequency: freq['d'] = 2
+Push to queue: q = [c, b, d, e, d]
+Remove repeated from front:
+q.front() = 'c' → freq['c'] = 1 → keep
+First non-repeating so far: 'c'
+
+
+
+Final Result:
+
+Queue q = [c, b, d, e, d]
+First non-repeating character at the end: q.front() = 'c'
+
+
+
 
 
 Time Complexity:
