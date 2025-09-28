@@ -1,0 +1,2450 @@
+Tree Data Structure:
+====================
+
+
+So far, we have studied Linear Data Structures such as:
+
+--Array
+--Linked List
+--Stack
+--Queue
+
+--In all these structures, the data is stored in a straight line (like people waiting in a queue for food). Traversing them usually means moving sequentially from one element to the next.
+
+--However, sometimes data cannot be represented in just a straight sequence.
+What if we need to represent data in a hierarchical manner—where one item can lead to multiple items, and those items may further branch into more?
+
+--Trees are super useful whenever we need to represent hierarchical data.
+
+
+Why Trees?
+-----------
+
+--Imagine some real-world situations:
+
+
+Example1: File system in our computer.
+
+        C (root)
+       / \
+   Users   Downloads
+    / \
+Ratan  Public
+
+
+
+Example2: family tree.
+
+	
+	GrandParent (root)
+           / \
+        Dad  uncle
+        / \    / \
+     ch1 ch2  ch1 ch2
+
+
+
+Example3: Movie Collection.
+
+--If you have 500 movies stored randomly on your computer and tomorrow you want to watch a romantic movie, you’d have to go through them one by one.  
+
+--Instead, if you store them in folders (Bollywood → Romantic, Action, Thriller / Hollywood → etc.), you can easily find what you want.  
+
+            Movie
+           /     \
+       Bollywood   Hollywood
+      /     |   \
+ Action Romantic Thriller
+
+
+
+
+What is a Tree?
+---------------
+
+--A Tree is a non-linear data structure used to represent data in a hierarchical way.
+
+--In a tree, we store data elements hierarchically..
+--We refer to these elements as "Nodes",and line that connect them as "Edges".
+--Each node contains a value or data (it could be a simple value or an object).
+--like a tree of a Person object,these person object could be a part of an organization or a family.
+
+
+Special Nodes:
+
+--The topmost node is called the "Root Node".
+--The nodes that do not have any children are called "Leaf Nodes".
+--A node that has children is often called a "Parent Node".
+--The children of the same parent are called "Sibling nodes".
+
+
+
+Note: Unlike linear data structures (Array, Linked List, Stack, Queue), where elements are arranged one after another in a sequence,
+
+In Tree:
+
+--The data kept inside the nodes, and each nodes they have some relationships are there, like parent, child, siblings, ancestors, desendent.
+
+
+Example:
+
+                          1
+                       /     \
+                     2         3
+                   /   \     /   \
+                 4      5   6     7
+                / \     / \  / \     / \
+               8   9   10 11 12 13 14  15
+
+
+
+
+
+
+Application areas of the tree data structure:
+---------------------------------------------
+
+1. Used in Databases (for indexing & searching fast).
+2. Used in GUI (Graphical User Interface – e.g., menus, submenus).
+3. Used in File Systems (folders and files).
+4. Used in AI (decision trees).
+5. Basically anywhere you want to represent hierarchy.
+
+
+
+Types of Trees:
+===============
+
+--There are different kinds of trees depending on the rules, some of them are:
+
+
+
+1. Generic Tree:
+----------------
+
+--A node can have any number of children.
+
+Example:
+
+      1
+    / | \
+   2  3  4
+     / \
+    5   6
+
+
+Here:  
+  - Root = 1  
+  - Children of 1 = {2, 3, 4}  
+  - 3 is the parent of 5 and 6  
+
+--Like a CEO with many managers under him.
+
+
+
+2. Binary Tree (BT):
+--------------------
+
+--A Binary Tree (BT) is a special type of Tree  in which each node can have at most two children.
+
+--One child is referred to as the Left Child.
+
+--The other child is referred to as the Right Child.
+
+--It is also possible that a node has only one child or no child at all.
+
+
+Example:
+
+        1   (root)
+       / \
+      2   3
+     / \
+    4   5
+         \
+          6
+
+
+Here:
+
+Root = 1
+
+Children of 1 = 2 (left), 3 (right)
+
+Leaf Nodes = 3, 4, 6
+
+
+
+
+3. Binary Search Tree (BST):
+-----------------------------
+
+
+--A type of Binary Tree with ordering property:
+
+Left Child < Parent < Right Child.
+
+Searching becomes very fast, like looking words in a dictionary.
+
+
+Example:
+
+
+        7
+      /   \
+     4     9
+    / \   / \
+   1   6 8  10
+
+
+
+4. AVL Tree:
+-------------
+
+--A self-balancing BST.
+
+--Ensures that the tree height stays balanced (so operations remain efficient).
+
+--Like a gym trainer who ensures balance on both sides.
+
+
+
+
+5. Heaps:
+----------
+
+--Complete binary tree with Heap Property (Min/Max).
+
+
+Other types of trees are:
+
+
+Full Binary Tree: Every node has either 0 or 2 children (no node with just 1 child).
+
+Perfect Binary Tree: All internal nodes have exactly 2 children, and all leaf nodes are at the same level.
+
+B-Tree: A self-balancing search tree commonly used in databases & file systems, Each node can have multiple keys and children.
+
+B+ Tree: A variation of B-Tree used in database indexing. Leaf nodes are linked for faster sequential access.
+
+Red-Black tree: A self-balancing BST that uses coloring rules (Red & Black) to maintain balance.
+
+etc.
+
+
+
+Note: Binary Trees and BSTs are the foundation for more advanced structures like AVL, Red-Black Trees, Heaps.
+
+
+
+
+Tree Terminologies:
+-------------------
+
+consider the following Binary Tree:
+
+
+
+        1   (root)
+       / \
+      2   3
+     / \
+    4   5
+         \
+          6
+
+
+1. Root Node: 
+
+--The topmost node of the tree.
+--Example: Node 1 in the above BT.
+
+
+
+2. Children:
+
+--Directly connected nodes below a parent.
+
+Example:
+
+Node 2 and 3 are children of 1.
+
+
+3. Leaf Node: 
+
+--A node with no children.
+--Example: Nodes 3, 4, and 6 .
+
+
+4. Siblings: 
+
+--Nodes that share the same parent.
+
+Examples:
+
+--2 and 3 are siblings.
+--4 and 5 are siblings.
+
+
+5. Ancestor:
+
+--Ancestors of a node are all the nodes along the path from that node up to the root.
+
+Example:
+
+Ancestors of 6 → 5, 2, 1
+Ancestors of 5 → 2, 1
+Ancestors of 4 → 2, 1
+
+For the Node 4, node 5 and 3 are not the ancestor
+
+
+6. Descendant:
+
+--Descendants of a node are all the nodes that come below it in the tree.
+
+Example:
+
+Descendants of 2 → 4, 5, 6
+Descendants of 5 → 6
+Descendants of 1 (root) → 2, 3, 4, 5, 6
+
+
+
+7. Level of Tree: Depth of a node (distance from root).
+
+--Root is at Level 0.
+
+Example:
+
+Level 0 → 1
+Level 1 → 2, 3
+Level 2 → 4, 5
+Level 3 → 6
+
+
+8. Height of Node/Tree:
+
+Height of a node: The number of edges on the longest path from that node to a leaf.
+Height of a tree: Height of the root node.
+
+Example: 
+
+Height of Node 1 → 3   (path: 1 → 2 → 5 → 6)
+Height of Node 5 → 1   (path: 5 → 6)
+Height of Node 4 → 0   (leaf node, no edges below)
+
+
+9. Depth of a Node:
+
+--The number of edges from the root node to that particular node.
+
+Examples:
+
+Depth of 1 → 0
+Depth of 2 → 1
+Depth of 4 → 2
+Depth of 6 → 3
+
+
+10. Depth of a Tree: 
+
+--Depth of a tree = Longest distance from root to the deepest leaf node.
+
+--Equivalent to height of the tree.
+
+
+
+Example: Depth = 3 (from root 1 to leaf 6)
+
+
+11. Subtree: A portion of the tree starting from a node.(A smaller tree inside the main tree, starting from any node.)
+
+
+
+Subtree Example:
+---------------
+
+Left Subtree of Root (1):
+
+      2
+     / \
+    4   5
+         \
+          6
+
+Right Subtree of Root (1):
+
+	\
+	 3
+
+
+
+
+
+12. Number of edges in a BT:
+
+
+--For a tree with n nodes, the number of edges = n - 1.
+
+Example:
+
+Tree with 10 nodes → edges = 9
+Tree with 1 node → edges = 0
+
+Reason: A tree is a connected acyclic graph; to connect n nodes without forming a cycle, you need exactly n - 1 edges.
+
+
+
+
+
+
+
+Note: To solve the most of the Tree related problems, we use the recursive approach.
+
+
+1. First, solve the problem for the left subtree.
+2. Then, solve the problem for the right subtree.
+3. Finally, combine the results to solve it for the root node. 
+
+
+Recursive Pseudocode:
+---------------------
+
+solve(root_node) {
+    solve(left_subtree)
+    solve(right_subtree)
+    calculate solution for root
+}
+
+
+
+
+Building a Binary Tree in C++:
+-------------------------------
+
+A Binary Tree (BT) is a tree data structure where:
+
+--Each node has at most two children.
+
+--These children are called:
+
+--Left Child
+
+--Right Child
+
+
+
+	 1
+        / \
+       2   3
+      / \
+     4   5
+
+
+To build a tree, we need:
+
+1. A Node class (with value, leftChild, and rightChild).
+
+2. A Tree class (with root).
+
+
+Structure of a Node:
+--------------------
+
+--Like a doubly linked list (where each node stores data and pointers to next/previous),
+a binary tree node has:
+
+[left | data | right]
+
+
+left → address of left child
+
+data → actual value stored
+
+right → address of right child
+
+
+
+
+Example Node representation:
+----------------------------
+
+
+[200 | 10 | 300]
+
+
+10 = data
+
+200 = address of left child
+
+300 = address of right child
+
+
+
+[NULL | 20 | 400]
+
+
+20 = data
+
+Left child is NULL (no node)
+
+Right child is at address 400
+
+
+[NULL | 30 | NULL]
+
+
+30 = data
+
+No left or right child → this is a leaf node.
+
+
+Node class:
+-----------
+
+class Node {
+public:
+    int value;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        value = val;
+        left = right = NULL;
+    }
+};
+
+
+Tree Class:
+-----------
+
+class Tree {
+
+public:
+    Node* root;
+
+    Tree() {
+        root = NULL;
+    }
+};
+
+
+
+
+
+Code Example1 (Basic Binary Tree Node Structure): Manual Approach
+------------------------------------------------
+
+#include <iostream>
+using namespace std;
+
+// Node class
+class Node {
+public:
+    int value;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        value = val;
+        left= right = NULL;
+    }
+};
+
+// Tree class
+class Tree {
+
+public:
+
+    Node* root;
+
+    Tree() {
+        root = NULL;
+    }
+};
+
+int main() {
+
+    Tree t;
+
+    // Creating nodes manually
+    t.root = new Node(1);
+    t.root->left = new Node(2);
+    t.root->right = new Node(3);
+    t.root->left->left = new Node(4);
+    t.root->left->right = new Node(5);
+
+    cout << "Root: " << t.root->value << endl;
+    cout << "Left Child of Root: " << t.root->left->value << endl;
+    cout << "Right Child of Root: " << t.root->right->value << endl;
+
+    return 0;
+}
+
+
+
+
+Implementing the find() function:
+---------------------------------
+
+bool find(Node* root, int val)
+
+Answer:
+-------
+
+// Function to find a value in a binary tree
+bool find(Node* root, int value) {
+    if(root == NULL) return false;         // Base case: empty tree
+    if(root->value == value) return true;  // Found the value
+
+    // Recursively check left and right subtrees
+    return find(root->left, value) || find(root->right, value);
+}
+
+
+
+int main() {
+
+    Tree t;
+
+    // Creating nodes manually
+    t.root = new Node(1);
+    t.root->left = new Node(2);
+    t.root->right = new Node(3);
+    t.root->left->left = new Node(4);
+    t.root->left->right = new Node(5);
+
+    int val = 5;
+
+    if(find(t.root, val))
+        cout << val << " found in the tree." << endl;
+    else
+        cout << val << " not found in the tree." << endl;
+
+    val = 10;
+    if(find(t.root, val))
+        cout << val << " found in the tree." << endl;
+    else
+        cout << val << " not found in the tree." << endl;
+
+
+    return 0;
+}
+
+
+
+
+
+Traversing a tree: Theory
+==================
+
+--In leanear DS like Arrays and LL we have only one way of traversal,start from the first and go forward,until we reach till the end.or from the end to the first.
+
+--But trees are the non-leanear structure.
+
+--So if we start traversing or walk in the tree from the root node, we have 2 possible direction, we can go either left side or right side.
+
+Example:
+
+        7
+      /   \
+     4     9
+    / \   / \
+   1   6 8  10
+
+
+--like from 7 to 4 or from 7 to 9.
+
+
+
+Approach for traversing a tree is classified into 2 categories:
+
+1.Breadth first traversal:
+
+2.Depth first traversal:
+
+
+
+
+1.Breadth first traversal:
+=========================
+
+--It is also know as level order traversal.
+
+--Here first we visit all the node in the same level,then go to the next level
+
+--here we visit nodes in following order:
+
+
+7       --first level
+
+4 9     --second level
+
+1 6 8 10   --third level
+
+
+--so the final output will be 
+
+7 4 9 1 6 8 10
+
+
+
+
+2.Depth first traversal:
+=======================
+
+--In this approach we have 3 different ways:
+
+
+a. pre-order traversal (root first)
+
+b. post-order traversal (root last)
+
+c. in-order traversal (root in middle)
+
+
+
+
+
+a. pre-order traversal:- 
+-----------------------
+
+Root ---->left subtree---->Right subtree
+
+
+
+Example:
+
+        7
+      /   \
+     4     9
+    / \   / \
+   1   6 8  10
+
+
+
+
+--here,we start with the root,7 print this value ,
+--then we go to the left subtree 4 -->then move to its left 1 
+
+--then we go back to the root of this subtree and then right subtree 6,
+
+-- then we go back to the top root ,and then come down to the right 9
+
+--then 8 then return back to the root of this subtree and then go to the 10.
+
+so the final output will be like:-
+
+7 4 1 6 9 8 10
+
+
+--here instead of printing the value level by level we first go in deep to all its children and grandchildren.
+
+
+
+
+
+b. post-order traversal:-
+------------------------
+
+Left subtree --->Right subtree ---> Root
+
+
+
+
+Example:
+
+        7
+      /   \
+     4     9
+    / \   / \
+   1   6 8  10
+
+
+
+
+
+
+--here we start with the root 7 ,and before printing this,we have to visit its left and right subtrees.
+
+--same pattern followed with the subtrees also.
+
+so the final pattern will be :-
+
+1 6 4 8 10 9 7
+
+
+--in this traversal, we first visit all the leafs of a trees and then its root. from left to right.
+
+--this is very useful in solving lots of tree problems.
+
+--in lots of cases we should start by visiting leaf node first,then calculate some values and pass those values to thier corresponding root until the main root.
+
+
+
+
+
+
+c. in-order traversal:-
+----------------------
+
+Left subtree ---> Root -----> Right subtree
+
+
+
+Example:
+
+        7
+      /   \
+     4     9
+    / \   / \
+   1   6 8  10
+
+
+
+
+
+
+--here we start with the root 7 ,but we are not going to print or work with it yet, from root we first visit the left subtree
+
+--in this subtree the root is 4 then again we are not going to print or work with it yet, then we move down its left and we found leaf 1 then print the 1 .
+
+--after that move back and print the 4 then move to its right side and follow the same approach,here print the 6,after done with this sub tree then go back to the root 7 and print it then move down the right subtree and follow the same approach.
+
+
+the final output will be :-
+
+1 4 6 7 8 9 10 (in sorted order)
+
+
+here if we want to the output should be in decending order then just swap the sequence:-
+
+
+Right subtree ---> Root -----> Left subtree
+
+
+
+Note:- we implements these traversal algorithm by using Recurrsion.
+
+
+
+
+
+Revisit recurssion:
+===================
+
+--Recurssion is a powerfull programming techinique to implements reapetation.like a loop but its works differently.
+
+
+Example: Calculating factorial of 4
+
+Formula:
+
+4! = 4 × 3 × 2 × 1 = 24
+
+Using a loop:
+---------------
+
+
+#include <iostream>
+using namespace std;
+
+int factorial_iterative(int number) {
+    int factorial = 1;
+    for (int i = number; i > 1; i--) {
+        factorial *= i;
+    }
+    return factorial;
+}
+
+int main() {
+    int n = 4;
+    cout << "Factorial of " << n << " = " << factorial_iterative(n) << endl;
+    return 0;
+}
+
+
+Recursive Method (using recursion):
+----------------------------------
+
+--With recursion, we express the problem as a smaller subproblem.
+
+Example:
+
+4! = 4 × 3!
+3! = 3 × 2!
+2! = 2 × 1!
+1! = 1
+
+
+General rule:
+
+n! = n × (n-1)!
+
+
+code:
+------
+
+#include <iostream>
+using namespace std;
+
+int factorial_recursive(int n) {
+    // Base condition
+    if (n == 0)
+        return 1;
+
+    // Recursive step
+    return n * factorial_recursive(n - 1);
+}
+
+int main() {
+    int n = 4;
+    cout << "Factorial of " << n << " = " << factorial_recursive(n) << endl;
+    return 0;
+}
+
+
+
+
+
+In summary:
+
+Loop method: Uses iteration, easy and efficient.
+
+Recursion method: Breaks the problem into smaller subproblems until the base case is reached.
+
+
+
+
+
+
+Tree Traversal: Code
+================
+
+1. Depth first traversal
+
+a. preorder
+b. postorder
+c. inorder
+
+2. Breadth first traversal / level wise traversal
+
+
+
+1. Depth first traversal:
+--------------------------
+
+
+a. Preorder:
+------------
+
+Concept:
+--------
+
+Preorder Traversal Order:
+
+Root → Left → Right
+
+--Using recursion, we split a big tree into smaller subtrees and solve each subtree individually.
+
+--Base condition: if the current node is NULL, return. 
+
+
+Node Structure:
+--------------
+
+--In C++ we usually define a simple struct or class for the binary tree node:
+
+class Node {
+
+    int value;
+    Node* leftChild;
+    Node* rightChild;
+
+    Node(int val) {
+        value = val;
+        leftChild = rightChild = NULL;
+    }
+};
+
+
+// Recursive Preorder Traversal
+void traversePreOrder(Node* root) {
+    // Base condition
+    if (root == NULL)
+        return;
+
+    // First visit root
+    cout << root->value << " ";
+
+    // Traverse left subtree
+    traversePreOrder(root->leftChild);
+
+    // Traverse right subtree
+    traversePreOrder(root->rightChild);
+}
+
+
+
+Example Usage:
+--------------
+
+int main() {
+    // Building the tree manually
+    Node* root = new Node(1);
+    root->leftChild = new Node(2);
+    root->rightChild = new Node(3);
+    root->leftChild->leftChild = new Node(4);
+    root->leftChild->rightChild = new Node(5);
+
+    cout << "Preorder Traversal: ";
+    traversePreOrder(root);  // Output: 1 2 4 5 3
+
+    return 0;
+}
+
+
+
+	1
+       / \
+      2   3
+     / \
+    4   5
+
+
+
+
+
+b. postorder:
+--------------
+
+concept:
+
+
+Postorder Traversal (Left → Right → Root)
+
+--Traverse the left subtree first.
+--Then traverse the right subtree.
+--Finally visit the root.
+
+Example:
+--------
+
+void traversePostOrder(Node* root) {
+    if (root == NULL) return;
+
+    traversePostOrder(root->leftChild);   // Visit left
+    traversePostOrder(root->rightChild);  // Visit right
+    cout << root->value << " ";           // Visit root  
+}
+
+
+output: 4 5 2 3 1
+
+
+c. Inorder:
+------------
+
+Inorder Traversal (Left → Root → Right)
+
+--Traverse the left subtree first.
+--Then visit the root.
+--Finally traverse the right subtree.
+
+Example:
+--------
+
+
+void traverseInOrder(Node* root) {
+    if (root == NULL) return;
+
+    traverseInOrder(root->leftChild);     // Visit left
+    cout << root->value << " ";           // Visit root
+    traverseInOrder(root->rightChild);    // Visit right
+}
+
+
+Output:  4 2 5 1 3
+
+
+
+Important points:
+-----------------
+
+1. Base condition in recursion: if node is NULL, return.
+
+2. Preorder is useful for copying trees.
+
+3. Inorder is useful for getting sorted order (in BST).
+
+4. Postorder is useful for deleting tree safely (children before parent).
+
+
+
+
+
+
+Creating a binary tree with the Preorder sequence:
+--------------------------------------------------
+
+
+Preorder sequence: [1, 2, -1, -1, 3, 4, -1, -1, 5, -1, -1]
+
+
+--This sequence is Preorder traversal with NULL markers.
+
+--Preorder Traversal order is:
+
+1. Visit Root
+
+2. Traverse Left Subtree
+
+3. Traverse Right Subtree
+
+--Here, -1 is used to indicate a NULL child (no node).
+
+
+
+Step-by-Step Trick to Build Tree:
+---------------------------------
+
+1. Start from the first element → this is the root.
+
+2. Create the left child recursively using the next numbers in the sequence.
+
+3. When you encounter -1, that subtree is NULL, so return to the parent.
+
+4. Then create the right child recursively.
+
+5. Continue this process until the entire sequence is used.
+
+
+Key Tricks / Tips:
+--------------------
+
+--Always create the left subtree first.
+
+--When -1 is encountered, backtrack to the parent node.
+
+--Then create the right subtree.
+
+--This works naturally with recursion because the call stack handles backtracking automatically.
+
+
+
+Step-by-step meaning of the above preorder sequence:
+----------------------------------------------------
+
+1. 1 → root node
+
+2. 2 → left child of 1
+
+3. -1 → left child of 2 is NULL
+
+4. -1 → right child of 2 is NULL
+    (So node 2 is a leaf)
+
+5. 3 → right child of 1
+
+6. 4 → left child of 3
+
+7. -1 → left child of 4 is NULL
+
+8. -1 → right child of 4 is NULL
+    (So node 4 is a leaf)
+
+9. 5 → right child of 3
+
+10. -1 → left child of 5 is NULL
+
+11. -1 → right child of 5 is NULL
+    (So node 5 is a leaf)
+
+
+Final Tree Structure:
+--------------------
+
+        1
+       / \
+      2   3
+         / \
+        4   5
+
+
+Task: draw the tree struture of [1, 2, 3, 4, -1, -1, 5, -1, -1, -1, 20, -1, -1] in preorder sequence.
+
+Answer:
+
+	1
+       / \
+      2   20
+     /
+    3
+   / \
+  4   5
+
+Approach1: Taking input from the user
+
+
+// Node class
+class Node {
+public:
+    int value;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        value = val;
+        left= right = NULL;
+    }
+};
+
+
+// Function to build tree from preorder user input
+Node* buildTree() {
+    int x;
+    cin >> x; // read current value
+
+    if (x == -1) // -1 means no node
+        return NULL;
+
+    Node* root = new Node(x); // create new node
+    root->left = buildTree(); // build left subtree
+    root->right = buildTree();// build right subtree
+
+    return root;
+}
+
+
+// Function to print inorder traversal (for verification) 
+void inorder(Node* root) {
+    if (root == NULL) return;
+    inorder(root->left);
+    cout << root->value << " ";
+    inorder(root->right);
+}
+
+int main() {
+    cout << "Enter preorder sequence with -1 for NULL:\n";
+    // Example input: 1 2 -1 -1 3 4 -1 -1 5 -1 -1
+    Node* root = buildTree();
+
+    cout << "\nInorder Traversal of constructed tree: ";
+    inorder(root);
+
+    return 0;
+}
+
+
+Key Points about the Call Stack:
+---------------------------------
+
+1. Each recursive call pushes a node context onto the stack.
+
+2. When a -1 is encountered, the function returns immediately → stack pops.
+
+3. The stack ensures automatic backtracking to the parent node.
+
+4. Left subtree is always constructed first, then right subtree.
+
+5. Final return to main() gives the root of the fully constructed tree.
+
+
+DRY RUN with input:
+-------------------
+
+1 2 -1 -1 3 4 -1 -1 5 -1 -1
+
+
+Steps:
+
+--Create root 1
+
+--Create left child 2 → then -1, -1 → no children → leaf
+
+--Create right child 3
+
+Left child = 4 → -1, -1 → leaf
+
+Right child = 5 → -1, -1 → leaf
+
+
+--recursive call stack step-by-step for this input:
+
+
+
+
+Time & Space Complexity:
+-------------------------
+
+Time Complexity: O(n)
+
+--Each node is created once.
+
+--Each node visited once.
+
+--Total work = n (number of nodes)
+
+
+Space Complexity: O(h)
+
+--Because recursion uses the function call stack.
+
+--At any point, recursion depth = height of tree h.
+
+Worst case:
+
+Skewed Tree → Height = n → Space = O(n)
+
+
+What is a Skewed Tree?
+----------------------
+
+A Skewed Tree is a special type of binary tree where all nodes have only one child.
+
+Two types:
+
+1. Left Skewed Tree: all nodes have only left child.
+
+    1
+   /
+  2
+ /
+3
+
+
+2. Right Skewed Tree: all nodes have only right child
+
+
+1
+ \
+  2
+   \
+    3
+
+
+
+
+
+Approach2: Using Preorder Vector
+----------
+
+--Instead of reading input with cin, you can pass the preorder sequence as a vector (with -1 as null markers).
+--Here we’ll use an index pointer to keep track of the current element while building the tree.
+
+Example:
+---------
+
+// Recursive function to build tree using vector
+Node* buildTreeFromVector(vector<int>& preorder, int& index) {
+
+    // Base case: if we reach end of vector or current element is -1
+    if (index >= preorder.size() || preorder[index] == -1) {
+        index++; // move forward to next element
+        return NULL; // no node here
+    }
+
+    // create new node with current value
+    Node* root = new Node(preorder[index]);
+    index++; // move to next element
+
+    // recursively build left and right subtrees
+    root->left = buildTreeFromVector(preorder, index);
+    root->right = buildTreeFromVector(preorder, index);
+
+    return root; // return the constructed node
+}
+
+
+// Function to print inorder traversal (for verification)
+void inorder(Node* root) {
+    if (root == NULL) return; // nothing to print
+    inorder(root->left); // visit left subtree
+    cout << root->value << " "; // visit root
+    inorder(root->right);  // visit right subtree
+}
+
+int main() {
+    // Preorder sequence with -1 as NULL
+    vector<int> preorder = {1, 2, -1, -1, 3, 4, -1, -1, 5, -1, -1};
+
+    int index = 0; // start from first element
+    Node* root = buildTreeFromVector(preorder, index);
+
+    cout << "Inorder Traversal of constructed tree: ";
+    inorder(root); // verify the tree
+
+    return 0;
+}
+
+
+
+Output: 2 1 4 3 5
+
+
+
+How it Works:
+
+1. Start at index = 0 → 1 → create root.
+
+2. Move to index = 1 → 2 → left child of 1.
+
+3. Next two -1, -1 → both children NULL → backtrack.
+
+4. Move to index = 4 → 3 → right child of 1.
+
+5. Then 4 → left child of 3 → followed by -1, -1.
+
+6. Then 5 → right child of 3 → followed by -1, -1.
+
+
+
+
+
+Function Call Trace (Dry Run):
+------------------------------
+
+Call 1:
+
+buildTreeFromPreorder(preorder, index=0)
+
+preorder[0] = 1 (not -1)
+Create node → root = Node(1)
+Increment index = 1
+Build left subtree → recursive call.
+
+
+Call 2 (Left of 1):
+
+buildTreeFromPreorder(preorder, index=1)
+
+preorder[1] = 2 (not -1)
+Create node → Node(2)
+Increment index = 2
+Build left subtree → recursive call.
+
+
+Call 3 (Left of 2):
+
+buildTreeFromPreorder(preorder, index=2)
+
+preorder[2] = -1 → return NULL
+Increment index = 3.
+(So left child of 2 = NULL)
+
+
+
+Call 4 (Right of 2):
+
+buildTreeFromPreorder(preorder, index=3)
+
+preorder[3] = -1 → return NULL
+Increment index = 4.
+(So right child of 2 = NULL)
+
+Node 2 is complete:
+
+
+   2
+  / \
+NULL NULL
+
+
+--Return Node(2) to Call 1.
+
+
+
+Back to Call 1 (Right of 1):
+
+buildTreeFromPreorder(preorder, index=4)
+
+preorder[4] = 3 (not -1)
+Create node → Node(3)
+Increment index = 5
+Build left subtree → recursive call.
+
+
+Call 5 (Left of 3):
+
+buildTreeFromPreorder(preorder, index=5)
+
+preorder[5] = 4 (not -1)
+Create node → Node(4)
+Increment index = 6
+Build left subtree → recursive call.
+
+
+
+Call 6 (Left of 4):
+
+buildTreeFromPreorder(preorder, index=6)
+
+preorder[6] = -1 → return NULL
+Increment index = 7.
+
+
+
+
+Call 7 (Right of 4):
+
+buildTreeFromPreorder(preorder, index=7)
+
+preorder[7] = -1 → return NULL
+Increment index = 8.
+
+Node 4 is complete:
+
+   4
+  / \
+NULL NULL
+
+
+--Return Node(4) to Call 5.
+
+
+Back to Call 5 (Right of 3):
+
+buildTreeFromPreorder(preorder, index=8)
+
+preorder[8] = 5 (not -1)
+Create node → Node(5)
+Increment index = 9
+Build left subtree → recursive call.
+
+
+Call 8 (Left of 5):
+
+buildTreeFromPreorder(preorder, index=9)
+
+preorder[9] = -1 → return NULL
+Increment index = 10.
+
+
+Call 9 (Right of 5):
+
+buildTreeFromPreorder(preorder, index=10)
+
+preorder[10] = -1 → return NULL
+Increment index = 11
+
+
+Node 5 is complete:
+
+   5
+  / \
+NULL NULL
+
+
+--Return Node(5) to Call 5.
+
+Node 3 Complete:
+
+     3
+    / \
+   4   5
+
+
+Return Node(3) to Call 1.
+
+Final Root (Node 1):
+
+        1
+       / \
+      2   3
+         / \
+        4   5
+
+
+
+
+
+Building a Binary Tree (Level-order / BFS Input):
+=================================================
+
+
+What is Level-Order Construction?
+----------------------------------
+
+
+--In level-order, we build the tree level by level, from top to bottom and left to right.
+
+--For each node, we need to attach its left and right children.
+
+Example:
+
+        1
+       / \
+      2   3
+     / \   \
+    4   5   6
+
+
+
+
+Note: Technically, level-order tree construction is naturally iterative, because you need to know the next node to attach children to, which is exactly what a "queue" does. Recursion works best for preorder, inorder, or postorder constructions, where you follow a depth-first pattern.
+
+
+Why Use a Queue here?
+-----------------------
+
+--Level-order is Breadth-First Search (BFS).
+
+--BFS requires us to remember all nodes whose children are not yet assigned.
+
+--A queue is perfect because it is FIFO (First-In-First-Out):
+
+1. First node in the queue gets its children assigned first.
+
+2. Once children are assigned, move to the next node in the queue.
+
+--Without a queue, we wouldn’t know which node to attach children to next.
+
+--Recursive DFS cannot do true level-order because recursion goes deep-first, not level-by-level.
+
+
+
+
+
+Idea:
+
+--Start with the root node.
+
+--Use a queue to keep track of nodes whose children we still need to set.
+
+--For each node taken from the queue:
+
+1. Ask for its left child (if input is not -1, create node and push to queue).
+
+2. Ask for its right child (if input is not -1, create node and push to queue).
+
+--This continues until the queue becomes empty.
+
+
+#include <iostream>
+#include <queue>
+using namespace std;
+
+// Node structure
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
+
+// Build tree using Level-order input
+Node* buildTreeLevelOrder() {
+ 
+    int x;
+    cout << "Enter the root element: ";
+    cin >> x;
+
+    if (x == -1) return NULL;  // empty tree
+
+    Node* root = new Node(x);
+    queue<Node*> q;
+    q.push(root);
+
+    while (!q.empty()) {
+        Node* temp = q.front();
+        q.pop();
+
+        int first, second;
+
+        // Left child
+        cout << "Enter the left value of " << temp->data << " (-1 for NULL): ";
+        cin >> first;
+        if (first != -1) {
+            temp->left = new Node(first);
+            q.push(temp->left);
+        }
+
+        // Right child
+        cout << "Enter the right value of " << temp->data << " (-1 for NULL): ";
+        cin >> second;
+        if (second != -1) {
+            temp->right = new Node(second);
+            q.push(temp->right);
+        }
+    }
+
+    return root;
+}
+
+// Inorder Traversal (for checking the tree)
+void inorder(Node* root) {
+    if (root == NULL) return;
+    inorder(root->left);
+    cout << root->data << " ";
+    inorder(root->right);
+}
+
+int main() {
+    Node* root = buildTreeLevelOrder();
+
+    cout << "\nInorder Traversal of the constructed tree: ";
+    inorder(root);
+
+    return 0;
+}
+
+
+
+        1
+       / \
+      2   3
+     / \   \
+    4   5   6
+
+
+
+
+
+Example Run:
+------------
+Enter the root element: 1
+Enter the left value of 1 (-1 for NULL): 2
+Enter the right value of 1 (-1 for NULL): 3
+Enter the left value of 2 (-1 for NULL): 4
+Enter the right value of 2 (-1 for NULL): 5
+Enter the left value of 3 (-1 for NULL): -1
+Enter the right value of 3 (-1 for NULL): 6
+Enter the left value of 4 (-1 for NULL): -1
+Enter the right value of 4 (-1 for NULL): -1
+Enter the left value of 5 (-1 for NULL): -1
+Enter the right value of 5 (-1 for NULL): -1
+Enter the left value of 6 (-1 for NULL): -1
+Enter the right value of 6 (-1 for NULL): -1
+
+Inorder Traversal of the constructed tree: 4 2 5 1 3 6
+
+
+
+
+
+
+
+Depth and Height of Nodes in a Binary Tree:
+============================================
+
+
+Two Important Properties of Nodes in a tree:
+
+1. Depth → How far a node is from the top (root).
+
+2. Height → How far a node is from the bottom (leaf).
+
+
+
+1. Depth:
+----------
+
+Example:
+
+
+        20
+      /    \
+    10      30
+   /  \    /  \
+  6   21  4
+ / \
+3   8
+
+
+
+
+--Depth is measured from the root node downwards.
+
+--Root node (20) has depth = 0.
+
+--As we go down, depth increases.
+
+
+Depth(20) = 0
+
+Depth(10), Depth(30) = 1
+
+Depth(6), Depth(21), Depth(4) = 2
+
+Depth(3), Depth(8) = 3
+
+
+
+
+
+2. Height:
+-----------
+
+--Height is measured from the leaf nodes upwards.
+
+--All leaf nodes have height = 0.
+
+--As we move up, height increases.
+
+Example:
+---------
+
+Height(3), Height(8), Height(21), Height(4) = 0
+
+Height(6), Height(30) = 1
+
+Height(10) = 2
+
+Height(20) = 3 (height of tree)
+
+
+
+Formula for Height of a Node:
+-----------------------------
+
+height(node) = 1 + max(height(leftsubtree), height(rightsubtree))
+
+--To calculate the height of a tree, here we also use the recurssive approach:
+
+Base case: If node is NULL, height = -1 (tree empty).
+
+If leaf node → height = 0.
+
+
+code:
+------
+
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+class Node {
+    int value;
+    Node* leftChild;
+    Node* rightChild;
+
+    Node(int val) {
+        value = val;
+        leftChild = rightChild = NULL;
+    }
+};
+
+// Recursive function to calculate height
+int height(Node* root) {
+    // If tree is empty
+    if (root == NULL)
+        return -1;
+
+    // If it's a leaf node
+    if (root->leftChild == NULL && root->rightChild == NULL)
+        return 0;
+
+    // Recursive formula: 1 + max of left and right subtree
+    return 1 + max(height(root->leftChild), height(root->rightChild));
+}
+
+int main() {
+    // Constructing the tree
+    Node* root = new Node(20);
+    root->leftChild = new Node(10);
+    root->rightChild = new Node(30);
+    root->leftChild->leftChild = new Node(6);
+    root->leftChild->rightChild = new Node(21);
+    root->rightChild->leftChild = new Node(4);
+    root->leftChild->leftChild->leftChild = new Node(3);
+    root->leftChild->leftChild->rightChild = new Node(8);
+
+    cout << "Height of the tree = " << height(root) << endl;
+
+    return 0;
+}
+
+
+Output:
+-------
+
+Height of the tree = 3
+
+
+Analogy to Remember:
+--------------------
+
+Depth = “How many floors you go down in a shopping mall to reach underground parking.”
+
+Height = “How many floors you need to climb up to reach the terrace party.”
+
+So:
+
+Root (20) is the ground floor → depth = 0.
+
+Basement (node 3 or 8) → depth = 3.
+
+Terrace party at root → height = 3
+
+
+
+Checking Equality of Two Trees:
+===============================
+
+Two trees are equal if:
+
+
+1. Their root values are the same.
+
+2. Their left subtrees are equal.
+
+3. Their right subtrees are equal.
+
+
+
+--We compare root values and recursively compare left and right subtrees.
+
+bool isIdentical(Node* n1, Node* n2) {
+    if (n1 == NULL && n2 == NULL) return 1;
+
+    if ((!n1 && n2) || (n1 && !n2))
+        return 0;
+
+    if (n1->data != n2->data)
+        return 0;
+
+    return isIdentical(n1->left, n2->left) && 
+           isIdentical(n1->right, n2->right);
+}
+
+
+
+Nodes at K Distance from Root:
+===============================
+
+
+Analogy:
+---------
+
+Think of the root as Ground Floor (0th level) .
+
+1st level = children
+
+2nd level = grandchildren
+
+kth level = kth generation
+
+So asking nodes at distance k is like asking:
+“Who lives on the kth floor of this building?”
+
+
+--We want to print all nodes that are exactly k levels down.
+
+code:
+------
+
+void printNodesAtDistance(Node* root, int distance) {
+    if (root == NULL) return;
+
+    if (distance == 0) {
+        cout << root->value << " ";
+        return;
+    }
+
+    printNodesAtDistance(root->leftChild, distance - 1);
+    printNodesAtDistance(root->rightChild, distance - 1);
+}
+
+
+
+
+int main() {
+    Node* root = new Node(20);
+    root->leftChild = new Node(10);
+    root->rightChild = new Node(30);
+    root->leftChild->leftChild = new Node(6);
+    root->leftChild->rightChild = new Node(21);
+    root->rightChild->leftChild = new Node(4);
+    root->leftChild->leftChild->leftChild = new Node(3);
+    root->leftChild->leftChild->rightChild = new Node(8);
+
+
+    cout << "Nodes at distance 3: ";
+    printNodesAtDistance(root, 3);
+    cout << endl;
+
+    return 0;
+}
+
+
+
+
+2. Breadth first traversal / level wise traversal
+--------------------------------------------------
+
+
+Example:
+
+
+        20
+      /    \
+    10      30
+   /  \    /
+  6   21  4
+ / \
+3   8
+
+
+
+
+Explanation:
+
+--BFS (Breadth First Search) prints the tree level by level.
+
+--Start from the root (level 0), then move to the next level and print all nodes, and continue until the leaves.
+
+--The height of the tree tells us how many levels exist. If height = 3, then levels = 0, 1, 2, 3.
+
+--We can use our printNodeAtDistance function (already implemented) to print all nodes at a given level.
+
+--By iterating from level = 0 to level = height, we can print the entire tree in BFS order.
+
+
+
+code:
+------
+
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int value;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        value = val;
+        left = right = nullptr;
+    }
+};
+
+// Function to print nodes at a given distance from root
+void printNodeAtDistance(Node* root, int distance) {
+    if (!root) return;
+
+    if (distance == 0) {
+        cout << root->value << " ";
+        return;
+    }
+
+    printNodeAtDistance(root->left, distance - 1);
+    printNodeAtDistance(root->right, distance - 1); 
+}
+
+// Function to calculate height of tree
+int height(Node* root) {
+    if (!root) return -1;
+    return 1 + max(height(root->left), height(root->right));
+}
+
+// Level Order Traversal using printNodeAtDistance
+void traverseLevelOrder(Node* root) {
+    int h = height(root);
+    for (int i = 0; i <= h; i++) {
+        printNodeAtDistance(root, i);
+    }
+    cout << endl;
+}
+
+int main() {
+    Node* root = new Node(20);
+    root->left = new Node(10);
+    root->right = new Node(30);
+    root->left->left = new Node(6);
+    root->left->right = new Node(21);
+    root->right->left = new Node(4);
+    root->left->left->left = new Node(3);
+    root->left->left->right = new Node(8);
+
+    cout << "Level Order Traversal (BFS): ";
+    traverseLevelOrder(root);
+
+    return 0;
+}
+
+
+Output:
+-------
+
+Level Order Traversal (BFS): 20 10 30 6 21 4 3 8
+
+Space Complexity for the above approach:
+----------------------------------------
+
+--Each call to printNodeAtDistance uses stack frames proportional to the height of the tree (h).
+--But note: after finishing one level, recursion unwinds completely before moving to the next level.
+
+--So the overall space complexity = O(h).
+
+
+Time complexity:
+-----------------
+
+This recursive method has O(n²) worst-case complexity (for skewed trees), because for each level you traverse part of the tree again.
+
+The queue-based iterative BFS method is O(n) always.
+
+
+
+
+
+Queue-based iterative BFS:
+=========================
+
+
+Logic:
+------
+
+1. Push root to queue.
+
+2. While queue not empty →
+
+--Pop front, add to result.
+
+--Push children into queue.
+
+code:
+------
+
+
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+class Node {
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
+
+vector<int> levelOrder(Node* root) {
+
+    // This vector will store the final result of level order traversal
+    vector<int> result;
+
+    // If tree is empty, return an empty vector
+    if (root == NULL) 
+		return result;
+
+    // Use a queue to process nodes level by level
+    queue<Node*> q;
+
+    // Start with the root node in the queue
+    q.push(root);
+
+    // Process until the queue is empty
+    while (!q.empty()) {
+
+        // Get the front node of the queue
+        Node* current = q.front();
+        q.pop(); // remove it from the queue
+
+        // Store the current node's value into result
+        result.push_back(current->data);
+
+        // Push left child into the queue if it exists
+        if (current->left != NULL) q.push(current->left);
+
+        // Push right child into the queue if it exists
+        if (current->right != NULL) q.push(current->right);
+    }
+
+    // Return the traversal result
+    return result;
+}
+
+// Example usage
+int main() {
+    /*
+            1
+           / \
+          2   3
+         / \   \
+        4   5   6
+    */
+
+    Node* root = new Node(1);
+    root->left = new Node(2);
+    root->right = new Node(3);
+    root->left->left = new Node(4);
+    root->left->right = new Node(5);
+    root->right->right = new Node(6);
+
+    vector<int> ans = levelOrder(root);
+
+    cout << "Level Order Traversal: ";
+    for (int x : ans) cout << x << " ";
+    cout << endl;
+}
+
+
+Logic:
+
+--intialally we have the root node 1, we can directly store it inside the queue.
+
+queue = [1]
+
+now get the front of this q and store inside the result.then pop out
+ 
+result = [1]
+queue = []
+
+now we need to go to 2 and 3
+queue = [2,3]
+
+now get the front of this q and store inside the result.then pop out
+result=[1,2,3]
+
+like wise...
+
+
+
+
+Space complexity of the Queue based BFS:
+----------------------------------------
+
+
+
+--for a perfect binary tree the numbers of element will be:
+
+level1: 1
+level2: 2
+level3: 4
+level4: 8
+
+so for the 4 level the total node will be 15
+n=15
+
+--at the last level the total nodes will be n/2
+
+15/2 = 7+1 = 8
+
+space complexity = (n/2 +1) = O(n)
+
+
+
+
+Some of the usefull functionality of the BT:
+============================================
+
+
+1. Size of the Binary Tree.
+---------------------------
+
+--The size of a tree = total number of nodes.
+
+code:
+------
+
+int size(Node* root) {
+    if (root == NULL) return 0;
+
+    return 1 + size(root->left) + size(root->right);
+}
+
+
+Time Complexity: O(n)
+Space Complexity: O(h) (due to recursion stack, h = height of tree)
+
+
+
+2. Sum of All Nodes:
+---------------------
+
+--The sum of a tree = total sum of all node values.
+
+code:
+-----
+
+int sum(Node* root) {
+    if (root == NULL) return 0;
+
+    return root->data + sum(root->left) + sum(root->right);
+}
+
+
+Time Complexity: O(n)
+Space Complexity: O(h)
+
+
+3. Count Leaf Nodes:
+---------------------
+
+--A leaf node is a node with no left or right child.
+
+code:
+------
+
+int countLeaves(Node* root) {
+    if (root == NULL) return 0;
+
+    if (root->left == NULL && root->right == NULL) return 1;
+
+    return countLeaves(root->left) + countLeaves(root->right);
+}
+
+
+
+4. Count Non-Leaf Nodes:
+-------------------------
+
+int countNonLeaves(Node* root) {
+    if (root == NULL) return 0;
+
+    if (root->left == NULL && root->right == NULL) return 0;
+
+    return 1 + countNonLeaves(root->left) + countNonLeaves(root->right);
+}
+
+
+5. Largest Value at Each Level:
+--------------------------------
+
+--We perform Level Order Traversal (BFS) and keep track of the maximum at each level.
+
+Example:
+
+        1
+       / \
+      3   2
+     /     \
+    5       9
+
+
+Output → [1, 3, 9]
+
+
+code:
+-----
+
+vector<int> largestValueEachLevel(Node* root) {
+    vector<int> result;
+    if (root == NULL) return result;
+
+    queue<Node*> q;
+    q.push(root);
+
+    while (!q.empty()) {
+        int n = q.size(); // number of nodes at current level
+        int maxVal = INT_MIN;
+
+        for (int i = 0; i < n; i++) {
+            Node* current = q.front(); q.pop();
+            maxVal = max(maxVal, current->data);
+
+            if (current->left) q.push(current->left);
+            if (current->right) q.push(current->right);
+        }
+
+        result.push_back(maxVal);
+    }
+
+    return result;
+}
+
+
+
+
+
+6. Mirror of a Binary Tree:
+---------------------------
+
+--Swap left and right subtrees at every node.
+
+Example:
+
+Original:         Mirror:
+    1                1
+   / \              / \
+  3   2            2   3
+     / \          / \
+    5   4        4   5
+
+
+
+code:
+------
+
+void mirror(Node* root) {
+    if (root == NULL) return;
+
+    swap(root->left, root->right);
+
+    mirror(root->left);
+    mirror(root->right);
+}
+
+
+
+
+
+7. Finding min and max inside a BT:
+-----------------------------------
+
+//finding min
+int findMin(Node* root) {
+    if (!root) return INT_MAX; // empty node contributes +∞
+
+    int leftMin = findMin(root->left);
+    int rightMin = findMin(root->right);
+
+    return min(root->data, min(leftMin, rightMin));
+}
+
+
+//finding max
+int findMax(Node* root) {
+    if (!root) return INT_MIN; // empty node contributes -∞
+
+    int leftMax = findMax(root->left);
+    int rightMax = findMax(root->right);
+
+    return max(root->data, max(leftMax, rightMax));
+}
+
+
+
+
+8. Check if two nodes are siblings
+
+code:
+------
+
+
+ 
+ bool areSiblings(Node* node, int val1, int val2) {
+
+    if (node == NULL) return false;  // Base case: empty tree → not siblings
+
+    // Check if current node has both left and right children
+    if (node->left && node->right) {
+        // If left and right children match val1 and val2 in any order
+        if ((node->left->value == val1 && node->right->value == val2) ||
+            (node->left->value == val2 && node->right->value == val1))
+            return true;
+    }
+
+    // Recur for left and right subtrees
+    return areSiblings(node->left, val1, val2) || areSiblings(node->right, val1, val2);
+}
+
+
+
+
+
+
+
