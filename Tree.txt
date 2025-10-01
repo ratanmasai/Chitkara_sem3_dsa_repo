@@ -1130,7 +1130,12 @@ Root → Left → Right
 
 --Base condition: if the current node is NULL, return. 
 
+otherwise: 
+
 --then print the value.
+
+--and do the same for root->leftChild and for the root->rightChild
+
 
 
 Node Structure:
@@ -1172,6 +1177,16 @@ void traversePreOrder(Node* root) {
 Example Usage:
 --------------
 
+
+	1
+       / \
+      2   3
+     / \
+    4   5
+
+
+
+
 int main() {
     // Building the tree manually
     Node* root = new Node(1);
@@ -1187,12 +1202,6 @@ int main() {
 }
 
 
-
-	1
-       / \
-      2   3
-     / \
-    4   5
 
 
 Time Complexity:
@@ -2205,18 +2214,28 @@ int main() {
 
     cout << "Node\tLeft Child\tRight Child\n";
     for (int i = 0; i < n; i++) {
-        if (tree[i] == -1) continue;  // skip empty positions
+	
+	 // If current node is -1, skip it (no node exists here)
+        if (tree[i] == -1) 
+		continue; 
 
+
+	 // Calculate the indices of left and right children
         int leftIndex = 2*i + 1;
         int rightIndex = 2*i + 2;
 
+
+	// Print current node
         cout << tree[i] << "\t";
 
+	// Print left child if it exists, otherwise print NULL
         if (leftIndex < n && tree[leftIndex] != -1)
             cout << tree[leftIndex] << "\t\t";
         else
             cout << "NULL\t\t";
 
+
+	// Print right child if it exists, otherwise print NULL
         if (rightIndex < n && tree[rightIndex] != -1)
             cout << tree[rightIndex] << "\n";
         else
