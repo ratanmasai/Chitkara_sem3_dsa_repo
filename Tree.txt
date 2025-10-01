@@ -707,11 +707,21 @@ So the recursion stack will go at most log n deep.
 Balanced Tree:
 ==============
 
---A balanced tree is a binary tree where the height difference of left and right subtrees of every node is <= 1.
+--A balanced tree is a binary tree where the height difference of the left and right subtrees of every node is at most 1.
+
+--in other words, The left and right subtrees of any node should not differ in height by more than 1.
 
 --For every node N in the tree:
 
-height(left subtree) - height(right subtree) <=1 
+
+−1 <= height(left subtree)−height(rightsubtree) <= 1
+
+
+--Examples of allowed height differences: -1, 0, +1
+
+--If the difference is more than 1 (like -2 or +2), the tree is unbalanced.
+
+
 
 Example:
 
