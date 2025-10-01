@@ -184,6 +184,8 @@ Leaf Nodes = 3, 4, 6
 
 Left Child < Parent < Right Child.
 
+--This rule is applicable for all the subtree also.
+
 Searching becomes very fast, like looking words in a dictionary.
 
 
@@ -219,9 +221,41 @@ Example:
 Other types of trees are:
 
 
-Full Binary Tree: Every node has either 0 or 2 children (no node with just 1 child).
+Full/strict Binary Tree: Every node has either 0 or 2 children (no node with just 1 child) except the leaf nodes.
+
+Example:
+
+	1
+       / \
+      2   3
+     / \
+    4   5
+
 
 Perfect Binary Tree: All internal nodes have exactly 2 children, and all leaf nodes are at the same level.
+
+Example:
+
+	1
+       / \
+      2   3
+     / \  / \
+    4   5 6  7
+
+
+Complete Binary Tree: A binary tree in which all levels are completely filled except possibly the last level
+
+Example:
+
+	1
+       / \
+      2   3
+     / \  /
+    4  5 6
+
+
+
+
 
 B-Tree: A self-balancing search tree commonly used in databases & file systems, Each node can have multiple keys and children.
 
@@ -394,7 +428,7 @@ Tree with 1 node → edges = 0
 
 Reason: A tree is a connected acyclic graph; to connect n nodes without forming a cycle, you need exactly n - 1 edges.
 
-
+so, we can say that if a BT having edges >= nodes, then there must be a cycle exist.
 
 
 
@@ -522,6 +556,7 @@ Tree Class:
 class Tree {
 
 public:
+
     Node* root;
 
     Tree() {
@@ -585,6 +620,10 @@ int main() {
 
 
 
+
+
+
+
 Implementing the find() function:
 ---------------------------------
 
@@ -595,7 +634,9 @@ Answer:
 
 // Function to find a value in a binary tree
 bool find(Node* root, int value) {
+
     if(root == NULL) return false;         // Base case: empty tree
+
     if(root->value == value) return true;  // Found the value
 
     // Recursively check left and right subtrees
@@ -632,6 +673,139 @@ int main() {
     return 0;
 }
 
+
+Time complexity:
+----------------
+
+Worst case → must visit all nodes if the value is not present or is present in the last node visited.
+
+So, O(n) where n = number of nodes in the tree.
+
+
+
+Space complexity:
+-----------------
+
+--Due to recursion → stack usage(call stack) = height of the tree.
+because, At most, your recursion will go as deep as the height. O(h)
+
+ 
+--In worst case (skewed tree): O(n).
+
+
+--In best case (balanced tree): O(log n).
+Because:
+
+--If the tree is balanced (like a perfect or complete binary tree),
+
+Height = O(log n) because the number of nodes doubles at each level.
+
+So the recursion stack will go at most log n deep.
+
+
+
+Balanced Tree:
+==============
+
+--A balanced tree is a binary tree where the height difference of left and right subtrees of every node is <= 1.
+
+--For every node N in the tree:
+
+height(left subtree) - height(right subtree) <=1 
+
+Example:
+
+Balanced:
+---------
+
+       1
+      / \
+     2   3
+    / \
+   4   5
+
+
+At node 1: left subtree height = 2, right subtree height = 1 → difference = 1 
+
+At node 2: left height = 1, right height = 1 → difference = 0 
+
+At node 3: left = 0, right = 0 → difference = 0 
+→ Whole tree is balanced.
+
+Unbalanced:
+-----------
+
+        1
+       / \
+      2   3
+     /
+    4
+   /
+  5
+
+
+At node 2: left height = 2, right height = 0 → difference = 2 
+--Tree is unbalanced.
+
+Balanced:
+---------
+
+        10
+       /  \
+      5    15
+     / \     \
+    2   7     20
+
+
+--Here also Heights of subtrees differ by at most 1 at each node.
+
+
+Unbalanced:
+-----------
+
+    10
+      \
+       20
+         \
+          30
+            \
+             40
+
+
+--This is skewed (like a linked list).
+--Height difference is large → not balanced.
+
+
+
+**Note: Balanced BST ensure that O(log n) for searching and some other operations like search, insert and delete.
+
+
+
+
+What is a Skewed Tree?
+----------------------
+
+A Skewed Tree is a special type of binary tree where all nodes have only one child.
+
+Two types:
+
+1. Left Skewed Tree: all nodes have only left child.
+
+    1
+   /
+  2
+ /
+3
+
+
+2. Right Skewed Tree: all nodes have only right child
+
+
+1
+ \
+  2
+   \
+    3
 
 
 
@@ -724,7 +898,6 @@ Example:
 
 
 
-
 --here,we start with the root,7 print this value ,
 --then we go to the left subtree 4 -->then move to its left 1 
 
@@ -764,8 +937,6 @@ Example:
 
 
 
-
-
 --here we start with the root 7 ,and before printing this,we have to visit its left and right subtrees.
 
 --same pattern followed with the subtrees also.
@@ -800,8 +971,6 @@ Example:
      4     9
     / \   / \
    1   6 8  10
-
-
 
 
 
@@ -851,6 +1020,7 @@ Using a loop:
 using namespace std;
 
 int factorial_iterative(int number) {
+
     int factorial = 1;
     for (int i = number; i > 1; i--) {
         factorial *= i;
@@ -950,6 +1120,8 @@ Root → Left → Right
 
 --Base condition: if the current node is NULL, return. 
 
+--then print the value.
+
 
 Node Structure:
 --------------
@@ -1011,6 +1183,36 @@ int main() {
       2   3
      / \
     4   5
+
+
+Time Complexity:
+----------------
+
+--In Preorder Traversal, every node is visited exactly once.
+
+--At each node, you:
+
+1. Print the value (O(1))
+
+2. Make two recursive calls (left and right child)
+
+So, if there are n nodes → total operations = O(n)
+
+Final TC = O(n)
+
+
+
+Space Complexity (SC):
+----------------------
+
+--Extra space is mainly due to the recursive call stack.
+
+SC = O(h), where h = height of tree
+
+Worst case: O(n), If the tree is skewed (like a linked list),
+
+Best case: for a balanced tree O(log n)
+
 
 
 
@@ -1080,6 +1282,1091 @@ Important points:
 
 4. Postorder is useful for deleting tree safely (children before parent).
 
+
+
+
+
+
+Depth and Height of Nodes in a Binary Tree:
+============================================
+
+
+Two Important Properties of Nodes in a tree:
+
+1. Depth → How far a node is from the top (root).
+
+2. Height → How far a node is from the bottom (leaf).
+
+
+
+1. Depth:
+----------
+
+Example:
+
+
+        20
+      /    \
+    10      30
+   /  \    /  \
+  6   21  4
+ / \
+3   8
+
+
+
+
+--Depth is measured from the root node downwards.
+
+--Root node (20) has depth = 0.
+
+--As we go down, depth increases.
+
+
+Depth(20) = 0
+
+Depth(10), Depth(30) = 1
+
+Depth(6), Depth(21), Depth(4) = 2
+
+Depth(3), Depth(8) = 3
+
+
+
+
+
+2. Height:
+-----------
+
+--Height is measured from the leaf nodes upwards.
+
+--All leaf nodes have height = 0.
+
+--As we move up, height increases.
+
+Example:
+---------
+
+Height(3), Height(8), Height(21), Height(4) = 0
+
+Height(6), Height(30) = 1
+
+Height(10) = 2
+
+Height(20) = 3 (height of tree)
+
+
+
+Formula for Height of a Node:
+-----------------------------
+
+height(node) = 1 + max(height(leftsubtree), height(rightsubtree))
+
+--To calculate the height of a tree, here we also use the recurssive approach:
+
+Base case: If node is NULL, height = -1 (tree empty).
+
+If leaf node → height = 0.
+
+
+code:
+------
+
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+class Node {
+
+public:
+
+    int value;
+    Node* leftChild;
+    Node* rightChild;
+
+    Node(int val) {
+        value = val;
+        leftChild = rightChild = NULL;
+    }
+};
+
+// Recursive function to calculate height
+int height(Node* root) {
+    // If tree is empty
+    if (root == NULL)
+        return -1;
+
+    // If it's a leaf node
+    // We can skip this line also
+    if (root->leftChild == NULL && root->rightChild == NULL)
+        return 0;
+
+    // Recursive formula: 1 + max of left and right subtree
+    return 1 + max(height(root->leftChild), height(root->rightChild));
+}
+
+
+
+
+
+Example:
+
+                 20
+               /    \
+             10      30
+            /  \     /
+           6    21  4
+          / \
+         3   8
+
+here the height of the tree will be: 3
+
+
+
+
+int main() {
+    // Constructing the tree
+    Node* root = new Node(20);
+    root->leftChild = new Node(10);
+    root->rightChild = new Node(30);
+    root->leftChild->leftChild = new Node(6);
+    root->leftChild->rightChild = new Node(21);
+    root->rightChild->leftChild = new Node(4);
+    root->leftChild->leftChild->leftChild = new Node(3);
+    root->leftChild->leftChild->rightChild = new Node(8);
+
+    cout << "Height of the tree = " << height(root) << endl;
+
+    return 0;
+}
+
+
+Output:
+-------
+
+Height of the tree = 3
+
+
+Analogy to Remember:
+--------------------
+
+Depth = “How many floors you go down in a shopping mall to reach underground parking.”
+
+Height = “How many floors you need to climb up to reach the terrace party.”
+
+So:
+
+Root (20) is the ground floor → depth = 0.
+
+Basement (node 3 or 8) → depth = 3.
+
+Terrace party at root → height = 3
+
+
+
+
+
+Checking Equality of Two Trees:
+===============================
+
+Two trees are equal if:
+
+
+1. Their root values are the same.
+
+2. Their left subtrees are equal.
+
+3. Their right subtrees are equal.
+
+
+
+--We compare root values and recursively compare left and right subtrees.
+
+
+bool isIdentical(Node* n1, Node* n2) {
+    
+    // Case 1: If both nodes are NULL, then this part of the tree is identical
+    if (n1 == NULL && n2 == NULL) 
+        return true;
+
+    // Case 2: If one node is NULL and the other is not, trees are not identical
+    if ((n1 == NULL && n2 != NULL) || (n1 != NULL && n2 == NULL))
+        return false;
+
+    // Case 3: If both nodes exist but their values are different, not identical
+    if (n1->value != n2->value)
+        return false;
+
+    // Case 4: If current nodes are same, 
+    // check left subtrees and right subtrees recursively
+    return isIdentical(n1->leftChild, n2->leftChild) && 
+           isIdentical(n1->rightChild, n2->rightChild);
+}
+
+
+
+Nodes at K Distance from Root:
+===============================
+
+K distance from root means:
+
+--Find all nodes that are K edges away from the root.
+
+(or equivalently, nodes that are at level K of the tree).
+
+Analogy:
+---------
+
+Think of the root as Ground Floor (0th level) .
+
+1st level = children
+
+2nd level = grandchildren
+
+kth level = kth generation
+
+So asking nodes at distance k is like asking:
+“Who lives on the kth floor of this building?”
+
+
+--We want to print all nodes that are exactly k levels down.
+
+
+Example:
+
+          1   ← root (level 0, distance 0)
+        /   \
+       2     3   ← level 1, distance 1
+      / \   / \
+     4   5 6   7 ← level 2, distance 2
+
+
+K = 0 → {1}
+
+K = 1 → {2, 3}
+
+K = 2 → {4, 5, 6, 7}
+
+So "nodes at K distance from root" = all nodes on the K-th level.
+
+
+
+
+code:
+------
+
+void printNodesAtDistance(Node* root, int distance) {
+    if (root == NULL) 
+	return;
+
+    if (distance == 0) {
+        cout << root->value << " ";
+        return;
+    }
+
+    printNodesAtDistance(root->leftChild, distance - 1);
+    printNodesAtDistance(root->rightChild, distance - 1);
+}
+
+
+
+/*
+
+                  20
+                /    \
+              10      30
+             /  \     /
+            6   21   4
+           / \
+          3   8
+
+*/
+
+
+int main() {
+    Node* root = new Node(20);
+    root->leftChild = new Node(10);
+    root->rightChild = new Node(30);
+    root->leftChild->leftChild = new Node(6);
+    root->leftChild->rightChild = new Node(21);
+    root->rightChild->leftChild = new Node(4);
+    root->leftChild->leftChild->leftChild = new Node(3);
+    root->leftChild->leftChild->rightChild = new Node(8);
+
+
+    cout << "Nodes at distance 3: ";
+    printNodesAtDistance(root, 3);
+    cout << endl;
+
+    return 0;
+}
+
+
+Output: 3 8
+
+
+Execution of the above function:
+--------------------------------
+
+
+1. At root 1, distance = 2 → not 0 → go left & right with distance = 1.
+
+2. At node 2, distance = 1 → not 0 → go deeper (distance = 0).
+
+--Left = node 4, distance = 0 → print 4
+
+--Right = node 5, distance = 0 → print 5
+
+3. At node 3, distance = 1 → not 0 → go deeper (distance = 0).
+
+--Left = node 6, distance = 0 → print 6
+
+--Right = node 7, distance = 0 → print 7
+
+
+
+
+
+
+2. Breadth first traversal / level wise traversal
+--------------------------------------------------
+
+
+Example:
+
+
+        20
+      /    \
+    10      30
+   /  \    /
+  6   21  4
+ / \
+3   8
+
+
+
+
+Explanation:
+
+--BFS (Breadth First Search) prints the tree level by level.
+
+--Start from the root (level 0), then move to the next level and print all nodes, and continue until the leaves.
+
+--The height of the tree tells us how many levels exist. If height = 3, then levels = 0, 1, 2, 3.
+
+--We can use our printNodeAtDistance function (already implemented) to print all nodes at a given level.
+
+--By iterating from level = 0 to level = height, we can print the entire tree in BFS order.
+
+
+
+code:
+------
+
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int value;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        value = val;
+        left = right = nullptr;
+    }
+};
+
+// Function to print nodes at a given distance from root
+void printNodeAtDistance(Node* root, int distance) {
+    if (root == NULL) 
+	return;
+
+    if (distance == 0) {
+        cout << root->value << " ";
+        return;
+    }
+
+    printNodeAtDistance(root->left, distance - 1);
+    printNodeAtDistance(root->right, distance - 1); 
+}
+
+// Function to calculate height of tree
+int height(Node* root) {
+    if (root == NULL) 
+	return -1;
+
+    return 1 + max(height(root->left), height(root->right));
+}
+
+
+// Level Order Traversal using printNodeAtDistance
+void traverseLevelOrder(Node* root) {
+    int h = height(root);
+    for (int i = 0; i <= h; i++) {
+        printNodeAtDistance(root, i);
+    }
+    cout << endl;
+}
+
+int main() {
+    Node* root = new Node(20);
+    root->left = new Node(10);
+    root->right = new Node(30);
+    root->left->left = new Node(6);
+    root->left->right = new Node(21);
+    root->right->left = new Node(4);
+    root->left->left->left = new Node(3);
+    root->left->left->right = new Node(8);
+
+    cout << "Level Order Traversal (BFS): ";
+    traverseLevelOrder(root);
+
+    return 0;
+}
+
+
+Output:
+-------
+
+Level Order Traversal (BFS): 20 10 30 6 21 4 3 8
+
+Space Complexity for the above approach:
+----------------------------------------
+
+--Each call to printNodeAtDistance uses stack frames proportional to the height of the tree (h).
+--But note: after finishing one level, recursion unwinds completely before moving to the next level.
+
+--So the overall space complexity = O(h).
+
+
+Time complexity:
+-----------------
+
+This recursive method has O(n²) worst-case complexity (for skewed trees), because for each level you traverse part of the tree again.
+
+The queue-based iterative BFS method is O(n) always.
+
+
+
+Queue-based iterative BFS:
+=========================
+
+
+Let's take one example:
+
+	  GrandParent
+           /      \
+         Dad      Uncle
+        /  \      /   \
+     sonu  monu  rinki  pinki
+
+
+The BFS output of the tree will be:
+
+--Start from the root → GrandParent → print it.
+
+--Move to level 1 → Dad, Uncle → print them left to right.
+
+--Move to level 2 → sonu, monu, rinki, pinki → print them left to right. 
+
+Final output: 
+--------------
+
+GrandParent, Dad, Uncle, sonu, monu, rinki, pinki
+
+Logic:
+
+--here we can use the FIFO logic, like first come first serve.
+
+1. Start
+
+--Create an empty queue.
+
+--Push the root node (GrandParent) into the queue.
+
+--Queue: [GrandParent] 
+
+
+2. Step 1: Process front of the queue
+
+--Dequeue GrandParent → print it → Output: GrandParent
+
+--Enqueue its children → Dad, Uncle
+
+--Queue after enqueue: [Dad, Uncle]
+
+
+3. Step 2: Process next node
+
+--Dequeue Dad → print it → Output: GrandParent, Dad
+
+--Enqueue Dad’s children → sonu, monu
+
+--Queue: [Uncle, sonu, monu]
+
+
+4. Step 3: Process next node
+
+Dequeue Uncle → print it → Output: GrandParent, Dad, Uncle
+
+Enqueue Uncle’s children → rinki, pinki
+
+Queue: [sonu, monu, rinki, pinki]
+
+
+5. Step 4: Process remaining nodes
+
+Dequeue sonu → print → Output: GrandParent, Dad, Uncle, sonu
+
+sonu has no children → nothing to enqueue
+
+Queue: [monu, rinki, pinki]
+
+
+6. Step 5:
+
+--Dequeue monu → print → Output: …, monu
+
+--No children → Queue: [rinki, pinki]
+
+7. Step 6:
+
+--Dequeue rinki → print → Output: …, rinki
+
+--No children → Queue: [pinki]
+
+
+8. Step 7:
+
+--Dequeue pinki → print → Output: GrandParent, Dad, Uncle, sonu, monu, rinki, pinki
+
+--No children → Queue is empty → Done
+
+
+summary:
+---------
+
+1. Take a Queue of node : queue<Node*> q
+
+2. Push root to queue.
+
+3. While queue not empty →
+
+--Pop front, add to result.
+
+--Push children into queue.
+
+
+task:
+-------
+
+
+implement the following functionality:
+--------------------------------------
+
+vector<int> levelOrder(Node* root) {
+
+//inseted of printing, just push the nodes into the result vector.
+
+}
+
+
+
+
+
+
+code:
+------
+
+
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+class Node {
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
+
+vector<int> levelOrder(Node* root) {
+
+    // This vector will store the final result of level order traversal
+    vector<int> result;
+
+    // If tree is empty, return an empty vector
+    if (root == NULL) 
+		return result;
+
+    // Use a queue to process nodes level by level
+    queue<Node*> q;
+
+    // Start with the root node in the queue
+    q.push(root);
+
+    // Process until the queue is empty
+    while (!q.empty()) {
+
+        // Get the front node of the queue
+        Node* current = q.front();
+        q.pop(); // remove it from the queue
+
+        // Store the current node's value into result
+        result.push_back(current->data);
+
+        // Push left child into the queue if it exists
+        if (current->left != NULL) q.push(current->left);
+
+        // Push right child into the queue if it exists
+        if (current->right != NULL) q.push(current->right);
+    }
+
+    // Return the traversal result
+    return result;
+}
+
+// Example usage
+int main() {
+    /*
+            1
+           / \
+          2   3
+         / \   \
+        4   5   6
+    */
+
+    Node* root = new Node(1);
+    root->left = new Node(2);
+    root->right = new Node(3);
+    root->left->left = new Node(4);
+    root->left->right = new Node(5);
+    root->right->right = new Node(6);
+
+    vector<int> ans = levelOrder(root);
+
+    cout << "Level Order Traversal: ";
+    for (int x : ans) cout << x << " ";
+    cout << endl;
+}
+
+
+Time complexity:
+-----------------
+
+--In BFS, every node is visited exactly once.
+
+--Let n = total number of nodes in the tree.
+
+For each node:
+
+--We dequeue it → O(1)
+
+--We enqueue its children → O(1) per child
+
+So total time = O(n)
+
+
+
+Space complexity of the Queue based BFS:
+----------------------------------------
+
+--The main extra space used is the queue.
+
+--At most, the queue will store all nodes at the largest level of the tree.
+
+--for a perfect binary tree of 15 nodes, numbers of element will be at each level:
+
+level1: 1
+level2: 2
+level3: 4
+level4: 8
+
+so for the 4 level the total node will be 15
+n=15
+
+--So maximum queue size = width of the tree (w)
+
+--at the last level the total nodes will be n/2
+
+15/2 = 7+1 = 8
+
+Total nodes = 15 → n = 15
+
+Last level nodes = 8 ≈ n/2
+
+Maximum queue size = n/2 + 1 ≈ O(n)
+
+--In worst case (perfect binary tree), width ≈ n/2 → O(n)
+
+space complexity = (n/2 +1) = O(n)
+
+
+
+Student Task: 
+--------------
+
+Let's take the following tree:
+
+
+	  GrandParent
+           /      \
+         Dad      Uncle
+        /  \      /   \
+     sonu  monu  rinki  pinki
+
+
+Guess the output of:
+
+1. preorder
+2. postorder
+3. inorder
+
+
+
+Linear representation of a complete binary tree: using array
+================================================
+
+
+--A complete binary tree (CBT) is a binary tree in which all levels are completely filled except possibly the last level, which is filled from left to right.
+
+--Linear representation stores the BT in a 1D array.
+
+--Here we store the tree nodes into an array, level wise(bottom to top, left to right)
+--we store the root node at index 0, and to store the left and right child we use the formula.
+
+
+In a complete binary tree:
+
+--If a node is at index i in the array (0-based indexing), then:
+
+Left child index: 2*i + 1
+Right child index: 2*i + 2
+Parent index: (i-1)/2 (integer division)
+
+--Using this property, we can represent the tree without pointers, just using array indices.
+
+
+Array Representation Rules:
+--------------------------
+
+--Suppose the binary tree nodes are numbered in level order:
+
+--Start from the root at index 0.
+
+--Insert nodes level by level from left to right.
+
+--Use the formulas above to find children and parent.
+
+Note: This representation works efficiently only for complete or almost complete binary trees. 
+
+Example:
+
+--Consider the following complete binary tree:
+
+          10
+       /     \
+     20       30
+    /  \     /
+  40   50  60
+
+
+Step 1: Number nodes by level order:
+
+Level 0: 10
+Level 1: 20,30
+Level 2: 40,50,60
+
+Step 2: Store in array
+
+Index:  0   1   2   3   4   5
+Array: [10, 20, 30, 40, 50, 60]
+
+
+
+Step 3: Verify relationships:
+
+--Node 10 at index 0
+
+Left child → 2*0+1 = 1 → 20 
+
+Right child → 2*0+2 = 2 → 30 
+
+--Node 20 at index 1
+
+Left child → 2*1+1 = 3 → 40 
+
+Right child → 2*1+2 = 4 → 50 
+
+--Node 30 at index 2
+
+Left child → 2*2+1 = 5 → 60 
+
+Right child → 2*2+2 = 6 → (no node)
+
+--Parent of 50 at index 4 → (4-1)/2 = 1 → 20 
+
+
+
+Example2:
+---------
+
+Consider the following tree:
+
+
+          20
+         /  \
+       10    30
+      / \    /
+     6  21  4
+    / \
+   3   8
+
+
+
+Index:  0   1   2   3   4   5  6  7  8
+Array: [20  10  30  6   21  4  -1 3  8]
+
+--here -1 represent the NULL.
+
+
+
+
+
+Advantage:
+----------
+
+1. No Pointers Needed:
+
+--Unlike linked representation, we don’t need left and right pointers for each node.
+--The position of parent and child can be calculated using simple formulas
+
+2. Memory Efficient for Complete Binary Trees.
+
+--n a complete binary tree, all positions in the array are used efficiently.
+
+3. Random Access:
+
+--Any node can be accessed in O(1) time using its index.
+--No need to traverse pointers level by level.
+
+4. Simple Heap Implementation:
+
+--Min-Heap or Max-Heap can be easily implemented using array representation.
+
+
+
+Disadvantage:
+--------------
+
+1. Memory Waste in Sparse Trees
+
+--If the tree is not complete, many array positions are empty (NULL), leading to wasted memory.
+
+2. Costly Insert/Delete Operations:
+
+--Inserting or deleting nodes may require shifting elements in the array, which can be inefficient.
+
+3. Fixed Size (if using static array):
+
+--You need to know the maximum possible size in advance; dynamic resizing adds complexity.
+
+
+
+
+Code example:
+-------------
+#include <iostream>
+using namespace std;
+
+int main() {
+    // Linear representation of the tree (using -1 for NULL nodes)
+    int tree[] = {20, 10, 30, 6, 21, 4, -1, 3, 8};
+
+    int n= sizeof(tree) / sizeof(tree[0]);
+
+    cout << "Node\tLeft Child\tRight Child\n";
+    for (int i = 0; i < n; i++) {
+        if (tree[i] == -1) continue;  // skip empty positions
+
+        int leftIndex = 2*i + 1;
+        int rightIndex = 2*i + 2;
+
+        cout << tree[i] << "\t";
+
+        if (leftIndex < n && tree[leftIndex] != -1)
+            cout << tree[leftIndex] << "\t\t";
+        else
+            cout << "NULL\t\t";
+
+        if (rightIndex < n && tree[rightIndex] != -1)
+            cout << tree[rightIndex] << "\n";
+        else
+            cout << "NULL\n";
+    }
+
+    return 0;
+}
+
+
+Output:
+
+Node    Left Child  Right Child
+20      10          30
+10      6           21
+30      4           NULL
+6       3           8
+21      NULL        NULL
+4       NULL        NULL
+3       NULL        NULL
+8       NULL        NULL
+
+
+
+
+
+Sparse Tree:
+--------------
+
+--A sparse tree is a tree in which some nodes are missing, and not all positions at each level are filled.
+
+--It can occur naturally when inserting nodes arbitrarily in a binary tree.
+
+--Many nodes may have only one child or no children, leaving gaps if we try to represent it in a linear array.
+
+--It is essentially the opposite of a complete or full tree.
+
+
+Example:
+
+        10
+       /  \
+     20    30
+       \
+        50
+
+
+--Node 20 has no left child, only right child 50.
+
+--Node 30 has no children.
+
+This is sparse, because:
+
+--Some nodes have missing children.
+
+--Levels are not fully filled left to right.
+
+
+
+
+Array Representation Issue:
+----------------------------
+
+--If we try to represent the above tree in an array (linear representation for a complete tree):
+
+Index: 0   1   2   3   4   5   6
+Array: 10 20  30 null 50 null null
+
+--Many indices are null to maintain the complete binary tree structure.
+
+--This wastes memory, which is why sparse trees are better represented using pointers (node-based structure).
+
+
+
+Creating a BT in level order with the given array:
+==================================================
+
+vector<int> arr = {20, 10, 30, 6, 21, 4, 3, 8};
+
+level order representation:
+--------------------------
+
+            20
+          /    \
+        10      30
+       /  \    /  \
+      6   21  4    3
+     /
+    8
+
+
+Idea:
+-----
+
+--Each element in the array corresponds to a node in the level-order of the tree.
+
+For array index i:
+
+--Left child → 2*i + 1
+
+--Right child → 2*i + 2
+
+
+
+code:
+------
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
+
+// Function to build tree from level-order array
+Node* buildTreeFromArray(vector<int>& arr, int i) {
+    if (i >= arr.size()) 
+	return NULL;
+
+    Node* root = new Node(arr[i]);
+    root->left = buildTreeFromArray(arr, 2 * i + 1);
+    root->right = buildTreeFromArray(arr, 2 * i + 2);
+
+    return root;
+}
+
+// Preorder traversal to verify
+void preorder(Node* root) {
+    if (!root) return;
+    cout << root->data << " ";
+    preorder(root->left);
+    preorder(root->right);
+}
+
+int main() {
+    vector<int> arr = {20, 10, 30, 6, 21, 4, 3, 8};
+
+    Node* root = buildTreeFromArray(arr, 0);
+
+    cout << "Preorder traversal of the tree: ";
+    preorder(root);
+    cout << endl;
+
+    return 0;
+}
+
+
+Output: 
+--------
+
+
+Preorder traversal of the tree: 20 10 6 8 21 30 4 3
 
 
 
@@ -1174,6 +2461,10 @@ Final Tree Structure:
 
 Task: draw the tree struture of [1, 2, 3, 4, -1, -1, 5, -1, -1, -1, 20, -1, -1] in preorder sequence.
 
+
+
+
+
 Answer:
 
 	1
@@ -1210,6 +2501,7 @@ Node* buildTree() {
         return NULL;
 
     Node* root = new Node(x); // create new node
+
     root->left = buildTree(); // build left subtree
     root->right = buildTree();// build right subtree
 
@@ -1296,32 +2588,6 @@ Space Complexity: O(h)
 Worst case:
 
 Skewed Tree → Height = n → Space = O(n)
-
-
-What is a Skewed Tree?
-----------------------
-
-A Skewed Tree is a special type of binary tree where all nodes have only one child.
-
-Two types:
-
-1. Left Skewed Tree: all nodes have only left child.
-
-    1
-   /
-  2
- /
-3
-
-
-2. Right Skewed Tree: all nodes have only right child
-
-
-1
- \
-  2
-   \
-    3
 
 
 
@@ -1730,513 +2996,6 @@ Inorder Traversal of the constructed tree: 4 2 5 1 3 6
 
 
 
-Depth and Height of Nodes in a Binary Tree:
-============================================
-
-
-Two Important Properties of Nodes in a tree:
-
-1. Depth → How far a node is from the top (root).
-
-2. Height → How far a node is from the bottom (leaf).
-
-
-
-1. Depth:
-----------
-
-Example:
-
-
-        20
-      /    \
-    10      30
-   /  \    /  \
-  6   21  4
- / \
-3   8
-
-
-
-
---Depth is measured from the root node downwards.
-
---Root node (20) has depth = 0.
-
---As we go down, depth increases.
-
-
-Depth(20) = 0
-
-Depth(10), Depth(30) = 1
-
-Depth(6), Depth(21), Depth(4) = 2
-
-Depth(3), Depth(8) = 3
-
-
-
-
-
-2. Height:
------------
-
---Height is measured from the leaf nodes upwards.
-
---All leaf nodes have height = 0.
-
---As we move up, height increases.
-
-Example:
----------
-
-Height(3), Height(8), Height(21), Height(4) = 0
-
-Height(6), Height(30) = 1
-
-Height(10) = 2
-
-Height(20) = 3 (height of tree)
-
-
-
-Formula for Height of a Node:
------------------------------
-
-height(node) = 1 + max(height(leftsubtree), height(rightsubtree))
-
---To calculate the height of a tree, here we also use the recurssive approach:
-
-Base case: If node is NULL, height = -1 (tree empty).
-
-If leaf node → height = 0.
-
-
-code:
-------
-
-
-#include <iostream>
-#include <algorithm>
-using namespace std;
-
-class Node {
-    int value;
-    Node* leftChild;
-    Node* rightChild;
-
-    Node(int val) {
-        value = val;
-        leftChild = rightChild = NULL;
-    }
-};
-
-// Recursive function to calculate height
-int height(Node* root) {
-    // If tree is empty
-    if (root == NULL)
-        return -1;
-
-    // If it's a leaf node
-    if (root->leftChild == NULL && root->rightChild == NULL)
-        return 0;
-
-    // Recursive formula: 1 + max of left and right subtree
-    return 1 + max(height(root->leftChild), height(root->rightChild));
-}
-
-int main() {
-    // Constructing the tree
-    Node* root = new Node(20);
-    root->leftChild = new Node(10);
-    root->rightChild = new Node(30);
-    root->leftChild->leftChild = new Node(6);
-    root->leftChild->rightChild = new Node(21);
-    root->rightChild->leftChild = new Node(4);
-    root->leftChild->leftChild->leftChild = new Node(3);
-    root->leftChild->leftChild->rightChild = new Node(8);
-
-    cout << "Height of the tree = " << height(root) << endl;
-
-    return 0;
-}
-
-
-Output:
--------
-
-Height of the tree = 3
-
-
-Analogy to Remember:
---------------------
-
-Depth = “How many floors you go down in a shopping mall to reach underground parking.”
-
-Height = “How many floors you need to climb up to reach the terrace party.”
-
-So:
-
-Root (20) is the ground floor → depth = 0.
-
-Basement (node 3 or 8) → depth = 3.
-
-Terrace party at root → height = 3
-
-
-
-Checking Equality of Two Trees:
-===============================
-
-Two trees are equal if:
-
-
-1. Their root values are the same.
-
-2. Their left subtrees are equal.
-
-3. Their right subtrees are equal.
-
-
-
---We compare root values and recursively compare left and right subtrees.
-
-bool isIdentical(Node* n1, Node* n2) {
-    if (n1 == NULL && n2 == NULL) return 1;
-
-    if ((!n1 && n2) || (n1 && !n2))
-        return 0;
-
-    if (n1->data != n2->data)
-        return 0;
-
-    return isIdentical(n1->left, n2->left) && 
-           isIdentical(n1->right, n2->right);
-}
-
-
-
-Nodes at K Distance from Root:
-===============================
-
-
-Analogy:
----------
-
-Think of the root as Ground Floor (0th level) .
-
-1st level = children
-
-2nd level = grandchildren
-
-kth level = kth generation
-
-So asking nodes at distance k is like asking:
-“Who lives on the kth floor of this building?”
-
-
---We want to print all nodes that are exactly k levels down.
-
-code:
-------
-
-void printNodesAtDistance(Node* root, int distance) {
-    if (root == NULL) return;
-
-    if (distance == 0) {
-        cout << root->value << " ";
-        return;
-    }
-
-    printNodesAtDistance(root->leftChild, distance - 1);
-    printNodesAtDistance(root->rightChild, distance - 1);
-}
-
-
-
-
-int main() {
-    Node* root = new Node(20);
-    root->leftChild = new Node(10);
-    root->rightChild = new Node(30);
-    root->leftChild->leftChild = new Node(6);
-    root->leftChild->rightChild = new Node(21);
-    root->rightChild->leftChild = new Node(4);
-    root->leftChild->leftChild->leftChild = new Node(3);
-    root->leftChild->leftChild->rightChild = new Node(8);
-
-
-    cout << "Nodes at distance 3: ";
-    printNodesAtDistance(root, 3);
-    cout << endl;
-
-    return 0;
-}
-
-
-
-
-2. Breadth first traversal / level wise traversal
---------------------------------------------------
-
-
-Example:
-
-
-        20
-      /    \
-    10      30
-   /  \    /
-  6   21  4
- / \
-3   8
-
-
-
-
-Explanation:
-
---BFS (Breadth First Search) prints the tree level by level.
-
---Start from the root (level 0), then move to the next level and print all nodes, and continue until the leaves.
-
---The height of the tree tells us how many levels exist. If height = 3, then levels = 0, 1, 2, 3.
-
---We can use our printNodeAtDistance function (already implemented) to print all nodes at a given level.
-
---By iterating from level = 0 to level = height, we can print the entire tree in BFS order.
-
-
-
-code:
-------
-
-#include <iostream>
-using namespace std;
-
-class Node {
-public:
-    int value;
-    Node* left;
-    Node* right;
-
-    Node(int val) {
-        value = val;
-        left = right = nullptr;
-    }
-};
-
-// Function to print nodes at a given distance from root
-void printNodeAtDistance(Node* root, int distance) {
-    if (!root) return;
-
-    if (distance == 0) {
-        cout << root->value << " ";
-        return;
-    }
-
-    printNodeAtDistance(root->left, distance - 1);
-    printNodeAtDistance(root->right, distance - 1); 
-}
-
-// Function to calculate height of tree
-int height(Node* root) {
-    if (!root) return -1;
-    return 1 + max(height(root->left), height(root->right));
-}
-
-// Level Order Traversal using printNodeAtDistance
-void traverseLevelOrder(Node* root) {
-    int h = height(root);
-    for (int i = 0; i <= h; i++) {
-        printNodeAtDistance(root, i);
-    }
-    cout << endl;
-}
-
-int main() {
-    Node* root = new Node(20);
-    root->left = new Node(10);
-    root->right = new Node(30);
-    root->left->left = new Node(6);
-    root->left->right = new Node(21);
-    root->right->left = new Node(4);
-    root->left->left->left = new Node(3);
-    root->left->left->right = new Node(8);
-
-    cout << "Level Order Traversal (BFS): ";
-    traverseLevelOrder(root);
-
-    return 0;
-}
-
-
-Output:
--------
-
-Level Order Traversal (BFS): 20 10 30 6 21 4 3 8
-
-Space Complexity for the above approach:
-----------------------------------------
-
---Each call to printNodeAtDistance uses stack frames proportional to the height of the tree (h).
---But note: after finishing one level, recursion unwinds completely before moving to the next level.
-
---So the overall space complexity = O(h).
-
-
-Time complexity:
------------------
-
-This recursive method has O(n²) worst-case complexity (for skewed trees), because for each level you traverse part of the tree again.
-
-The queue-based iterative BFS method is O(n) always.
-
-
-
-
-
-Queue-based iterative BFS:
-=========================
-
-
-Logic:
-------
-
-1. Push root to queue.
-
-2. While queue not empty →
-
---Pop front, add to result.
-
---Push children into queue.
-
-code:
-------
-
-
-#include <iostream>
-#include <vector>
-#include <queue>
-using namespace std;
-
-class Node {
-    int data;
-    Node* left;
-    Node* right;
-
-    Node(int val) {
-        data = val;
-        left = right = NULL;
-    }
-};
-
-vector<int> levelOrder(Node* root) {
-
-    // This vector will store the final result of level order traversal
-    vector<int> result;
-
-    // If tree is empty, return an empty vector
-    if (root == NULL) 
-		return result;
-
-    // Use a queue to process nodes level by level
-    queue<Node*> q;
-
-    // Start with the root node in the queue
-    q.push(root);
-
-    // Process until the queue is empty
-    while (!q.empty()) {
-
-        // Get the front node of the queue
-        Node* current = q.front();
-        q.pop(); // remove it from the queue
-
-        // Store the current node's value into result
-        result.push_back(current->data);
-
-        // Push left child into the queue if it exists
-        if (current->left != NULL) q.push(current->left);
-
-        // Push right child into the queue if it exists
-        if (current->right != NULL) q.push(current->right);
-    }
-
-    // Return the traversal result
-    return result;
-}
-
-// Example usage
-int main() {
-    /*
-            1
-           / \
-          2   3
-         / \   \
-        4   5   6
-    */
-
-    Node* root = new Node(1);
-    root->left = new Node(2);
-    root->right = new Node(3);
-    root->left->left = new Node(4);
-    root->left->right = new Node(5);
-    root->right->right = new Node(6);
-
-    vector<int> ans = levelOrder(root);
-
-    cout << "Level Order Traversal: ";
-    for (int x : ans) cout << x << " ";
-    cout << endl;
-}
-
-
-Logic:
-
---intialally we have the root node 1, we can directly store it inside the queue.
-
-queue = [1]
-
-now get the front of this q and store inside the result.then pop out
- 
-result = [1]
-queue = []
-
-now we need to go to 2 and 3
-queue = [2,3]
-
-now get the front of this q and store inside the result.then pop out
-result=[1,2,3]
-
-like wise...
-
-
-
-
-Space complexity of the Queue based BFS:
-----------------------------------------
-
-
-
---for a perfect binary tree the numbers of element will be:
-
-level1: 1
-level2: 2
-level3: 4
-level4: 8
-
-so for the 4 level the total node will be 15
-n=15
-
---at the last level the total nodes will be n/2
-
-15/2 = 7+1 = 8
-
-space complexity = (n/2 +1) = O(n)
-
-
-
 
 Some of the usefull functionality of the BT:
 ============================================
@@ -2443,6 +3202,951 @@ code:
 }
 
 
+
+
+
+
+Morris Traversal:
+=================
+
+
+
+Goal: Traverse a binary tree in Inorder (or Preorder) using O(1) extra space.
+
+--Normal Inorder traversal uses recursion → O(h) space.
+
+--Iterative traversal uses stack → O(h) space.
+
+--Morris Traversal avoids both by temporarily modifying the tree pointers.
+
+
+
+Idea / Intuition:
+------------------
+
+1. For current node, if left child exists, find the rightmost node in the left subtree (inorder predecessor).
+
+2. Connect this rightmost node's right pointer to current node. This is called creating a temporary thread.
+
+3. Move to the left child.
+
+4. If left child doesn’t exist, print the current node and move to the right child.
+
+5. When a thread is found (meaning we came back from left subtree), remove the thread, print the node, and move to right.
+
+--Essentially, we create temporary links to go back to parent nodes without stack.
+
+
+Example:
+--------
+
+        1
+       / \
+      2   3
+     / \
+    4   5
+
+
+Step-by-Step Inorder Traversal:
+-------------------------------
+
+1. Start at 1: left exists → go to left subtree → predecessor of 1 in left subtree = 5 (rightmost in left subtree).
+
+--Make 5 → right = 1 (thread)
+
+--Move to 2
+
+2. At 2: left exists → predecessor of 2 in left subtree = 4
+
+--Make 4 → right = 2 (thread)
+
+--Move to 4
+
+3. At 4: left = NULL → print 4 → move right → thread points to 2
+
+--Remove thread → print 2 → move right to 5
+
+4. At 5: left = NULL → print 5 → move right → thread points to 1
+
+--Remove thread → print 1 → move right to 3
+
+5. At 3: left = NULL → print 3 → move right → NULL → done
+
+Inorder Output: 4 2 5 1 3
+
+
+code: In-order traversal without recurssion.
+-------------------------------------------
+
+
+#include <iostream>
+using namespace std;
+
+class Node {
+    int data;
+    Node* left;
+    Node* right;
+    Node(int val) {
+	 data= val; 
+	left =  right= NULL;
+    }
+};
+
+
+
+void morrisInorder(Node* root) {
+    Node* curr = root;
+
+    while (curr != NULL) {
+
+        if (curr->left == NULL) {
+            cout << curr->data << " "; // print node
+            curr = curr->right;        // move right
+
+        } else {
+ 
+           // Find inorder predecessor
+            Node* pred = curr->left;
+
+            while (pred-> right != NULL && pred->right != curr)
+                pred = pred->right;
+
+            if (pred->right == NULL) {
+                // Make thread
+                pred->right = curr;
+                curr = curr->left;
+            } else {
+                // Thread exists → remove it
+                pred->right = NULL;
+                cout << curr->data << " ";
+                curr = curr->right;
+            }
+        }
+    }
+    cout << endl;
+}
+
+
+
+int main() {
+
+    Node* root = new Node(1);
+    root->left = new Node(2);
+    root->right = new Node(3);
+    root->left->left = new Node(4);
+    root->left->right = new Node(5);
+
+    cout << "Morris Inorder Traversal: ";
+    morrisInorder(root);
+}
+
+
+Key Point:
+-----------
+
+1. No recursion, no stack: O(1) space.
+
+2. Time Complexity: O(n)
+
+--Each edge is traversed at most twice.
+
+3. Temporary threads: Pointers are restored to original → tree structure not modified permanently.
+
+4. Works for Inorder & Preorder
+
+
+
+Preorder Traversal: without using the recursion
+------------------------
+
+
+Note: The difference: In Preorder, print the node before creating the thread, not after removing it.
+
+
+
+
+void morrisPreorder(Node* root) {
+    Node* curr = root;
+
+    while (curr != NULL) {
+        if (curr->left == NULL) {
+            cout << curr->data << " ";
+            curr = curr->right;
+        } else {
+            Node* pred = curr->left;
+            while (pred->right != nullptr && pred->right != curr)
+                pred = pred->right;
+
+            if (pred->right == NULL) {
+                cout << curr->data << " "; // print **before threading** for preorder
+                pred->right = curr;
+                curr = curr->left;
+            } else {
+                pred->right = NULL;
+                curr = curr->right;
+            }
+        }
+    }
+    cout << endl;
+}
+
+
+Advantages:
+------------
+
+--Space efficient: O(1) extra memory.
+
+--Restores tree after traversal.
+
+--Can be applied for inorder, preorder traversals.
+
+
+Visual Tips:
+------------
+
+--Think of threads as temporary “breadcrumbs” to go back to parent nodes.
+
+--Whenever a node has no left child → print and move right.
+
+--Whenever left exists → find predecessor, make thread if not exists, remove thread if exists.
+
+
+
+Student task: complete the following function.
+-------------
+
+
+function signature:
+-------------------
+
+
+vector<int> inOrder(Node* root){
+
+//Instead of printing values (cout << curr->data), we store them in a vector<int> and return that vector.
+
+}
+
+
+
+Note: Morris is mainly used for Inorder and Preorder, For Postorder, people usually prefer recursion based or stack-based traversal for the simplicity.
+
+Why ?
+
+
+--In Inorder and Preorder, the “moment of visiting a node” fits naturally with the Morris idea:
+
+Inorder → visit root after left subtree is done.
+
+Preorder → visit root before going left.
+
+--In Postorder, we need to visit root  AFTER both left and right subtrees, i.e. the last action.
+
+--Morris traversal works by temporarily threading and returning to the parent, but when you come back, you haven’t yet visited the right subtree → so you can’t directly do Postorder.
+
+
+
+
+
+
+
+
+
+
+
+Binary Search Tree:
+=============
+
+
+
+--There is difference between Binary tree and Binary Search tree.
+
+--Binary Search tree is one kind of Binary tree which satisfy the following condition:
+
+1. In Binary Search tree the left node value is always less than root node and the right node values are always greater than root node value.
+
+--Left child value < Root value < Right child value
+
+
+2. No duplicate values allowed.
+
+3. And each subtree of a binary search tree should also follow same condition.
+
+--Where as in normal binary tree the above condition need not satisfy.
+
+
+Analogy:
+-------
+
+--Think of a Binary Tree as a random family gathering where people can sit anywhere — no rules.
+
+--But a Binary Search Tree is like a classroom seating plan:
+
+1. Shorter students (smaller numbers) sit on the left.
+
+2. Taller students (larger numbers) sit on the right.
+
+3. Everyone follows the same rule in every row (subtree).
+
+
+Example1:
+
+
+        20
+      /    \
+    10      30
+   /  \    /  \
+  6   15  25   35
+ / \
+3   8
+
+
+
+Why This is a BST ?
+
+Root node: 20
+
+Left subtree: all values < 20 
+
+Right subtree: all values > 20 
+
+Left subtree (root 10):
+
+Left child 6 < 10 
+
+Right child 15 > 10 
+
+Subtree of 6: 3 < 6, 8 > 6 
+
+Right subtree (root 30):
+
+Left child 25 < 30 
+
+Right child 35 > 30 
+
+All subtrees also satisfy BST rules
+
+
+
+Example2:
+---------
+
+        20
+      /    \
+    10      30
+   /  \    /
+  6   21  4
+ / \
+3   8
+
+
+This is NOT a BST, because:
+
+21 should be in the right subtree of 20, not left.
+
+4 should be in the left subtree of 30, not right.
+
+
+
+
+
+
+
+Example to create a BST:
+------------------------------
+
+
+class Node {
+    public:
+        int value;
+        Node* left;
+        Node* right;
+
+        Node(int val){
+		value = val;
+		left = right = NULL;
+	}
+    };
+
+
+
+
+// function to Insert a value into BST
+Node* insertBST(Node* root, int val) {
+    if (root == NULL)
+        return new Node(val);
+
+    if (val < root->value)
+        root->left = insertBST(root->left, val);
+    else if (val > root->value)
+        root->right = insertBST(root->right, val);
+
+    return root;
+}
+
+
+   // function for inorder traversal
+    void inorder(Node* node) {
+
+        if (node == NULL) return;
+
+        inorder(node->left);
+        cout << node->value << " ";
+        inorder(node->right);
+    }
+
+
+int main() {
+ 
+    Node* root = NULL;
+
+    // Insert values into BST
+    int values[] = {20, 10, 30, 6, 15, 25, 35, 3, 8};
+    for (int val : values) {
+        root = insertBST(root, val);
+    }
+
+    // Print inorder traversal
+    cout << "Inorder traversal of BST: ";
+    inorder(root);
+    cout << endl;
+
+    return 0;
+}
+
+
+
+Output:
+-------
+
+Inorder traversal of BST: 3 6 8 10 15 20 25 30 35
+
+
+Notes:
+
+1. Inorder traversal of a BST always prints values sorted in ascending order.
+
+2. The insertBST function ensures that the tree satisfies BST properties.
+
+
+Implementing find() function:
+=============================
+
+Approach1: Iterative way:
+-------------------------
+
+bool findIterative(Node* root, int val) {
+    
+ Node* current = root;
+
+    while (current != NULL) {
+  
+      if (val < current->value)
+            current = current->left;
+ 
+       else if (val > current->value)
+            current = current->right;
+
+        else
+            return true;  // Found the value
+    }
+
+    return false;  // Value not found
+}
+
+
+
+
+
+Approach 2: Recursive way:
+---------------------------
+
+--Compare the target value with the current node:
+
+If equal → found
+
+If smaller → search left subtree
+
+If larger → search right subtree
+
+
+
+code:
+------
+
+bool findRecursive(Node* root, int val) {
+    if (root == NULL) 
+	return false;
+
+    if (root->value == val) 
+	return true;
+
+    else if (val < root->value) 
+	return findRecursive(root->left, val);
+
+    else 
+	return findRecursive(root->right, val);
+}
+
+
+
+
+Finding Min and Max in BST (efficient way):
+===========================================
+
+
+Minimum = leftmost leaf.
+
+Maximum = rightmost leaf.
+
+
+Time Complexity: O(log n) (if balanced tree).
+
+
+int findMinBST(Node* root) {
+    if (root == NULL)
+	return -1;
+
+    Node* current = root;
+
+    while (current->leftChild != NULL)
+        current = current->leftChild;
+    return current->value;
+}
+
+
+
+int findMaxBST(Node* root) {
+    if (root == NULL) 
+	return -1;
+
+    Node* current = root;
+
+    while (current->rightChild != NULL)
+        current = current->rightChild;
+    return current->value;
+}
+
+
+
+--If the BST is balanced the time complexity will take O(log n), where as if it is unbalanced it will raise to O(n).
+
+
+
+
+
+Validating a Binary Search Tree (BST):
+==================================
+
+A BST is valid if:
+
+1. Every node’s left child < node value
+
+2. Every node’s right child > node value
+
+3. Both left and right subtrees are also valid BSTs
+
+
+Approach (Using Min & Max):
+------------------------
+
+--Each node must lie within a valid range:
+
+Initially, the root can take any value → range (-∞, +∞) // -infinity to +infinity
+
+For left child → range becomes (min, node value)
+
+For right child → range becomes (node value, max)
+
+
+
+Analogy:
+--------
+
+--Think of it as every node having a “permit range”:
+
+--Left child can’t exceed parent
+
+--Right child must be larger than parent
+
+--Check recursively for all nodes
+
+
+
+
+code:
+------
+
+#include <iostream>
+#include <climits>
+using namespace std;
+
+class Node {
+public:
+    int value;
+    Node* left;
+    Node* right;
+    Node(int val) {
+        value = val;
+        left = right = NULL;
+    }
+};
+
+// Function to validate BST
+bool isValidBST(Node* root, int minVal = INT_MIN, int maxVal = INT_MAX) {
+    if (root == NULL) 
+	return true;
+
+    if (root->value <= minVal || root->value >= maxVal)
+        return false;
+
+    return isValidBST(root->left, minVal, root->value) &&
+           isValidBST(root->right, root->value, maxVal);
+}
+
+int main() {
+    // Create a BST
+    Node* root = new Node(20);
+    root->left = new Node(10);
+    root->right = new Node(30);
+    root->left->left = new Node(5);
+    root->left->right = new Node(15);
+
+    if (isValidBST(root))
+        cout << "Tree is a valid BST" << endl;
+    else
+        cout << "Tree is NOT a BST" << endl;
+
+    return 0;
+}
+
+
+
+
+--Works in O(n) time and O(h) space (h = tree height)
+
+
+
+Deleting a Node in BST (Binary Search Tree):
+=======================================
+
+
+--Deleting a node in a BST is more complex than insertion or searching.
+
+--Why? Because we must maintain the BST properties after deletion.
+
+--There are 3 main cases to consider depending on the node we want to delete.
+
+
+Case 1: Node is a Leaf (No Children):
+
+--Simply remove the node.
+
+example:
+
+       20
+      /  \
+    10    30
+   /
+  5
+
+
+Delete 5 → just remove it.
+
+Result:
+
+       20
+      /  \
+    10    30
+
+
+Case 2: Node has One Child:
+
+--Replace the node with its only child.
+
+example:
+
+       20
+      /  \
+    10    30
+          /
+        25
+
+
+--Delete 30 → replace it with 25 (its left child).
+
+Result:
+
+       20
+      /  \
+    10    25
+
+
+Case 3: Node has Two Children: 
+
+
+--When we delete a node with two children in a BST, we can’t just remove it outright because that would break the BST property (left < root < right). 
+--So we need to replace it with another node that preserves the BST order.
+
+--There are two options:
+
+1. Inorder Predecessor: 
+
+The largest value in the left subtree of the node we want to delete.
+
+Why?
+
+All values in the left subtree are smaller than the node.
+
+The largest value among them is just smaller than the node, so replacing keeps the BST property intact.
+
+Example:
+
+       20
+      /  \
+    10    30
+   /  \
+  5   15
+
+
+--Delete 20
+
+--Inorder predecessor = 15 (largest in left subtree)
+
+--Replace 20 with 15 → BST property maintained
+
+
+Result:
+
+       15
+      /  \
+    10    30
+   /
+  5
+
+
+2. Inorder Successor:
+
+--The smallest value in the right subtree of the node we want to delete.
+
+--Why?
+
+--All values in the right subtree are larger than the node.
+
+--The smallest value among them is just larger than the node, so replacing keeps the BST property intact.
+
+Example:
+
+       20
+      /  \
+    10    30
+         /  \
+       25    35
+
+--Delete 20
+
+--Inorder successor = 25 (smallest in right subtree)
+
+--Replace 20 with 25 → BST property maintained
+
+Result:
+
+       25
+      /  \
+    10    30
+                \
+                 35
+
+
+Key Point:
+---------
+
+--You can use either predecessor or successor.
+
+--The goal is to maintain the BST property (left < root < right).
+
+--Choice depends on convenience; both are correct and safe.
+
+
+
+
+code:
+-------
+
+Node* deleteNode(Node* root, int val) {
+
+    if (root == NULL) 
+	return NULL;
+
+    if (val < root->value)
+        root->left = deleteNode(root->left, val);
+    else if (val > root->value)
+        root->right = deleteNode(root->right, val);
+    else {
+        // Node found
+        if (root->left == NULL) return root->right;      // Case 0 or 1
+        if (root->right == NULL) return root->left;     // Case 0 or 1
+
+        // Case 2: Node has 2 children
+        Node* temp = root->right;                // Find inorder successor
+        while (temp->left) 
+	temp = temp->left;
+
+        root->value = temp->value;              // Replace value
+        root->right = deleteNode(root->right, temp->value); // Delete successor
+    }
+    return root;
+}
+
+
+
+Time Complexity: O(h), where h = height of the BST
+
+Balanced → O(log n)
+
+Skewed → O(n)
+
+
+
+
+Implementing a Set Using BST in C++
+================================
+
+Overview:
+
+
+--A Set stores unique elements in sorted order.
+
+--Internally, we can implement it using a Binary Search Tree (BST).
+
+--Operations supported:
+
+1. Insert → Add a unique element
+
+2. Search (contains) → Check if element exists
+
+3. Inorder Traversal → Print elements in sorted order
+
+4. Delete (remove) → Delete an element while maintaining BST properties
+
+
+Set Class Using BST:
+-------------------
+
+class Node {
+public:
+    int value;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        value = val;
+        left = right = nullptr;
+    }
+};
+
+
+class BSTSet {
+private:
+    Node* root;
+
+    // Insert a value recursively
+    Node* insert(Node* node, int val) {
+        if (!node) return new Node(val);
+        if (val < node->value)
+            node->left = insert(node->left, val);
+        else if (val > node->value)
+            node->right = insert(node->right, val);
+        // Duplicate value → ignore
+        return node;
+    }
+
+    // Search recursively
+    bool contains(Node* node, int val) {
+        if (!node) return false;
+        if (val == node->value) return true;
+        else if (val < node->value) return contains(node->left, val);
+        else return contains(node->right, val);
+    }
+
+    // Inorder traversal (prints elements in sorted order)
+    void inorder(Node* node) {
+        if (!node) return;
+        inorder(node->left);
+        std::cout << node->value << " ";
+        inorder(node->right);
+    }
+
+    // Delete a node
+    Node* deleteNode(Node* node, int val) {
+        if (!node) return nullptr;
+
+        if (val < node->value)
+            node->left = deleteNode(node->left, val);
+        else if (val > node->value)
+            node->right = deleteNode(node->right, val);
+        else {
+            // Node found
+            if (!node->left) return node->right;      // Case: 0 or 1 child
+            if (!node->right) return node->left;     // Case: 0 or 1 child
+
+            // Node has 2 children → find inorder successor
+            Node* temp = node->right;
+            while (temp->left) temp = temp->left;
+
+            node->value = temp->value;               // Replace value
+            node->right = deleteNode(node->right, temp->value); // Delete successor
+        }
+        return node;
+    }
+
+public:
+    BSTSet() { root = nullptr; }
+
+    // Public methods
+    void insert(int val) { root = insert(root, val); }
+    bool contains(int val) { return contains(root, val); }
+    void remove(int val) { root = deleteNode(root, val); }
+    void display() {
+        std::cout << "Set elements (sorted): ";
+        inorder(root);
+        std::cout << std::endl;
+    }
+};
+
+
+Uses Example:
+--------------
+
+int main() {
+    BSTSet s;
+
+    // Insert elements
+    s.insert(20);
+    s.insert(10);
+    s.insert(30);
+    s.insert(25);
+    s.insert(35);
+    s.insert(10); // duplicate ignored
+
+    s.display(); // Output: 10 20 25 30 35
+
+    // Search elements
+    cout << "Contains 25? " << (s.contains(25) ? "Yes" : "No") << endl;
+    cout << "Contains 15? " << (s.contains(15) ? "Yes" : "No") << endl;
+
+    // Delete element
+    s.remove(30);
+    s.display(); // Output: 10 20 25 35
+
+    return 0;
+}
+
+
+Note: The above custom BSTSet class essentially behaves like std::set in terms of time and space complexity.
+
+The main difference is that std::set internally uses a self-balancing BST (like Red-Black Tree), which guarantees O(log n) for all operations in the worst case.
+
+Our BSTSet class can degrade to O(n) if the BST becomes skewed (like a linked list).
 
 
 
