@@ -782,6 +782,9 @@ Unbalanced:
              40
 
 
+
+
+
 --This is skewed (like a linked list).
 --Height difference is large → not balanced.
 
@@ -1145,6 +1148,8 @@ Node Structure:
 
 class Node {
 
+public:
+
     int value;
     Node* leftChild;
     Node* rightChild;
@@ -1300,7 +1305,6 @@ Important points:
 3. Inorder is useful for getting sorted order (in BST).
 
 4. Postorder is useful for deleting tree safely (children before parent).
-
 
 
 
@@ -1482,7 +1486,9 @@ Basement (node 3 or 8) → depth = 3.
 
 Terrace party at root → height = 3
 
+bool isIdentical(Node* n1, Node* n2){
 
+}
 
 
 
@@ -1907,6 +1913,9 @@ code:
 using namespace std;
 
 class Node {
+
+public:
+
     int data;
     Node* left;
     Node* right;
@@ -2057,6 +2066,18 @@ Linear representation of a complete binary tree: using array
 
 --A complete binary tree (CBT) is a binary tree in which all levels are completely filled except possibly the last level, which is filled from left to right.
 
+Example:
+
+
+	1
+       / \
+      2   3
+     / \  /
+    4  5 6
+
+
+
+
 --Linear representation stores the BT in a 1D array.
 
 --Here we store the tree nodes into an array, level wise(bottom to top, left to right)
@@ -2151,7 +2172,7 @@ Consider the following tree:
 
 
 
-Index:  0   1   2   3   4   5  6  7  8
+Index:  0   1   2   3   4   5   6 7  8
 Array: [20  10  30  6   21  4  -1 3  8]
 
 --here -1 represent the NULL.
@@ -3233,8 +3254,6 @@ code:
 
 
 
-
-
 Morris Traversal:
 =================
 
@@ -3475,15 +3494,291 @@ Preorder → visit root before going left.
 
 
 
+Delete a Node from a Binary Tree:
+=============================
+
+--We can't delete any node directly from the BT, because if we delete the root node directly, the remaining nodes will become orphan, and we can't get their reference, which will cause the memory leak problem.
+
+The standard way to delete a node is:
+
+1. Find the node to be deleted.
+
+2. Find the deepest (rightmost) node in the tree.
+
+3. Replace the target node’s value with that deepest node’s value.
+
+4. Delete the deepest node from the tree.
+
+--This ensures the tree remains compact (no gaps) and prevents orphan nodes.
+
+
+
+Deepest Node:
+-------------
+
+--The deepest node is the node that appears last in a level-order (BFS) traversal of the tree.
+
+--It is the rightmost node of the lowest level.
+
+--In other words, if you traverse the tree level by level (from left to right), the last node visited is the deepest node.
+
+
+
+Analogy:
+-------
+
+--Imagine students sitting on benches in a row.
+
+--You want to remove one student sitting in the middle. If that student just leaves, there will be a gap in the row.
+
+--To keep the row compact, you ask the last student (rightmost) to move into that empty spot.
+
+--Finally, the last position becomes empty, so you remove it.
+
+-- This is exactly like removing a node in BT: replace with the last (deepest) one, then remove the deepest.
+
+
+
+Example:
+
+consider the following BT:
+
+        10
+       /  \
+     20    30
+    / \     /
+40  50 60
+
+
+Task: Delete 20
+
+
+Step 1: Find node 20
+
+--Yes, 20 exists.
+
+
+Step 2: Find deepest node
+
+--The deepest/rightmost node = 60.
+
+
+Step 3: Replace target node with deepest node
+
+--Replace 20 with 60:
+
+
+        10
+       /  \
+     60    30
+    /   \    
+   40  50  
+
+
+Step 4: Delete deepest node
+
+--Remove 60 from its old position:
+
+Final Tree after deletion of 20:
+
+        10
+       /  \
+     60    30
+    / \    
+   40  50  
 
 
 
 
+KeyNote: 
+--------
+
+--This method works for general BT (not BST).
+
+--For BST, deletion rules are different (because order matters).
+
+--Time Complexity = O(n) (we may need to traverse the tree).
+
+
+Code:
+------
+
+
+#include <iostream>
+#include <queue>
+using namespace std;
+
+// Node structure
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
+
+// Function to print tree in Level Order (BFS)
+void printLevelOrder(Node* root) {
+    if (!root) return;
+
+    queue<Node*> q;
+    q.push(root);
+
+    while (!q.empty()) {
+        Node* temp = q.front();
+        q.pop();
+        cout << temp->data << " ";
+
+        if (temp->left) q.push(temp->left);
+        if (temp->right) q.push(temp->right);
+    }
+}
+
+// Helper: Delete the deepest (rightmost) node from the tree
+void deleteDeepest(Node* root, Node* delNode) { //delNode is the node, which we want to delete
+
+    if (root == NULL  || delNode == NULL) 
+	return;
+
+
+    queue<Node*> q;
+    q.push(root);
+
+    while (!q.empty()) {
+        Node* temp = q.front();
+        q.pop();
+
+        // Check left child
+        if (temp->left != NULL) {
+
+            if (temp->left == delNode) {
+                delete temp->left;
+                temp->left = NULL;
+                return;
+
+            } else {
+                q.push(temp->left);
+            }
+        }
+
+        // Check right child
+        if (temp->right != NULL) {
+            if (temp->right == delNode) {
+                delete temp->right;
+                temp->right = NULL;
+                return;
+            } else {
+                q.push(temp->right);
+            }
+        }
+    }
+}
+
+
+// Main function: Delete a node with given key from Binary Tree
+
+Node* deleteNode(Node* root, int key) {
+    if (root == NULL) 
+	return NULL;
+
+
+    // Special case: tree has only one node
+    if (root->left == NULL && root->right == NULL) {
+        if (root->data == key) {
+            delete root;
+            return NULL;
+        } else {
+            return root;
+        }
+    }
+
+
+    // BFS traversal to find:
+    // 1) keyNode (the node to be deleted)
+    // 2) last (deepest/rightmost node)
+    queue<Node*> q;
+    q.push(root);
+    Node* keyNode = NULL;
+    Node* temp = NULL;
+    Node* last = NULL;
+
+    while (!q.empty()) {
+        temp = q.front();
+        q.pop();
+
+        if (temp->data == key)
+            keyNode = temp; // Found the node to delete
+
+        if (temp->left != NULL) 
+	q.push(temp->left);
+
+        if (temp->right != NULL) 
+	q.push(temp->right);
+
+        last = temp; // Keep track of the last (deepest) node
+    }
+
+    // If we found the node to delete
+    if (keyNode) {
+        keyNode->data = last->data;    // Replace value
+        deleteDeepest(root, last);     // Delete deepest node
+    }
+
+    return root;
+}
+
+// Example usage
+int main() {
+    /* Build this tree:
+             10
+            /  \
+          11    9
+         / \   /
+        7  12 15
+    */
+    Node* root = new Node(10);
+    root->left = new Node(11);
+    root->right = new Node(9);
+    root->left->left = new Node(7);
+    root->left->right = new Node(12);
+    root->right->left = new Node(15);
+
+    cout << "Before deletion (level order):\n";
+    printLevelOrder(root);
+
+    int key = 11;
+    root = deleteNode(root, key);
+
+    cout << "\n\nAfter deleting " << key << " (level order):\n";
+    printLevelOrder(root);
+
+    return 0;
+}
+
+
+Edge cases & notes:
+-----------------
+
+--If the key is not found, the tree remains unchanged.
+
+--If the tree has only one node and it matches the key, delete it and return NULL.
+
+--This deletion method is for general binary trees. For BST deletion follow the BST-specific algorithm (replace with inorder predecessor/successor).
+
+
+
+Time: O(n) — we may traverse all nodes.
+
+Space: O(n) — queue used for level-order traversal in worst case.
 
 
 
 Binary Search Tree:
-=============
+===================
 
 
 
