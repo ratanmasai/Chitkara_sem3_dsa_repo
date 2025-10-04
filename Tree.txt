@@ -949,7 +949,6 @@ Example:
 
 
 
-
 --here we start with the root 7 ,and before printing this,we have to visit its left and right subtrees.
 
 --same pattern followed with the subtrees also.
@@ -1379,6 +1378,9 @@ Height(10) = 2
 Height(20) = 3 (height of tree)
 
 
+int height(Node* root)
+
+
 
 Formula for Height of a Node:
 -----------------------------
@@ -1531,12 +1533,12 @@ bool isIdentical(Node* n1, Node* n2) {
 
 
 
-Nodes at K Distance from Root:
-===============================
+Nodes at K level Distance from Root:
+====================================
 
 K distance from root means:
 
---Find all nodes that are K edges away from the root.
+--Find all nodes that are K(level) edges away from the root.
 
 (or equivalently, nodes that are at level K of the tree).
 
@@ -1556,6 +1558,8 @@ So asking nodes at distance k is like asking:
 
 
 --We want to print all nodes that are exactly k levels down.
+
+
 
 
 Example:
@@ -2191,7 +2195,7 @@ Advantage:
 
 2. Memory Efficient for Complete Binary Trees.
 
---n a complete binary tree, all positions in the array are used efficiently.
+and for a complete binary tree, all positions in the array are used efficiently.
 
 3. Random Access:
 
@@ -2236,7 +2240,7 @@ int main() {
     cout << "Node\tLeft Child\tRight Child\n";
     for (int i = 0; i < n; i++) {
 	
-	 // If current node is -1, skip it (no node exists here)
+	 // If current(parent) node is -1, skip it (no node exists here)
         if (tree[i] == -1) 
 		continue; 
 
@@ -2265,6 +2269,9 @@ int main() {
 
     return 0;
 }
+
+
+int tree[] = {20, 10, 30, 6, 21, 4, -1, 3, 8};
 
 
 Output:
@@ -2324,6 +2331,8 @@ Array Representation Issue:
 
 Index: 0   1   2   3   4   5   6
 Array: 10 20  30 null 50 null null
+
+--here null will be represented as -1.
 
 --Many indices are null to maintain the complete binary tree structure.
 
@@ -2385,6 +2394,7 @@ Node* buildTreeFromArray(vector<int>& arr, int i) {
 	return NULL;
 
     Node* root = new Node(arr[i]);
+
     root->left = buildTreeFromArray(arr, 2 * i + 1);
     root->right = buildTreeFromArray(arr, 2 * i + 2);
 
@@ -2393,7 +2403,7 @@ Node* buildTreeFromArray(vector<int>& arr, int i) {
 
 // Preorder traversal to verify
 void preorder(Node* root) {
-    if (!root) return;
+    if (root == NULL) return;
     cout << root->data << " ";
     preorder(root->left);
     preorder(root->right);
@@ -2873,6 +2883,8 @@ Final Root (Node 1):
 
 
 
+
+G7---
 
 
 Building a Binary Tree (Level-order / BFS Input):
@@ -3791,11 +3803,24 @@ Binary Search Tree:
 --Left child value < Root value < Right child value
 
 
-2. No duplicate values allowed.
-
-3. And each subtree of a binary search tree should also follow same condition.
+2. And each subtree of a binary search tree should also follow same condition.
 
 --Where as in normal binary tree the above condition need not satisfy.
+
+
+3. No duplicate values allowed in strict BST. But Some implementations allow duplicates by defining a rule for handling them, for example:
+
+a. Always insert duplicates to the left subtree
+
+If value <= root → go left
+Else → go right
+
+b. Always insert duplicates to the right subtree.
+
+If value < root → go left
+Else → go right
+
+
 
 
 Analogy:
@@ -3952,33 +3977,51 @@ Notes:
 2. The insertBST function ensures that the tree satisfies BST properties.
 
 
+Time Complexity: O(h) → (O(log n) balanced, O(n) skewed)
+
+Space Complexity: O(h) due to recursion.
+
+
+
+
+
 Implementing find() function:
 =============================
 
 Approach1: Iterative way:
 -------------------------
 
+
 bool findIterative(Node* root, int val) {
-    
- Node* current = root;
+
+    Node* current = root;
 
     while (current != NULL) {
-  
-      if (val < current->value)
-            current = current->left;
- 
-       else if (val > current->value)
-            current = current->right;
 
+        if (val == current->value)
+            return true;
+
+        if (val < current->value)
+            current = current->left;
         else
-            return true;  // Found the value
+            current = current->right;
     }
 
-    return false;  // Value not found
+    return false;
 }
 
 
 
+Time Complexity: O(h)
+
+--Best case: O(1) → if the value is at the root.
+
+--Average case: O(log n) → if the tree is balanced.
+
+--Worst case: O(n) → if the tree is skewed (like a linked list).
+
+
+Space complexity: O(1)
 
 
 Approach 2: Recursive way:
@@ -4013,6 +4056,13 @@ bool findRecursive(Node* root, int val) {
 
 
 
+Time Complexity: O(h) (O(log n) if balanced, O(n) if skewed)
+
+Space Complexity: O(h) because of recursion stack
+
+
+
+
 
 Finding Min and Max in BST (efficient way):
 ===========================================
@@ -4023,8 +4073,6 @@ Minimum = leftmost leaf.
 Maximum = rightmost leaf.
 
 
-Time Complexity: O(log n) (if balanced tree).
-
 
 int findMinBST(Node* root) {
     if (root == NULL)
@@ -4034,6 +4082,7 @@ int findMinBST(Node* root) {
 
     while (current->leftChild != NULL)
         current = current->leftChild;
+
     return current->value;
 }
 
@@ -4047,6 +4096,7 @@ int findMaxBST(Node* root) {
 
     while (current->rightChild != NULL)
         current = current->rightChild;
+
     return current->value;
 }
 
@@ -4158,6 +4208,37 @@ Deleting a Node in BST (Binary Search Tree):
 
 --Why? Because we must maintain the BST properties after deletion.
 
+left child < root < right child
+
+
+
+
+Key terms:
+---------
+
+Inorder Successor: The smallest node in the right subtree
+Inorder Predecessor: The largest node in the left subtree
+
+Example:
+
+      20
+     /  \
+   10    30
+  /  \
+ 5    15
+
+
+Inorder of the above BST: 5, 10, 15, 20, 30
+
+For the node 20,
+
+Inorder Successor = 30 (next node in inorder traversal)
+
+Inorder Predecessor = 15 (previous node in inorder traversal)
+
+
+
+
 --There are 3 main cases to consider depending on the node we want to delete.
 
 
@@ -4185,7 +4266,12 @@ Result:
 
 Case 2: Node has One Child:
 
+--Remove the node and link its child directly to the parent.
+
+or
+
 --Replace the node with its only child.
+
 
 example:
 
@@ -4208,20 +4294,22 @@ Result:
 Case 3: Node has Two Children: 
 
 
---When we delete a node with two children in a BST, we can’t just remove it outright because that would break the BST property (left < root < right). 
---So we need to replace it with another node that preserves the BST order.
+--You cannot remove it directly; it would break the BST property.
+--Solution: Replace the node with inorder predecessor or inorder successor.
 
---There are two options:
 
-1. Inorder Predecessor: 
+There are two options:
 
-The largest value in the left subtree of the node we want to delete.
 
-Why?
+1. Using Inorder Predecessor:
+---------------------------
 
-All values in the left subtree are smaller than the node.
+--Find the largest value in the left subtree(Inorder predecessor).
 
-The largest value among them is just smaller than the node, so replacing keeps the BST property intact.
+--Replace the node’s value with the predecessor’s value.
+
+--Delete the predecessor node (which will now have at most 1 child).
+
 
 Example:
 
@@ -4239,46 +4327,122 @@ Example:
 --Replace 20 with 15 → BST property maintained
 
 
-Result:
+Intermediate Tree:
 
        15
       /  \
     10    30
-   /
-  5
+   /  \
+  5   15 <-- original predecessor
 
 
-2. Inorder Successor:
+--Now delete the original predecessor (15 in left subtree).
 
---The smallest value in the right subtree of the node we want to delete.
 
---Why?
+Final tree:
 
---All values in the right subtree are larger than the node.
 
---The smallest value among them is just larger than the node, so replacing keeps the BST property intact.
+      15
+      /  \
+    10    30
+   /  
+  5   
+
+
+--If predecessor has one child:
 
 Example:
 
        20
       /  \
     10    30
-         /  \
-       25    35
+   /  \
+  5   15
+      /
+     12
+
+
+Step 1: Replace 20 with 15
+
+intermediate tree:
+
+       15
+      /  \
+    10    30
+   /  \
+  5   15 <-- original predecessor
+      /
+     12
+
+
+Step 2: Delete predecessor 15 (has left child 12) → link 12 to parent 10
+
+Final Tree:
+
+       15
+      /  \
+    10    30
+   /  \
+  5   12
+
+
+
+Key Points:
+
+--Predecessor will never have a right child.
+
+--Predecessor may have no child → leaf → delete directly.
+
+--Predecessor may have left child only → link it to the parent → delete predecessor.
+
+
+
+2. Using Inorder Successor:
+-------------------------
+
+--Find the smallest value in the right subtree.
+
+--Replace the node’s value with the successor’s value.
+
+--Delete the successor node (which will now have at most 1 child).
+
+
+Example:
+
+  
+       20
+      /  \
+    10    30
+   /  \
+  5   15
+
 
 --Delete 20
 
---Inorder successor = 25 (smallest in right subtree)
+--Inorder successor = 30 (smallest in right subtree)
 
---Replace 20 with 25 → BST property maintained
+--Replace 20 with 30 → BST property maintained
 
-Result:
 
-       25
+       30
       /  \
-    10    30
-                \
-                 35
+    10    30 --original successor
+   /  \
+  5   15
+
+
+Delete the Original Successor Node:
+
+
+Final tree:
+
+       30
+      / 
+    10   
+   /  \
+  5   15
+
+
 
 
 Key Point:
@@ -4293,32 +4457,94 @@ Key Point:
 
 
 
+
+
+
+
 code:
 -------
+#include <iostream>
+using namespace std;
 
-Node* deleteNode(Node* root, int val) {
+class Node {
+public:
+    int value;
+    Node* left;
+    Node* right;
+    Node(int val) {
+        value = val;
+        left = right = NULL;
+    }
+};
 
-    if (root == NULL) 
-	return NULL;
+// Helper to find minimum value in a subtree (Inorder Successor)
+Node* minValueNode(Node* root) {
+    Node* current = root;
+    while (current && current->left != NULL)
+        current = current->left;
+    return current;
+}
 
-    if (val < root->value)
-        root->left = deleteNode(root->left, val);
-    else if (val > root->value)
-        root->right = deleteNode(root->right, val);
+
+// Delete function
+Node* deleteNode(Node* root, int key) {
+
+    if (root == NULL)
+        return root;
+
+    // 1. Search for the node
+    if (key < root->value)
+        root->left = deleteNode(root->left, key);
+    else if (key > root->value)
+        root->right = deleteNode(root->right, key);
     else {
         // Node found
-        if (root->left == NULL) return root->right;      // Case 0 or 1
-        if (root->right == NULL) return root->left;     // Case 0 or 1
 
-        // Case 2: Node has 2 children
-        Node* temp = root->right;                // Find inorder successor
-        while (temp->left) 
-	temp = temp->left;
+        // Case 1 & 2: 0 or 1 child
+        if (root->left == NULL) {
+            Node* temp = root->right;
+            delete root;
+            return temp;
+        }
+        else if (root->right == NULL) {
+            Node* temp = root->left;
+            delete root;
+            return temp;
+        }
 
-        root->value = temp->value;              // Replace value
-        root->right = deleteNode(root->right, temp->value); // Delete successor
+        // Case 3: 2 children
+        Node* temp = minValueNode(root->right);  // Inorder Successor
+        root->value = temp->value;               // Replace value
+        root->right = deleteNode(root->right, temp->value);  // Delete successor
     }
+
     return root;
+}
+
+// Inorder traversal to check tree
+void inorder(Node* root) {
+    if (!root) return;
+    inorder(root->left);
+    cout << root->value <<" ";
+    inorder(root->right);
+}
+
+int main() {
+    Node* root = new Node(20);
+    root->left = new Node(10);
+    root->right = new Node(30);
+    root->left->left = new Node(5);
+    root->left->right = new Node(15);
+
+    cout << "Original BST (Inorder): ";
+    inorder(root); cout << endl;
+
+    root = deleteNode(root, 10);  // Delete node 10
+
+    cout << "BST after deleting 10 (Inorder): ";
+    inorder(root); cout << endl;
+
+    return 0;
 }
 
 
@@ -4328,6 +4554,92 @@ Time Complexity: O(h), where h = height of the BST
 Balanced → O(log n)
 
 Skewed → O(n)
+
+
+
+
+DRY RUN:
+--------
+
+Initial Tree:
+
+       20
+      /  \
+    10    30
+   /  \
+  5   15
+
+
+
+Step 1: Call deleteNode(root, 10)
+
+root = 20, key = 10
+key < root->value → go left
+Call deleteNode(root->left, 10)
+
+
+Step 2: At Node 10
+
+root = 10, key = 10 → node found
+Check children:
+root->left = 5 (not NULL)
+root->right = 15 (not NULL)
+Node has 2 children → Case 3
+
+Step 3: Find Inorder Successor
+
+Node* temp = minValueNode(root->right);
+root->right = 15
+Call minValueNode(15):
+current = 15
+current->left = NULL → stop
+Inorder successor = 15
+
+
+Step 4: Replace Node Value
+
+root->value = temp->value;
+root->value = 15 → node 10 becomes 15
+
+Tree now looks like:
+
+       20
+      /  \
+    15    30
+   /  \
+  5   15
+
+
+Notice: duplicate 15 appears temporarily (will fix in next step)
+
+
+Step 5: Delete Inorder Successor Node
+
+root->right = deleteNode(root->right, temp->value);
+Call deleteNode(root->right, 15)
+root->right = 15 (node to delete)
+
+Check children:
+
+root->left = NULL
+root->right = NULL
+
+Node is a leaf → return NULL after delete root
+root->right = NULL
+
+
+Step 6: Updated Tree
+
+After deletion, tree becomes:
+
+       20
+      /  \
+    15    30
+   /  
+  5   
+
+
+BST property maintained (left < root < right)
 
 
 
