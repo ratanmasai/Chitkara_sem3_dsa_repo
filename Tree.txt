@@ -2063,9 +2063,9 @@ Let's take the following tree:
 
 Guess the output of:
 
-1. preorder
-2. postorder
-3. inorder
+1. preorder : 
+2. postorder : 
+3. inorder: 
 
 
 
@@ -2350,6 +2350,8 @@ Creating a complete BT in level order with the given array:
 
 vector<int> arr = {20, 10, 30, 6, 21, 4, 3, 8};
 
+
+
 level order representation:
 --------------------------
 
@@ -2372,6 +2374,9 @@ For array index i:
 --Left child → 2*i + 1
 
 --Right child → 2*i + 2
+
+
+
 
 
 
@@ -2889,7 +2894,8 @@ Final Root (Node 1):
 
 
 
-G7---
+
+
 
 
 Building a Binary Tree (Level-order / BFS Input):
@@ -2936,6 +2942,9 @@ Why Use a Queue here?
 --Recursive DFS cannot do true level-order because recursion goes deep-first, not level-by-level.
 
 
+Node* levelOrderCreation(){
+
+}
 
 
 
@@ -3512,6 +3521,8 @@ Preorder → visit root before going left.
 
 
 
+
+pending......
 Delete a Node from a Binary Tree:
 =============================
 
@@ -3715,17 +3726,16 @@ Node* deleteNode(Node* root, int key) {
     }
 
 
-    // BFS traversal to find:
+    // BFS traversal to find key:
     // 1) keyNode (the node to be deleted)
     // 2) last (deepest/rightmost node)
     queue<Node*> q;
     q.push(root);
     Node* keyNode = NULL;
-    Node* temp = NULL;
     Node* last = NULL;
 
     while (!q.empty()) {
-        temp = q.front();
+        Node* temp = q.front();
         q.pop();
 
         if (temp->data == key)
@@ -3741,7 +3751,7 @@ Node* deleteNode(Node* root, int key) {
     }
 
     // If we found the node to delete
-    if (keyNode) {
+    if (keyNode != NULL) {
         keyNode->data = last->data;    // Replace value
         deleteDeepest(root, last);     // Delete deepest node
     }
@@ -3908,7 +3918,6 @@ This is NOT a BST, because:
 
 
 
-
 Example to create a BST:
 ------------------------------
 
@@ -3989,7 +3998,6 @@ Notes:
 Time Complexity: O(h) → (O(log n) balanced, O(n) skewed)
 
 Space Complexity: O(h) due to recursion.
-
 
 
 
@@ -4085,6 +4093,9 @@ Time Complexity: O(h) (O(log n) if balanced, O(n) if skewed)
 Space Complexity: O(h) because of recursion stack
 
 
+int MinBST(Node* node){
+
+}
 
 
 
@@ -4497,7 +4508,7 @@ Key Point:
 
 
 
-code:
+code: using inorder successor.
 -------
 
 #include <iostream>
@@ -4525,8 +4536,13 @@ public:
 // during deletion when the node has two children.
 
 Node* minValueNode(Node* root) {
+
+    if(root == NULL){
+	return NULL;
+    }
+
     Node* current = root;
-    while (current && current->left != NULL)  // Keep moving left
+    while (current->left != NULL)  // Keep moving left
         current = current->left;
     return current;  // The leftmost node is the smallest
 }
