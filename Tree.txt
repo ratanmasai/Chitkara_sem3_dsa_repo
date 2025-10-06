@@ -1771,6 +1771,11 @@ Space Complexity for the above approach:
 --So the overall space complexity = O(h).
 
 
+
+
+
+
+
 Time complexity:
 -----------------
 
@@ -2340,8 +2345,8 @@ Array: 10 20  30 null 50 null null
 
 
 
-Creating a BT in level order with the given array:
-==================================================
+Creating a complete BT in level order with the given array:
+============================================================
 
 vector<int> arr = {20, 10, 30, 6, 21, 4, 3, 8};
 
@@ -3266,6 +3271,7 @@ code:
 
 
 
+
 Morris Traversal:
 =================
 
@@ -3559,7 +3565,7 @@ consider the following BT:
        /  \
      20    30
     / \     /
-40  50 60
+   40  50 60
 
 
 Task: Delete 20
@@ -3584,7 +3590,7 @@ Step 3: Replace target node with deepest node
        /  \
      60    30
     /   \    
-   40  50  
+   40   50  
 
 
 Step 4: Delete deepest node
@@ -3786,6 +3792,9 @@ Edge cases & notes:
 Time: O(n) — we may traverse all nodes.
 
 Space: O(n) — queue used for level-order traversal in worst case.
+
+
+
 
 
 
@@ -4644,8 +4653,8 @@ BST property maintained (left < root < right)
 
 
 
-Implementing a Set Using BST in C++
-================================
+Implementing a Set Using BST in C++:
+====================================
 
 Overview:
 
@@ -4783,6 +4792,1206 @@ Note: The above custom BSTSet class essentially behaves like std::set in terms o
 The main difference is that std::set internally uses a self-balancing BST (like Red-Black Tree), which guarantees O(log n) for all operations in the worst case.
 
 Our BSTSet class can degrade to O(n) if the BST becomes skewed (like a linked list).
+
+
+
+
+AVL Tree:
+==========
+
+
+--AVL Tree is a self-balancing Binary Search Tree (BST).
+
+--Named after Adelson-Velsky and Landis, who invented it in 1962.
+
+--Property: For every node, the difference between the height of left and right subtree is at most 1.
+
+Height Balance Factor (BF):
+
+𝐵𝐹 = height(left subtree) − height(right subtree)
+
+
+If BF ∈ {-1, 0, 1} → Node is balanced
+
+Otherwise → Node is unbalanced, needs rotation
+
+
+Why AVL Tree?
+==============
+
+--Normal BST can become skewed, making search O(n) in worst case:
+
+Example:
+
+Insert: 10, 20, 30 → BST becomes:
+
+Insert: 10, 20, 30 → BST becomes:
+
+10
+  \
+   20
+     \
+      30
+
+
+
+--These trees are the wrost types of BST,infact they are not trees atall,they are like LinkedList where every nodes references the next node.
+
+--In this type of scenario, for performing the search, insert or delete operation, the time complexity will raise to the O(n), just like searching an item in LinkedList.
+
+
+--AVL tree automatically balances itself → O(log n) search, insert, delete
+
+--It is the first self balancing tree. Other self balancing trees are B-trees, red-black trees,etc
+
+--so, every time when we insert or remove a value, the tree will balance itself.
+
+
+
+Height of a Node:
+-----------------
+
+Leaf node: height = 1
+
+NULL node: height = 0
+
+Height formula:
+
+height(node) = 1 + max(height(left), height(right))
+
+
+Rotations in AVL Trees:
+-----------------------
+
+--AVL trees are the special type of BST that automatically rebalances themselves,every time we add or removes a nodes.they do this by ensuring the difference between height of the left and right subtrees never increases more than 1.
+
+
+--If the difference will become more than 1 then it rebalance themselves using rotations.
+
+--Which rotation we should use, depends on which side of the tree is heavy.
+
+
+1. LL Rotation (Left-Left case): also called Right Rotation
+--------------------------------
+
+--LL case: Heavy on left-left side → fix by Right Rotation
+
+When to use:
+
+--The left subtree of the left child of a node becomes heavy.
+
+--This happens when a new node is inserted into the left subtree of the left child.
+
+How it works:
+
+--Perform a Right Rotation at the unbalanced node.
+
+--The left child becomes the new root of this subtree, and the original unbalanced node becomes its right child.
+
+
+
+LL Rotation Example
+
+Insert: 30 → 20 → 10
+
+Unbalanced BST:
+
+       30
+      /
+    20
+   /
+ 10 <- newly inserted
+
+BF(30) = 2 → Left-heavy
+Solution: Right rotation on 30
+
+After LL rotation:
+
+       20
+      /  \
+    10    30
+
+
+
+
+
+2. RR Rotation (Right-Right case): also called Left Rotation
+----------------------------------
+
+--RR case: Heavy on right-right side → fix by Left Rotation
+
+When to use:
+
+--The right subtree of the right child of a node becomes heavy.
+
+--This happens when a new node is inserted into the right subtree of the right child.
+
+How it works:
+
+--Perform a Left Rotation at the unbalanced node.
+
+--The right child becomes the new root of this subtree, and the original unbalanced node becomes its left child.
+
+
+RR Rotation Example
+
+Insert: 10 → 20 → 30
+
+Unbalanced BST:
+
+10
+  \
+   20
+     \
+      30 <- newly inserted
+
+BF(10) = -2 → Right-heavy
+Solution: Left rotation on 10
+
+After RR rotation:
+
+       20
+      /  \
+    10    30
+
+
+
+3. LR Rotation (Left-Right case): combination of Left and Right rotations
+--------------------------------
+
+--LR case: Heavy on left-right side → fix by Left Rotation on left child → Right Rotation on root
+
+When to use:
+
+--The right subtree of the left child of a node becomes heavy.
+
+--Happens when a new node is inserted into the right subtree of the left child.
+
+How it works:
+
+--First, Left Rotation on the left child to bring the new node up.
+
+--Then, Right Rotation on the unbalanced node to balance the tree.
+
+
+LR Rotation Example
+
+Insert: 30 → 10 → 20
+
+Unbalanced BST:
+
+      30
+     /
+   10
+     \
+      20 <- newly inserted
+
+BF(30) = 2 → Left-heavy
+BF(10) = -1 → Left-Right case
+
+Solution: 
+
+a. Left rotation on 10 → subtree becomes:
+
+	30
+	/
+      20
+     /
+    10
+	
+
+b. Right rotation on 30 → final tree:
+
+      20
+     /  \
+    10   30
+
+
+
+
+
+4. RL Rotation (Right-Left case): combination of Right and Left rotations
+--------------------------------
+
+--RL case: Heavy on right-left side → fix by Right Rotation on right child → Left Rotation on root
+
+When to use:
+
+--The left subtree of the right child of a node becomes heavy.
+
+--Happens when a new node is inserted into the left subtree of the right child.
+
+How it works:
+
+--First, Right Rotation on the right child to bring the new node up.
+
+--Then, Left Rotation on the unbalanced node to balance the tree.
+
+
+
+RL Rotation Example
+
+Insert: 10 → 30 → 25
+
+Unbalanced BST:
+
+10
+  \
+   30
+  /
+ 25 <- newly inserted
+
+BF(10) = -2 → Right-heavy
+BF(30) = 1 → Right-Left case
+
+Solution:
+1. Right rotation on 30 → subtree becomes:
+
+   10
+     \	
+      25
+        \
+         30
+
+2. Left rotation on 10 → final tree:
+
+      25
+     /  \
+    10   30
+
+
+Key points to remember:
+------------------------
+
+1. LL and RR are single rotations.
+
+2. LR and RL are double rotations (child first, then parent).
+
+3. The rotation direction (Left or Right) is opposite to the heavy side to lift the heavy subtree.
+
+
+
+
+
+
+
+Balance Factor check:
+--------------------
+
+Balance Factor (BF) = height(left subtree) - height(right subtree)
+
+BF = 0 → perfectly balanced
+
+BF = +1 → left subtree is higher by 1 → still balanced
+
+BF = -1 → right subtree is higher by 1 → still balanced
+
+BF > 1 → left subtree is too heavy → unbalanced
+
+BF < -1 → right subtree is too heavy → unbalanced 
+
+
+
+
+Right Rotation (for LL Case):
+-----------------------------
+
+
+When do we use it?
+
+--The tree is left-heavy (balance factor > 1)
+
+--Specifically, Left-Left (LL) case, meaning the new node was inserted in the left subtree of the left child.
+
+
+Imagine this tree before rotation:
+
+       y
+      /
+     x
+    /
+   z
+
+
+Here:
+
+--y is the unbalanced node (root of the subtree)
+
+--x is y->left
+
+--z is the newly inserted node in left-left
+
+
+Step1: Save the right child of x
+
+Node* T2 = x->right; //currently it is NULL.
+
+--T2 is temporarily saved because after rotation, y will become the right child of x and needs a left child.
+
+
+Step2: Perform rotation:
+
+x->right = y;
+y->left = T2;
+
+
+--x moves up as the new root of this subtree
+
+--y becomes the right child of x
+
+--T2 becomes the left child of y
+
+After rotation:
+
+       x
+      / \
+     z   y
+        /
+      T2
+
+
+--since T2 is NULL here so the final tree will be:
+
+
+       x
+      / \
+     z   y
+
+
+
+code:
+-------
+
+Node* rightRotate(Node* y) {
+
+    Node* x = y->left;
+    Node* T2 = x->right;
+
+    x->right = y;
+    y->left = T2;
+
+    return x; // new root
+}
+
+
+
+
+Left Rotation (for RR Case):
+============================
+
+
+When do we use it?
+
+--The tree is right-heavy (balance factor < -1)
+
+--Specifically, Right-Right (RR) case, meaning the new node was inserted in the right subtree of the right child.
+
+
+Imagine this tree before rotation:
+
+   x
+    \
+     y
+      \
+       z
+
+
+--x is the unbalanced node (root of the subtree)
+
+--y is x->right
+
+--z is the newly inserted node in right-right
+
+
+Step1: Save the left child of y
+
+Node* T2 = y->left;
+
+
+Step2: Perform rotation
+
+y->left = x;
+x->right = T2;
+
+
+--y moves up as the new root
+
+--x becomes the left child of y
+
+--T2 becomes the right child of x
+
+
+After rotation:
+
+       y
+      / \
+     x   z
+      \
+      T2
+
+--Since T2 is NULL here, so the final tree will be:
+
+       y
+      / \
+     x   z
+
+
+
+
+code:
+-----
+
+Node* leftRotate(Node* x) {
+    Node* y = x->right;
+    Node* T2 = y->left;
+
+    y->left = x;
+    x->right = T2;
+
+    return y; // new root
+}
+
+
+
+
+
+Insertion algorithm(High level):
+---------------------------------
+
+1. Insert like normal BST
+
+2. Update height of ancestor nodes
+
+3. Check balance factor
+
+4. If unbalanced → perform rotation
+
+
+
+
+
+
+AVL Tree Insertion code with rotation:
+--------------------------------------
+
+#include <iostream>
+using namespace std;
+
+// Node structure
+class Node {
+public:
+    int value;
+    Node* left;
+    Node* right;
+    Node(int val) {
+        value = val;
+        left = right = NULL;
+    }
+};
+
+// -------------------- HELPER FUNCTIONS --------------------
+
+// Calculate height of a node recursively
+int height(Node* node) {
+    if (node == NULL) return 0;
+    return 1 + max(height(node->left), height(node->right));
+}
+
+// Get balance factor of a node
+int getBalance(Node* node) {
+    if (node == NULL) return 0;
+    return height(node->left) - height(node->right);
+}
+
+// -------------------- ROTATIONS --------------------
+
+// Right rotation (LL Case)
+Node* rightRotate(Node* y) {
+    Node* x = y->left;
+    Node* T2 = x->right;
+
+    x->right = y;
+    y->left = T2;
+
+    return x; // new root
+}
+
+// Left rotation (RR Case)
+Node* leftRotate(Node* x) {
+    Node* y = x->right;
+    Node* T2 = y->left;
+
+    y->left = x;
+    x->right = T2;
+
+    return y; // new root
+}
+
+// -------------------- INSERTION --------------------
+Node* insertAVL(Node* root, int key) {
+    if (root == NULL) return new Node(key); // create new node if tree is empty
+
+    // 1. Perform normal BST insertion
+    if (key < root->value)
+        root->left = insertAVL(root->left, key);
+    else if (key > root->value)
+        root->right = insertAVL(root->right, key);
+    else
+        return root; // duplicate keys not allowed
+
+    // 2. Check balance factor to see if this node became unbalanced
+    int balance = getBalance(root);
+
+    // 3. Four rotation cases
+
+    // LL Case (Left-Left)
+    if (balance > 1 && key < root->left->value)
+        return rightRotate(root);
+
+    // RR Case (Right-Right)
+    if (balance < -1 && key > root->right->value)
+        return leftRotate(root);
+
+    // LR Case (Left-Right)
+    if (balance > 1 && key > root->left->value) {
+        root->left = leftRotate(root->left);
+        return rightRotate(root);
+    }
+
+    // RL Case (Right-Left)
+    if (balance < -1 && key < root->right->value) {
+        root->right = rightRotate(root->right);
+        return leftRotate(root);
+    }
+
+    return root; // return unchanged root if balanced
+}
+
+// Inorder traversal to display the tree
+void inorder(Node* root) {
+    if (!root) return;
+    inorder(root->left);
+    cout << root->value << " ";
+    inorder(root->right);
+}
+
+// -------------------- MAIN --------------------
+int main() {
+    Node* root = NULL;
+
+    // Insert example nodes
+    root = insertAVL(root, 10);
+    root = insertAVL(root, 20);
+    root = insertAVL(root, 30);
+    root = insertAVL(root, 40);
+    root = insertAVL(root, 50);
+    root = insertAVL(root, 25);
+
+    cout << "AVL Tree Inorder after insertions: ";
+    inorder(root);
+    cout << endl;
+
+    return 0;
+}
+
+
+
+
+
+Note: 
+
+--Balance factor = left height − right height.
+
+--Rotation is used only when balance factor is >1 or <-1.
+
+--LL & RR are single rotations; LR & RL are double rotations.
+
+
+
+
+
+AVL Tree deletion code with rotation:
+--------------------------------------
+
+
+
+1. Deletion has 3 cases: leaf, 1 child, 2 children.
+
+2. After deletion, we must check balance factor at every ancestor node.
+
+3. Rotations are applied similarly as in insertion.
+
+
+
+
+
+
+Deletion Algorithm (High-level)
+--------------------------------
+
+1. Delete like normal BST
+
+2. Update height of ancestor nodes
+
+3. Check balance factor
+
+4. If unbalanced → perform rotation
+
+
+
+code:
+------
+
+#include <iostream>
+using namespace std;
+
+// -------------------- NODE STRUCTURE --------------------
+class Node {
+public:
+    int value;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        value = val;
+        left = right = NULL;
+    }
+};
+
+// -------------------- HELPER FUNCTIONS --------------------
+
+// Calculate height of a node
+int height(Node* node) {
+    if (node == NULL) return 0;
+    return 1 + max(height(node->left), height(node->right));
+}
+
+// Get balance factor of a node
+int getBalance(Node* node) {
+    if (node == NULL) return 0;
+    return height(node->left) - height(node->right);
+}
+
+// -------------------- ROTATIONS --------------------
+
+// Right rotation (LL case)
+Node* rightRotate(Node* y) {
+    Node* x = y->left;
+    Node* T2 = x->right;
+
+    x->right = y;
+    y->left = T2;
+
+    return x; // new root
+}
+
+// Left rotation (RR case)
+Node* leftRotate(Node* x) {
+    Node* y = x->right;
+    Node* T2 = y->left;
+
+    y->left = x;
+    x->right = T2;
+
+    return y; // new root
+}
+
+// Find node with minimum value in a subtree
+Node* minValueNode(Node* node) {
+    Node* current = node;
+    while (current != NULL && current->left != NULL)
+        current = current->left;
+    return current;
+}
+
+// -------------------- DELETION --------------------
+Node* deleteAVL(Node* root, int key) {
+    if (root == NULL) return root; // empty tree
+
+    // 1. Perform standard BST deletion
+    if (key < root->value) {
+        root->left = deleteAVL(root->left, key);
+    } 
+    else if (key > root->value) {
+        root->right = deleteAVL(root->right, key);
+    } 
+    else {
+        // Node to delete found
+        if (root->left == NULL || root->right == NULL) {
+            // Node has 0 or 1 child
+            Node* temp = (root->left != NULL) ? root->left : root->right;
+
+            if (temp == NULL) {
+                // No child
+                temp = root;
+                root = NULL;
+            } else {
+                // One child, copy its contents
+                *root = *temp;
+            }
+            delete temp;
+        } 
+        else {
+            // Node has 2 children
+            Node* temp = minValueNode(root->right); // find inorder successor
+            root->value = temp->value;              // copy value
+            root->right = deleteAVL(root->right, temp->value); // delete successor
+        }
+    }
+
+    // If tree became empty
+    if (root != NULL) {
+        // 2. Update balance factor
+        int balance = getBalance(root);
+
+        // -------------------- BALANCE THE TREE --------------------
+        // Left heavy
+        if (balance > 1) {
+            if (getBalance(root->left) >= 0) {
+                // LL case
+                return rightRotate(root);
+            } else {
+                // LR case
+                root->left = leftRotate(root->left);
+                return rightRotate(root);
+            }
+        }
+
+        // Right heavy
+        if (balance < -1) {
+            if (getBalance(root->right) <= 0) {
+                // RR case
+                return leftRotate(root);
+            } else {
+                // RL case
+                root->right = rightRotate(root->right);
+                return leftRotate(root);
+            }
+        }
+    }
+
+    return root;
+}
+
+// -------------------- INORDER TRAVERSAL --------------------
+void inorder(Node* root) {
+    if (root != NULL) {
+        inorder(root->left);
+        cout << root->value << " ";
+        inorder(root->right);
+    }
+}
+
+// -------------------- MAIN --------------------
+int main() {
+    Node* root = NULL;
+
+    // Insert nodes manually (for demonstration)
+    root = new Node(10);
+    root->left = new Node(5);
+    root->right = new Node(20);
+    root->right->left = new Node(15);
+    root->right->right = new Node(30);
+
+    cout << "AVL Tree Inorder before deletions: ";
+    inorder(root);
+    cout << endl;
+
+    // Delete nodes
+    root = deleteAVL(root, 20); // delete node with 2 children
+    root = deleteAVL(root, 5);  // delete leaf
+
+    cout << "AVL Tree Inorder after deletions: ";
+    inorder(root);
+    cout << endl;
+
+    return 0;
+}
+
+
+
+
+Heap:
+====
+
+
+
+Definition:
+-----------
+
+A Heap is a complete binary tree (CBT) that satisfies the heap property:
+
+--Max-Heap: Value of each node >= values of its children.
+
+--Min-Heap: Value of each node <= values of its children.
+
+A complete binary tree means all levels are completely filled except possibly the last level, which is filled from left to right.
+
+
+
+Types of Heap:
+-------------
+
+1. Max-Heap:
+
+
+--Root contains the maximum element.
+
+Example:
+
+
+	50
+        / \
+      30   20
+     / \   /
+   10  15  5
+
+
+
+2. Min-Heap:
+
+--Root contains the minimum element.
+
+Example:
+
+
+	5
+       / \
+      10  15
+     / \  /	
+    20 30 50
+
+
+
+Heap Representation:
+--------------------
+
+
+--Heaps are usually implemented using arrays instead of pointers.
+
+For a node at index i:
+
+Parent = (i-1)/2
+
+Left child = 2*i + 1
+
+Right child = 2*i + 2
+
+
+Example:
+
+Max-Heap: [50, 30, 20, 10, 15, 5]
+
+
+
+
+Heap Operations:
+----------------
+
+1. Insertion
+
+
+--Steps to insert a new element in a heap:
+
+1. Add the new element at the end of the array (to maintain CBT).
+
+2. Compare the element with its parent.
+
+3. If heap property is violated, swap with parent (heapify up / bubble up).
+
+4. Repeat until heap property is restored.
+
+
+Example (Max-Heap): Insert 40 into [50, 30, 20, 10, 15, 5]
+
+Step 1: Add at end → [50, 30, 20, 10, 15, 5, 40]
+
+Step 2: Compare with parent 20 → swap → [50, 30, 40, 10, 15, 5, 20]
+
+Step 3: Compare with new parent 50 → no swap → done
+
+
+
+2. Deletion:
+-------------
+
+--Usually, we delete the root (max for Max-Heap, min for Min-Heap).
+
+Steps:
+
+1. Replace root with the last element in the array.
+
+2. Remove the last element (array shrinks).
+
+3. Compare new root with its children.
+
+4. If heap property is violated, swap with the larger child (Max-Heap) or smaller child (Min-Heap).
+
+5. Repeat until heap property is restored (heapify down / bubble down).
+
+Example (Max-Heap): Delete root from [50, 30, 40, 10, 15, 5, 20]
+
+Step 1: Replace 50 with 20 → [20, 30, 40, 10, 15, 5]
+
+Step 2: Compare 20 with children 30, 40 → swap with 40 → [40, 30, 20, 10, 15, 5]
+
+Step 3: Compare 20 with its children → heap property restored
+
+
+
+Key Points to Remember:
+------------------------
+
+
+--Heap is a complete binary tree → easy to implement with array.
+
+--Max-Heap → root is maximum; Min-Heap → root is minimum.
+
+--Insertion: insert at end + heapify up.
+
+--Deletion: replace root with last + heapify down.
+
+--Heap sort uses heap to sort in O(n log n).
+
+--Efficient for priority-based operations.
+
+
+
+
+
+
+
+
+
+
+Heap Implementation (C++ using array/vector):
+---------------------------------------------
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Max-Heap
+class Heap {
+public:
+    vector<int> arr;
+
+    void insert(int val) {
+        arr.push_back(val);          // Step 1: Add at end
+        int i = arr.size() - 1;
+        while (i != 0 && arr[(i-1)/2] < arr[i]) { // Step 2: Heapify up
+            swap(arr[i], arr[(i-1)/2]);
+            i = (i-1)/2;
+        }
+    }
+
+    void deleteRoot() {
+        if (arr.empty()) return;
+
+        arr[0] = arr.back();         // Step 1: Replace root with last
+        arr.pop_back();              // Step 2: Remove last element
+
+        int i = 0;
+        int n = arr.size();
+        while (true) {
+            int largest = i;
+            int left = 2*i + 1;
+            int right = 2*i + 2;
+
+            if (left < n && arr[left] > arr[largest])
+                largest = left;
+            if (right < n && arr[right] > arr[largest])
+                largest = right;
+
+            if (largest != i) {
+                swap(arr[i], arr[largest]);
+                i = largest;
+            } else break;
+        }
+    }
+
+    void display() {
+        for (int val : arr) cout << val << " ";
+        cout << endl;
+    }
+};
+
+int main() {
+    Heap h;
+    h.insert(50);
+    h.insert(30);
+    h.insert(20);
+    h.insert(10);
+    h.insert(15);
+    h.insert(5);
+    h.insert(40);
+
+    cout << "Heap elements: ";
+    h.display();
+
+    h.deleteRoot();
+    cout << "Heap after deleting root: ";
+    h.display();
+
+    return 0;
+}
+
+
+
+Applications of Heap:
+---------------------
+
+1. Priority Queue
+
+--Efficient implementation using heaps.
+
+--Highest priority element is always at root.
+
+2. Heap Sort
+
+--Efficient comparison-based sorting.
+
+3. Graph Algorithms
+
+--Dijkstra's shortest path (Min-Heap)
+
+--Prim’s Minimum Spanning Tree (Min-Heap)
+
+4. Median Maintenance
+
+--Keep two heaps (Max-Heap, Min-Heap) to find running median efficiently.
+
+5. Scheduling & Resource Management
+
+--CPU task scheduling based on priority.
+
+
+Heap Sort:
+----------
+
+---Heap Sort uses a Max-Heap to sort an array in ascending order:
+
+1. Build a Max-Heap from the array.
+
+2. Swap root (max) with last element.
+
+3. Reduce heap size by 1.
+
+4. Heapify root again.
+
+5. Repeat until heap size = 1.
+
+Time Complexity: O(n log n)
+
+Space Complexity: O(1) (in-place)
+
+
+code:
+------
+
+#include <iostream>
+using namespace std;
+
+// Heapify subtree rooted at index i
+void heapify(int arr[], int n, int i) {
+    int largest = i;       // Initialize largest as root
+    int left = 2*i + 1;    // left child
+    int right = 2*i + 2;   // right child
+
+    // If left child is larger
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+
+    // If right child is larger
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    // If root is not largest
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest); // Recursively heapify affected subtree
+    }
+}
+
+// Heap Sort function
+void heapSort(int arr[], int n) {
+    // Build max heap
+    for (int i = n/2 - 1; i >= 0; i--)
+        heapify(arr, n, i);
+
+    // Extract elements one by one
+    for (int i = n-1; i > 0; i--) {
+        swap(arr[0], arr[i]);   // Move current root to end
+        heapify(arr, i, 0);     // Heapify reduced heap
+    }
+}
+
+int main() {
+    int arr[] = {50, 30, 20, 10, 15, 5, 40};
+    int n = sizeof(arr)/sizeof(arr[0]);
+
+    cout << "Original array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+
+    heapSort(arr, n);
+
+    cout << "Sorted array:   ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+
+    return 0;
+}
+
+
+Heap Sort using priority_queue (Max-Heap):
+------------------------------------------
+
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+int main() {
+    vector<int> arr = {50, 30, 20, 10, 15, 5, 40};
+
+    // Create a max-heap
+    priority_queue<int> pq(arr.begin(), arr.end());
+
+    cout << "Sorted array: ";
+    while (!pq.empty()) {
+        cout << pq.top() << " "; // Extract max element
+        pq.pop();
+    }
+    return 0;
+}
+
+
+
+Heap Sort in Ascending Order:
+------------------------------
+
+--If you want ascending order, use a Min-Heap instead:
+
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+int main() {
+    vector<int> arr = {50, 30, 20, 10, 15, 5, 40};
+
+    // Create a min-heap
+    priority_queue<int, vector<int>, greater<int>> pq(arr.begin(), arr.end());
+
+    cout << "Sorted array: ";
+    while (!pq.empty()) {
+        cout << pq.top() << " "; // Extract min element
+        pq.pop();
+    }
+    return 0;
+}
 
 
 
