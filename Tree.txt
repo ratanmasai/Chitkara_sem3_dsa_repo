@@ -4000,6 +4000,21 @@ Implementing find() function:
 Approach1: Iterative way:
 -------------------------
 
+bool findIterative(Node* root, int val){
+
+// while the root is not NULL:
+// if the val == root->value: true;
+// if the val < root->value: root= move root to the left side
+// otherwise move the root to the right side.
+ 
+
+}
+
+
+
+
+
+
 
 bool findIterative(Node* root, int val) {
 
@@ -4152,6 +4167,18 @@ Analogy:
 --Right child must be larger than parent
 
 --Check recursively for all nodes
+
+function signature:
+
+bool isValidBST(Node* root, int minVal = INT_MIN, int maxVal = INT_MAX) {
+
+//if root == NULL: true
+// if invalid range: false, i.e, root->value <= minVal || root->value >= maxVal
+// use recusrion for left: root->left, minVal, root->value
+// for right: root->right, root->value, maxVal
+}
+
+
 
 
 
@@ -4472,73 +4499,102 @@ Key Point:
 
 code:
 -------
+
 #include <iostream>
 using namespace std;
+
 
 class Node {
 public:
     int value;
     Node* left;
     Node* right;
+
+    // Constructor to initialize a new node
     Node(int val) {
         value = val;
         left = right = NULL;
     }
 };
 
-// Helper to find minimum value in a subtree (Inorder Successor)
+// --------------------------------------------------
+// Helper Function: Find the minimum value node
+// --------------------------------------------------
+// This function finds the node with the smallest value
+// in a given subtree. It is used to find the Inorder Successor
+// during deletion when the node has two children.
+
 Node* minValueNode(Node* root) {
     Node* current = root;
-    while (current && current->left != NULL)
+    while (current && current->left != NULL)  // Keep moving left
         current = current->left;
-    return current;
+    return current;  // The leftmost node is the smallest
 }
 
 
-// Delete function
+// Deletes a node with the given key from the BST
+// and returns the new root of the subtree.
 Node* deleteNode(Node* root, int key) {
 
+    // Base Case: Tree is empty
     if (root == NULL)
         return root;
 
-    // 1. Search for the node
+    // STEP 1: Search for the node to delete
     if (key < root->value)
-        root->left = deleteNode(root->left, key);
+        root->left = deleteNode(root->left, key);     // Search in left subtree
     else if (key > root->value)
-        root->right = deleteNode(root->right, key);
+        root->right = deleteNode(root->right, key);   // Search in right subtree
     else {
         // Node found
 
-        // Case 1 & 2: 0 or 1 child
+        // STEP 2: Handle different cases
+
+        // Case 1: Node has no left child (0 or 1 child)
         if (root->left == NULL) {
             Node* temp = root->right;
-            delete root;
-            return temp;
+            delete root;       // Free memory
+            return temp;       // Return new subtree root
         }
+        // Case 2: Node has no right child (0 or 1 child)
         else if (root->right == NULL) {
             Node* temp = root->left;
             delete root;
             return temp;
         }
 
-        // Case 3: 2 children
-        Node* temp = minValueNode(root->right);  // Inorder Successor
-        root->value = temp->value;               // Replace value
-        root->right = deleteNode(root->right, temp->value);  // Delete successor
+        // Case 3: Node has two children
+        // Find Inorder Successor (smallest node in right subtree)
+        Node* temp = minValueNode(root->right);
+
+        // Copy the inorder successor's value to the current node
+        root->value = temp->value;
+
+        // Delete the inorder successor node from the right subtree
+        root->right = deleteNode(root->right, temp->value);
     }
 
-    return root;
+    return root;  // Return the (possibly updated) root node
 }
 
-// Inorder traversal to check tree
+
 void inorder(Node* root) {
-    if (!root) return;
+    if (root == NULL)
+        return;
     inorder(root->left);
-    cout << root->value <<" ";
+    cout << root->value << " ";
     inorder(root->right);
 }
 
+
 int main() {
+    // Constructing the following BST:
+    //          20
+    //         /  \
+    //       10    30
+    //      /  \
+    //     5    15
+
     Node* root = new Node(20);
     root->left = new Node(10);
     root->right = new Node(30);
@@ -4546,12 +4602,15 @@ int main() {
     root->left->right = new Node(15);
 
     cout << "Original BST (Inorder): ";
-    inorder(root); cout << endl;
+    inorder(root);
+    cout << endl;
 
-    root = deleteNode(root, 10);  // Delete node 10
+    // Delete node with value 10
+    root = deleteNode(root, 10);
 
     cout << "BST after deleting 10 (Inorder): ";
-    inorder(root); cout << endl;
+    inorder(root);
+    cout << endl;
 
     return 0;
 }
