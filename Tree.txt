@@ -1912,6 +1912,11 @@ vector<int> levelOrder(Node* root) {
 
 
 
+
+
+
+
+
 code:
 ------
 
@@ -4900,7 +4905,7 @@ Example:
 
 Insert: 10, 20, 30 → BST becomes:
 
-Insert: 10, 20, 30 → BST becomes:
+
 
 10
   \
@@ -4987,6 +4992,75 @@ After LL rotation:
     10    30
 
 
+Another example:
+
+Insert 50 → 40 → 30
+
+--Let’s start inserting one by one into an initially empty AVL tree.
+
+Step 1: Insert 50:
+
+
+tree: 
+
+	50
+
+--tree is having only one node 50, so it is balanced.
+
+
+Step 2: Insert 40:
+
+tree:
+
+	50
+       /
+      40
+
+--Still balanced (Balance Factor of 50 = +1).
+
+
+Step 3: Insert 30
+
+Tree before rotation:
+
+       50
+      /
+    40
+   /
+ 30
+
+Now check Balance Factors:
+
+BF(30) = 0
+BF(40) = +1
+BF(50) = +2  ← Unbalanced (Left-Left case)
+
+The imbalance occurred at node 50.
+
+The left child (40) also has a left child (30).
+So, this is a Left-Left (LL) case.
+
+Solution → Perform Right Rotation on 50
+
+
+Right Rotation steps:
+
+1. Make 40 the new root of this subtree.
+
+2. 50 becomes the right child of 40.
+
+3. The right subtree of 40 (if any) becomes the left subtree of 50.
+
+
+
+Tree after rotation:
+
+       40
+      /  \
+    30    50
+
+
+--Now the tree is perfectly balanced again.
 
 
 
@@ -5573,8 +5647,13 @@ Node* leftRotate(Node* x) {
 
 // Find node with minimum value in a subtree
 Node* minValueNode(Node* node) {
+
+    if(node == NULL){
+	return NULL;
+    }
+
     Node* current = node;
-    while (current != NULL && current->left != NULL)
+    while (current->left != NULL)
         current = current->left;
     return current;
 }
@@ -5694,13 +5773,37 @@ Heap:
 Definition:
 -----------
 
-A Heap is a complete binary tree (CBT) that satisfies the heap property:
+A Heap is a "complete binary tree" (CBT) that satisfies the heap property:
 
 --Max-Heap: Value of each node >= values of its children.
 
 --Min-Heap: Value of each node <= values of its children.
 
 A complete binary tree means all levels are completely filled except possibly the last level, which is filled from left to right.
+
+example:
+
+Complete binary tree: CBT
+
+	50
+        / \
+      30   20
+     / \   /
+   10  15  5
+
+
+None complete Binary tree: 
+
+
+	50
+        / \
+      30   20
+          / \
+         5  15
+
+--here all the levels are completly filled except the last one but the it is not filled from left to right.
+
+
 
 
 
@@ -5723,6 +5826,14 @@ Example:
 
 
 
+--here we started the inserting the node from top to bottom and from left to right.
+
+--if the next element is greater than its parent then we perform the swapping from its parent(bubble up to the root) until the max heap property is satisfied.
+
+
+
+
+
 2. Min-Heap:
 
 --Root contains the minimum element.
@@ -5742,20 +5853,25 @@ Heap Representation:
 --------------------
 
 
---Heaps are usually implemented using arrays instead of pointers.
+--Heaps are usually implemented using arrays instead of pointers. 
 
 For a node at index i:
 
-Parent = (i-1)/2
+
 
 Left child = 2*i + 1
 
 Right child = 2*i + 2
 
+Parent = (i-1)/2
+
 
 Example:
 
 Max-Heap: [50, 30, 20, 10, 15, 5]
+
+Min-Heap: [5,10,15,20,30,50]
+
 
 
 
@@ -5772,29 +5888,111 @@ Heap Operations:
 
 2. Compare the element with its parent.
 
-3. If heap property is violated, swap with parent (heapify up / bubble up).
+3. If heap property is violated(i.e for max heap, parent < child), swap with parent (heapify up / bubble up).
 
 4. Repeat until heap property is restored.
 
 
 Example (Max-Heap): Insert 40 into [50, 30, 20, 10, 15, 5]
 
+                       0   1   2   3   4  5   6
 Step 1: Add at end → [50, 30, 20, 10, 15, 5, 40]
 
+
+parent of 40 will be 6-1/2 = index 2 -> 20
+                                           0  1   2   3   4   5   6
 Step 2: Compare with parent 20 → swap → [50, 30, 40, 10, 15, 5, 20]
 
 Step 3: Compare with new parent 50 → no swap → done
+
+now the parent will be 2-1/2 = index 0 ->50  
+
+
+
+
+Example: insertion
+---------
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class MaxHeap{
+
+vector<int> heap;
+
+//function to maintain the heap property after insertion
+void heapifyUp(int index){
+
+    int parent = (index-1)/2;
+
+    if(index > 0 && heap[index] > heap[parent]){
+        swap(heap[index], heap[parent]);
+        heapifyUp(parent);
+    }
+
+}
+
+public:
+
+    //insert element into the heap
+    void insert(int value){
+        heap.push_back(value);
+        heapifyUp(heap.size()-1);
+    }
+
+    //print heap
+    void printHeap(){
+        for(int i: heap){
+            cout<<i <<" ";
+        }
+        cout<<endl;
+    }
+
+
+};
+
+
+int main() {
+
+    MaxHeap h;
+    h.insert(50);
+    h.insert(30);
+    h.insert(20);
+    h.insert(10);
+    h.insert(15);
+    h.insert(5);
+    h.insert(40);
+    
+
+    cout << "Heap elements after insertion: ";
+    h.printHeap();
+ 
+    return 0;
+
+}
+
+
+output: Heap elements after insertion: 50 30 40 10 15 5 20 
+
+
 
 
 
 2. Deletion:
 -------------
 
---Usually, we delete the root (max for Max-Heap, min for Min-Heap).
+In a Heap, we usually delete the root element (top of the tree).
 
-Steps:
+--In a Max-Heap, we delete the maximum value.
 
-1. Replace root with the last element in the array.
+--In a Min-Heap, we delete the minimum value.
+
+
+
+Steps: Max heap example
+
+1. Replace (swap) root with the last element in the array.
 
 2. Remove the last element (array shrinks).
 
@@ -5804,13 +6002,150 @@ Steps:
 
 5. Repeat until heap property is restored (heapify down / bubble down).
 
+
+
 Example (Max-Heap): Delete root from [50, 30, 40, 10, 15, 5, 20]
 
-Step 1: Replace 50 with 20 → [20, 30, 40, 10, 15, 5]
+Step 1: Replace 50 with 20 → [20, 30, 40, 10, 15, 5, 20] 
 
-Step 2: Compare 20 with children 30, 40 → swap with 40 → [40, 30, 20, 10, 15, 5]
+step 2: remove the last element (shrink the array)
 
-Step 3: Compare 20 with its children → heap property restored
+[20, 30, 40, 10, 15, 5]
+ 
+--(We moved 20 to the root and removed the last element)
+
+Step 3: Compare 20 with children 30, 40 (which one is larger) → swap with 40 → [40, 30, 20, 10, 15, 5]
+
+Step 4: Compare 20 with its children 10,15 (which one is larger) →(here 20 is already larger) heap property restored.
+
+
+final heap: [40, 30, 20, 10, 15, 5]
+
+
+
+Example: deletion:
+-------------------
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class MaxHeap{
+
+vector<int> heap;
+
+
+//function to maintain the heap property after insertion
+void heapifyUp(int index){
+
+    int parent = (index-1)/2;
+
+    if(index > 0 && heap[index] > heap[parent]){
+        swap(heap[index], heap[parent]);
+        heapifyUp(parent);
+    }
+
+}
+
+
+//function to maintain the heap property after deletion
+//compare the 1st value (0th index value) with their children recursivly..
+void heapifyDown(int index){
+
+    int largest = index;
+
+    int left = 2 * index+1;
+    int right = 2 * index+2;
+
+    //find the largest among parent, left child and right child
+    if(left < heap.size() && heap[left] > heap[largest])
+        largest = left;
+    if(right < heap.size() && heap[right] > heap[largest])
+        largest = right;
+
+
+ // If parent is not largest, swap and continue heapifying
+    if(largest != index){
+        swap(heap[index], heap[largest]);
+        heapifyDown(largest);
+    }
+
+
+}
+
+public:
+
+   //insert element into the heap
+    void insert(int value){
+        heap.push_back(value);
+        heapifyUp(heap.size()-1);
+    }
+
+
+
+    void deleteRoot(){
+        if(heap.empty()){
+            cout<<"Heap is empty \n";
+        }
+
+       // Step 1: Replace root with last element
+        heap[0]= heap.back();
+       
+
+   // Step 2: Remove the last element
+    heap.pop_back();
+
+        // Step 3: Restore heap property (top to bottom)
+        heapifyDown(0);
+
+
+
+    }
+
+
+    //print heap
+    void printHeap(){
+        for(int i: heap){
+            cout<<i <<" ";
+        }
+        cout<<endl;
+    }
+
+
+};
+
+
+int main() {
+
+    MaxHeap h;
+    h.insert(50);
+    h.insert(30);
+    h.insert(20);
+    h.insert(10);
+    h.insert(15);
+    h.insert(5);
+    h.insert(40);
+    
+
+    cout << "Initial Heap: ";
+    h.printHeap();
+
+    cout << "After deleting root: ";
+    h.deleteRoot();
+    h.printHeap();
+ 
+    return 0;
+
+}
+
+
+Output:
+
+Initial Heap: 50 30 40 10 15 5 20 
+After deleting root: 40 30 20 10 15 5
+
+
 
 
 
@@ -5833,113 +6168,90 @@ Key Points to Remember:
 
 
 
-
-
-
-
-
-
-Heap Implementation (C++ using array/vector):
----------------------------------------------
-
-
-#include <iostream>
-#include <vector>
-using namespace std;
-
-// Max-Heap
-class Heap {
-public:
-    vector<int> arr;
-
-    void insert(int val) {
-        arr.push_back(val);          // Step 1: Add at end
-        int i = arr.size() - 1;
-        while (i != 0 && arr[(i-1)/2] < arr[i]) { // Step 2: Heapify up
-            swap(arr[i], arr[(i-1)/2]);
-            i = (i-1)/2;
-        }
-    }
-
-    void deleteRoot() {
-        if (arr.empty()) return;
-
-        arr[0] = arr.back();         // Step 1: Replace root with last
-        arr.pop_back();              // Step 2: Remove last element
-
-        int i = 0;
-        int n = arr.size();
-        while (true) {
-            int largest = i;
-            int left = 2*i + 1;
-            int right = 2*i + 2;
-
-            if (left < n && arr[left] > arr[largest])
-                largest = left;
-            if (right < n && arr[right] > arr[largest])
-                largest = right;
-
-            if (largest != i) {
-                swap(arr[i], arr[largest]);
-                i = largest;
-            } else break;
-        }
-    }
-
-    void display() {
-        for (int val : arr) cout << val << " ";
-        cout << endl;
-    }
-};
-
-int main() {
-    Heap h;
-    h.insert(50);
-    h.insert(30);
-    h.insert(20);
-    h.insert(10);
-    h.insert(15);
-    h.insert(5);
-    h.insert(40);
-
-    cout << "Heap elements: ";
-    h.display();
-
-    h.deleteRoot();
-    cout << "Heap after deleting root: ";
-    h.display();
-
-    return 0;
-}
-
-
-
 Applications of Heap:
 ---------------------
 
-1. Priority Queue
 
---Efficient implementation using heaps.
+--A Heap is not just a data structure for sorting, it’s a powerful tool used in many real-world and algorithmic problems:
 
---Highest priority element is always at root.
+Examples:
 
-2. Heap Sort
+1. Heap Sort:
 
---Efficient comparison-based sorting.
+--Heap Sort is one of the main uses of the heap.
 
-3. Graph Algorithms
+--First, build a Max-Heap from the array.
 
---Dijkstra's shortest path (Min-Heap)
+--Then, repeatedly remove the root (largest element) and place it at the end of the array.
 
---Prim’s Minimum Spanning Tree (Min-Heap)
+-- It sorts the array in O(n log n) time.
+-- Memory-efficient (no extra array required).
 
-4. Median Maintenance
 
---Keep two heaps (Max-Heap, Min-Heap) to find running median efficiently.
+2. Priority Queue Implementation:
 
-5. Scheduling & Resource Management
+--A Priority Queue is a special queue where each element has a priority value.
 
---CPU task scheduling based on priority.
+--Elements with higher priority are processed before lower-priority ones.
+
+--Heap provides an efficient way to implement this.
+
+Example:
+
+a. In CPU scheduling → processes with higher priority are executed first.
+
+b. In Dijkstra’s algorithm → nodes with smaller distances are given higher priority.
+
+
+3. Graph Algorithms:
+
+--Heaps are used in many graph-related algorithms that rely on selecting minimum or maximum values efficiently.
+
+Examples:
+
+a. Dijkstra’s Algorithm → to find the shortest path (uses Min-Heap).
+
+b. Prim’s Algorithm → to find the Minimum Spanning Tree (also uses Min-Heap).
+
+--Both use heaps to quickly extract the minimum-weight vertex or edge.
+
+
+
+4. Job Scheduling / Task Scheduling: 
+
+--When multiple tasks have different priorities or deadlines, a heap can help schedule them efficiently.
+
+--You can always pick the highest-priority job (Max-Heap) or the earliest deadline job (Min-Heap) first.
+
+Example:
+
+--Operating systems or printers often use priority scheduling using heaps.
+
+
+5. Median Finding in Data Streams
+
+--Using two heaps (a Max-Heap and a Min-Heap), we can find the median of a continuously changing data stream efficiently.
+
+--One heap stores the smaller half, and the other stores the larger half of numbers.
+
+Example:
+
+--Used in real-time analytics, like finding the median of live stock prices.
+
+
+6. Real-Time Event Simulation:
+
+--In simulations (like games or traffic systems), heaps help efficiently process the next event based on time.
+
+--The event with the smallest timestamp (Min-Heap) is processed first.
+
+
+
+
+
+
+
+
 
 
 Heap Sort:
@@ -5962,13 +6274,95 @@ Time Complexity: O(n log n)
 Space Complexity: O(1) (in-place)
 
 
+
+summery:
+--------
+
+1. Build a Max-Heap from the array (so the largest element is at the root).
+2. Repeatedly remove the root (largest element) and move it to the end of the array.
+
+
+--When we build a heap from an array, we need to heapify every non-leaf node.
+
+
+Note: to build a Max-heap from an array, we use the following loop:
+
+ for (int i = n/2 - 1; i >= 0; i--){
+
+ }
+
+Why i = n/2 - 1 ?
+--------------
+
+as we know, In a heap represented by an array,
+for any node at index i:
+
+Left child index  = 2*i + 1
+Right child index = 2*i + 2
+Parent index      = (i - 1)/2
+
+
+So, if the array size is n,
+the last index = n - 1.
+
+Which nodes are leaves?
+---------------------
+
+--In a Complete Binary Tree,
+
+Leaf nodes = indices from (n/2) to (n - 1)
+Non-leaf nodes = indices from 0 to (n/2 - 1)
+
+
+Example:
+
+Let’s take an array of size n = 7:
+
+Index:    0    1     2    3    4    5    6
+Value: [50, 30, 40, 10, 15, 5, 20]
+
+
+here:
+
+n = 7
+n/2 = 3 (index 3 to index 6 are the leaf nodes)
+n/2 - 1 = 2 (index 0 to index 2 are the non-leaf nodes)
+
+         
+           50
+          /  \
+        30   40 
+       / \   / \ 
+      10 15  5  20
+
+So we start heapify from index 2  to  0 (2-> 1 -> 0)
+
+Node at index 2 → has children at 5,6
+
+Node at index 1 → has children at 3,4
+
+Node at index 0 → has children at 1,2
+
+Leaves (3,4,5,6) don’t need heapify.
+
+
+--Leaf nodes don’t need heapify because they already satisfy heap property (no children).
+
+--Therefore, we start heapifying from the last non-leaf node which is at index n/2 - 1.
+
+
+
+
+
+
+
 code:
 ------
 
 #include <iostream>
 using namespace std;
 
-// Heapify subtree rooted at index i
+// Heapify subtree rooted at index i in an array of size n
 void heapify(int arr[], int n, int i) {
     int largest = i;       // Initialize largest as root
     int left = 2*i + 1;    // left child
@@ -5991,14 +6385,19 @@ void heapify(int arr[], int n, int i) {
 
 // Heap Sort function
 void heapSort(int arr[], int n) {
-    // Build max heap
+    
+     // Step 1: Build a MAX HEAP from the input array
+         // Start from the last non-leaf node and heapify each node in reverse level order
     for (int i = n/2 - 1; i >= 0; i--)
         heapify(arr, n, i);
 
-    // Extract elements one by one
+
+    //Step 2: One by one extract the largest element from the heap
+    // when i ==0 loop will stop, After the loop ends, only one element (index 0) is left unsorted —
+    // but since all others are in correct position, that last one is automatically sorted too.
     for (int i = n-1; i > 0; i--) {
         swap(arr[0], arr[i]);   // Move current root to end
-        heapify(arr, i, 0);     // Heapify reduced heap
+        heapify(arr, i, 0);     // and fix the heap again (heapify root)
     }
 }
 
@@ -6018,6 +6417,267 @@ int main() {
 
     return 0;
 }
+
+
+
+DRY RUN:
+---------
+
+arr[] = {50, 30, 20, 10, 15, 5, 40}, n = 7
+
+--We will go through two main phases:
+
+
+Phase 1: Build Max Heap:
+--------------------
+
+for (int i = n/2 - 1; i >= 0; i--)
+    heapify(arr, n, i);
+
+
+n/2 - 1 = 7/2 - 1 = 2
+
+So i = 2, 1, 0
+
+
+Step 1.1: i = 2
+
+Node = arr[2] = 20
+
+Left child = arr[5] = 5, Right child = arr[6] = 40
+
+Largest among 20, 5, 40 → 40
+
+Swap arr[2] and arr[6]
+
+arr = [50, 30, 40, 10, 15, 5, 20]
+
+
+Step 1.2: i = 1
+
+Node = arr[1] = 30
+
+Left child = arr[3] = 10, Right child = arr[4] = 15
+
+Largest among 30, 10, 15 → 30 (no swap needed)
+
+
+arr = [50, 30, 40, 10, 15, 5, 20]
+
+
+Step 1.3: i = 0
+
+Node = arr[0] = 50
+
+Left child = arr[1] = 30, Right child = arr[2] = 40
+
+Largest among 50, 30, 40 → 50 (no swap needed)
+
+Max Heap after phase 1: [50, 30, 40, 10, 15, 5, 20]
+
+
+        50
+      /    \
+    30      40
+   /  \      /  \
+10   15 5   20
+
+Max Heap built successfully.
+
+
+Phase 2: Extract elements one by one
+---------------------------------
+
+for (int i = n-1; i > 0; i--) {
+    swap(arr[0], arr[i]);
+    heapify(arr, i, 0);
+}
+
+
+--We will shrink heap size each time  from i = 6 to i = 1.
+
+Step 2.1: i = 6
+
+Swap root and last element: arr[0] ↔ arr[6]  i.e 50 <-> 20
+
+arr = [20, 30, 40, 10, 15, 5, 50]  // 50 is fixed at the end
+
+
+Heapify root (size = 6)
+
+--Node = 20, children = 30, 40 → largest = 40
+
+--Swap 20 ↔ 40 → [40, 30, 20, 10, 15, 5, 50]
+
+Heap after step 2.1:
+
+[40, 30, 20, 10, 15, 5, 50]
+
+
+
+Step 2.2: i = 5
+
+Swap root and last element of heap: arr[0] ↔ arr[5]  i.e 40 <-> 5
+
+arr = [5, 30, 20, 10, 15, 40, 50]  // 40 and 50 are fixed
+
+
+Heapify root (size = 5)
+
+root = 5, children = 30, 20 → largest = 30
+
+Swap 5 ↔ 30 → [30, 5, 20, 10, 15, 40, 50]
+
+Heapify index 1, node 5 → children 10 , 15 →  swap 5 <-> 15
+
+Heap after step 2.2:
+
+[30, 15, 20, 10, 5, 40, 50]
+
+
+Step 2.3: i = 4
+
+--Swap root and last element of heap: arr[0] ↔ arr[4] i.e 30 <-> 5
+
+arr = [5, 15, 20, 10, 30, 40, 50]  // 30 40 50 are fixed.
+
+
+Heapify root (size = 4)
+
+Node = 5, children = 15, 20 → largest = 20
+
+Swap 5 ↔ 20 → [20, 15, 5, 10, 30, 40, 50]
+
+Heapify index 2: Node 5, children = none → done
+
+Heap after step 2.3:
+
+[20, 15, 5, 10, 30, 40, 50]
+
+
+Step 2.4: i = 3
+
+--Swap root and last element of heap: arr[0] ↔ arr[3] i.e 20 <-> 10
+
+arr = [10, 15, 5, 20,30, 40,  50]  // 20, 30, 40 50 are fixed
+
+Heapify root (size = 3)
+
+Node = 10, child = 15 and 5→ largest = 15
+
+Swap 10 ↔ 15 → [15, 10, 5, 20, 30, 40, 50]
+
+Heapify index 1: Node 10 → no children → done
+
+Heap after step 2.4:
+
+[15, 10, 5, 20, 30, 40, 50]
+
+Step 2.5: i = 2
+
+Swap root and last element of heap: arr[0] ↔ arr[2] i.e 15 <-> 5
+
+arr = [5, 10, 15, 20, 30, 40, 50]  
+
+Heapify root (size = 2)
+
+Node 5, child = 10 → largest = 10
+
+Swap 5 ↔ 10 → [10, 5, 15, 20, 30, 40, 50]
+
+
+Step 2.6: i = 1
+
+Swap root and last element of heap: arr[0] ↔ arr[1] i.e 10 <-> 5
+
+arr = [5, 10, 15, 20, 30, 40, 50]
+
+
+Final Sorted Array:
+
+[5, 10, 15, 20, 30, 40, 50]
+
+
+
+
+
+
+
+
+Step by step explaination of above program:
+-------------------------------------------
+
+1. Build Max heap:
+
+--The array is first converted into a Max Heap.
+
+--This ensures the largest element is always at the top (index 0).
+
+2. Swap Root with Last Element:
+
+--The root (largest element) is swapped with the last element of the array.
+
+--Now, the largest element is at the end (its final sorted position).
+
+3. Reduce Heap Size:
+
+--After placing the largest element at the end, we ignore it for the next heapify step.
+
+--So the heap size becomes smaller by 1.
+
+
+4. Heapify Again:
+
+--After removing the top element, the heap property might be broken.
+
+--We call heapify() on the root (index 0) to fix it.
+
+5. Repeat:
+
+--Keep repeating steps 2–4 until the heap size becomes 1.
+
+--The array is now sorted in ascending order.
+
+
+
+
+Time complexity of the heap sort:
+---------------------------------
+
+1. Build Max Heap: 
+
+--We start with an unsorted array of size n.
+
+--We call heapify on each non-leaf node from i = n/2 - 1 down to 0.
+
+--Time complexity of heapify at a node is proportional to the height of the subtree, which is O(log n).
+
+--But not all nodes have height log n. Most nodes are near leaves and have smaller height.
+
+--The total time to build the heap is: O(n) 
+
+2. Extract Max Elements One by One
+
+--We remove the root (largest element) and place it at the end.
+
+--Then call heapify on the root again to restore max heap.
+
+--We repeat this n-1 times.
+
+--Each heapify takes O(log n) time.
+
+Total complexity: O(n log n)
+
+so, the overall time complexity: O(n log n)
+
+
+
+
+
+
+
+
+in C++, the priority_queue container adaptor is implemented internally using a heap, specifically a max-heap by default.
 
 
 Heap Sort using priority_queue (Max-Heap):
