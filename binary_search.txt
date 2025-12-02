@@ -220,7 +220,7 @@ Code:
 
 
 
-int binarySearch(vector<int> arr, int target){
+int binarySearch(vector<int>& arr, int target){
 
     int low=0;
     int high= arr.size()-1;
@@ -253,6 +253,12 @@ Note: to avoid the integer overflow problem when low and high are large values (
 we can use the following formula to calculate the mid value:
 
 int mid = low+(high-low)/2;
+
+
+
+
+
+
 
 
 calculating the TC of the above binary search code:

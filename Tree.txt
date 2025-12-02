@@ -469,11 +469,7 @@ A Binary Tree (BT) is a tree data structure where:
 
 
 
-	 1
-        / \
-       2   3
-      / \
-     4   5
+
 
 
 To build a tree, we need:
@@ -565,6 +561,10 @@ public:
 };
 
 
+Tree t;
+
+t.root = new Node(1);
+
 
 
 
@@ -618,6 +618,7 @@ int main() {
 }
 
 
+bool find(Node* root, int val)
 
 
 
@@ -911,6 +912,8 @@ Example:
 
 
 
+
+
 --here,we start with the root,7 print this value ,
 --then we go to the left subtree 4 -->then move to its left 1 
 
@@ -949,6 +952,9 @@ Example:
 
 
 
+
+
+
 --here we start with the root 7 ,and before printing this,we have to visit its left and right subtrees.
 
 --same pattern followed with the subtrees also.
@@ -983,6 +989,8 @@ Example:
      4     9
     / \   / \
    1   6 8  10
+
+
 
 
 
@@ -1294,6 +1302,13 @@ Output:  4 2 5 1 3
 
 
 
+
+
+
+
+
+
+
 Important points:
 -----------------
 
@@ -1492,6 +1507,8 @@ bool isIdentical(Node* n1, Node* n2){
 
 }
 
+
+bool isIdentical(Node* n1, Node* n2) 
 
 
 Checking Equality of Two Trees:

@@ -1,0 +1,1185 @@
+Q1. Family Photograph:
+
+N members of a family are lined up in the increasing order of their heights for a family photograph. But to click a better snap, the photographer decided to reverse their positions in the groups of k members each.
+
+Given an array and an integer k, where each array element denotes the height of a person standing at the respective position originally. Your task is to print their heights according to their final position, after reversing in the groups of k.
+
+For example, If the height's array is {1, 2, 3, 4, 5, 6, 7, 8, 9}, i.e. denoting the original positions of the family members, and k = 3, then their final positions should be {3, 2, 1, 6, 5, 4, 9, 8, 7}, i.e. after reversing them in the groups of 3 members each.
+
+Note: The last group on the right side may contain less than k members.
+
+Input Format:
+
+--First Line will contain an integer N, denoting the number of family members.
+
+--Second line contains N space separated integers, denoting the height of members standing at their respective positions originally.
+
+--Third line contains an integer k.
+
+
+Output Format:
+
+Print the final heights array after reversal.
+Constraints
+1 <= N <= 10^5
+1 <= heights[i] <= 1000
+1 <= k <= N
+
+Sample Input:
+
+9 // N
+1 2 3 4 5 6 7 8 9 // heights[]
+3 // k
+
+Sample Output:
+
+3 2 1 6 5 4 9 8 7
+
+
+Solution approach:
+-------------------
+
+What does “reverse in groups of k” mean?
+
+You take the array of heights and:
+
+--Divide it into chunks of k members each
+
+--Reverse each chunk separately
+
+--If the last chunk has fewer than k members, you still reverse it
+
+Example:
+
+
+heights = {1,2,3,4,5,6,7,8,9}
+k = 3
+
+Groups:
+
+(1 2 3)  (4 5 6)  (7 8 9)
+
+Reverse:
+
+(3 2 1)  (6 5 4)  (9 8 7)
+
+
+Final output:
+
+3 2 1 6 5 4 9 8 7
+
+
+Approach:
+
+--start the array traversal
+
+--every time reverse the subarray i to i+k-1
+
+--print the final array
+
+
+
+Code:
+-----
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    int N;
+    cin >> N;
+
+    vector<int> a(N);
+    for(int i = 0; i < N; i++) {
+        cin >> a[i];
+    }
+
+    int k;
+    cin >> k;
+
+    // Reverse every group of k elements
+    for(int i = 0; i < N; i += k) {
+
+        int end = i + k - 1;   // expected last index of this group
+
+        if(end >= N) {
+            end = N - 1;           // adjust if last group is smaller
+        }
+
+        // reverse from start to end
+        reverse(a.begin() + i, a.begin() + end + 1);
+    }
+
+    // Print result
+    for(int i = 0; i < N; i++) {
+        cout << a[i] << " ";
+    }
+
+    return 0;
+}
+
+
+
+
+
+
+Q2. The Airport Mishap:
+
+
+You are working as a software engineer for an airline's baggage tracking system. Before a flight takes off, every piece of luggage is scanned and its unique ID(nonnegative integers) is recorded in a database. During the flight, the luggage shifts around in the cargo hold, changing the order.
+
+Upon landing, the ground crew scans the bags as they are unloaded onto the conveyor belt. However, the crew realizes that the number of bags unloaded is one less than the number of bags loaded. One bag has been lost in transit! Given the list of bag IDs at departure and the scrambled list of bag IDs at arrival, your task is to identify the ID of the missing bag.
+
+Input Format:
+
+First line contains 𝑇(number of flights to analyze).
+
+--For each flight: The first line contains 𝑚(total bags checked in) and 𝑛(total bags arrived).
+
+The second line contains the IDs(non-negative integers) of the bags checked in.
+
+The third line contains the IDs(non-negative integers) of the bags that arrived.
+
+Output Format:
+
+--For each flight, print the ID of the missing bag.
+
+Sample Input :
+
+1
+5 4
+1 2 3 4 5
+3 4 1 2
+
+Sample Output
+
+5
+
+
+Solution approach1:
+
+
+Missing = sum(departure) − sum(arrival)
+
+code1: 
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int m, n;
+        cin >> m >> n;
+
+        vector<int> dep(m), arr(n);
+
+        int sumDep = 0, sumArr = 0;
+
+        for (int i = 0; i < m; i++) {
+            cin >> dep[i];
+            sumDep += dep[i];
+        }
+
+        for (int i = 0; i < n; i++) {
+            cin >> arr[i];
+            sumArr += arr[i];
+        }
+
+        cout << (sumDep - sumArr) << endl;
+    }
+
+    return 0;
+}
+
+
+
+Approach2: Using unordered_map (Frequency Counting)
+
+--uses extra memory:
+
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int m, n;
+        cin >> m >> n;
+
+        unordered_map<int, int> countMap;
+        int x;
+
+        for (int i = 0; i < m; i++) {
+            cin >> x;
+            countMap[x]++;
+        }
+
+        for (int i = 0; i < n; i++) {
+            cin >> x;
+            countMap[x]--;
+        }
+
+        for (auto p : countMap) {
+            if (p.second == 1) {   // missing number
+                cout << p.first << endl;
+                break;
+            }
+        }
+    }
+    return 0;
+}
+
+
+
+
+Q3. Upper Triangular Matrix Verification
+
+
+Imagine you are a Quality Control (QC) Inspector at a factory that produces specialized mathematical objects called Square Matrices.
+
+Your current job is to take a batch of these matrices and check if they meet a specific design requirement: Are they an Upper Triangular Matrix?
+
+The Rule for an Upper Triangular Matrix
+
+--For a matrix to be approved as "Upper Triangular," every single component (element) that is located below the main diagonal must be a zero (0).
+
+--The main diagonal runs from the top-left corner down to the bottom-right corner.
+
+Your Task as the QC Inspector:
+
+--Display the Matrix: First, you must clearly present the contents of the matrix you are inspecting so everyone can see it.
+
+--Give the Verdict: After checking all the elements below the main diagonal against the rule (must be zero), you must then display a final, clear message stating:
+
+--"not an upper triangular matrix" OR
+--"upper triangular matrix"
+
+Constraints :
+
+2<n<=5 //order of matrix
+
+
+Sample Input :
+
+3 //order of matrix
+1 2 3
+4 5 6
+7 8 9
+
+Sample Output :
+
+1 2 3
+4 5 6
+7 8 9
+
+not an upper triangular matrix
+
+Explanation :
+
+1 2 3
+4 5 6
+7 8 9
+
+are the contents of array
+not an upper triangular matrix is displayed as elements below diagonal are not zero
+
+Sample Input :
+
+3
+1 2 3
+0 5 6
+0 0 9
+
+Sample Output :
+
+1 2 3
+0 5 6
+0 0 9
+
+upper triangular matrix
+
+
+Solution approach:
+-------------------
+
+--You must check whether the matrix is an Upper Triangular Matrix.
+
+What is an Upper Triangular Matrix?
+
+--A square matrix is called upper triangular if:
+
+--Every element below the main diagonal is 0
+
+The main diagonal is:
+
+(0,0), (1,1), (2,2), ... (n-1,n-1)
+
+
+Example of an upper triangular matrix:
+
+1 2 3
+0 5 6
+0 0 9
+
+
+--Everything below diagonal is 0, so it is valid.
+
+Example of NOT upper triangular:
+
+1 2 3
+4 5 6
+0 8 9
+
+
+Below diagonal values: 4, 8 → not zero → so it is NOT upper triangular.
+
+Your Job:
+
+
+1. Read the size n of the matrix.
+
+2. Read the matrix.
+
+3. Print the matrix as it is.
+
+4. Check if all elements below diagonal are zero.
+
+Print:
+
+"upper triangular matrix"
+
+OR
+
+"not an upper triangular matrix"
+
+
+Approach:
+
+1. Use two loops to input the matrix.
+
+2. Print the matrix.
+
+3. Use nested loops to check:
+
+--Only check positions where row > col (because these are below the main diagonal)
+
+If any one of these values !=  0 → it is NOT upper triangular.
+
+Else → it is upper triangular.
+
+
+code:
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+
+    int a[5][5];
+
+    // Input the matrix
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> a[i][j];
+        }
+    }
+
+    // Print the matrix
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << a[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    // Check if upper triangular
+    bool isUpper = true;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < i; j++) {  // elements below diagonal
+            if (a[i][j] != 0) {
+                isUpper = false;
+                break;
+            }
+        }
+    }
+
+    // Final answer
+    if (isUpper)
+        cout << "\nupper triangular matrix";
+    else
+        cout << "\nnot an upper triangular matrix";
+
+    return 0;
+}
+
+
+
+
+Q4. The Magic Card Game:
+
+
+You are playing a single-player math card game. You have a deck of cards that contains Number Cards (0-9) and Action Cards (mathematical symbols +, -, *, /, ^).
+
+You draw cards one by one and place them face-up on a single pile on the table.
+
+--If you draw a Number Card: You simply place it on top of the pile.
+
+--If you draw an Action Card: You must pick up the top two cards from the pile, perform the math operation on them, write the result on a blank card, and
+place that new card back on top of the pile.
+
+--Given the sequence of cards you draw, calculate the value of the single card remaining on the table at the end of the game.
+
+
+Input Format :
+
+--First line contains T(number of games played).
+--The next T lines each contain the sequence of cards drawn in postfix expression.
+
+
+Output Format :
+
+--Print the value of the final card on the pile for each game.
+
+
+Sample Input :
+2 // Testcases
+8425+-*
+546+*493/+*
+
+Sample Output :
+-24
+350
+
+Explanation :
+
+Testcase 1 will be evaluated as:
+
+8 * (4 - (2 + 5)) = -24
+
+Testcase 2 will be evaluated as:
+
+(5 * (4 + 6)) * (4 + (9 / 3)) = 350
+
+
+
+Approach (Stack-Based Solution)
+
+1. Create an empty stack.
+
+2. Traverse each character in the postfix string:
+
+--If digit → convert to number → push to stack
+
+--If operator → pop two numbers → apply operation → push result
+
+After full string → stack top = final answer
+
+
+code:
+
+#include <iostream>
+#include <stack>
+#include <cctype>
+#include <cmath>
+
+using namespace std;
+
+// Function to apply the operator on two values
+int applyOp(int a, int b, char op) {
+    switch(op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return a / b;   // assume no divide by zero
+        case '^': return pow(a, b);
+    }
+    return 0; 
+}
+
+// Function to evaluate a postfix expression
+int evaluatePostfix(string exp) {
+    stack<int> st;
+
+    for (char ch : exp) {
+        if (isdigit(ch)) {
+            st.push(ch - '0');   // convert char digit to int
+        }
+        else {  
+            int val2 = st.top(); st.pop();
+            int val1 = st.top(); st.pop();
+            int result = applyOp(val1, val2, ch);
+            st.push(result);
+        }
+    }
+    return st.top();
+}
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        string exp;
+        cin >> exp;
+
+        int result = evaluatePostfix(exp);
+        cout << result << endl;
+    }
+
+    return 0;
+}
+
+
+
+Q5. The Cafeteria Tray Dispenser
+
+
+You are in charge of the tray dispenser in a busy cafeteria. The dispenser operates on a strict "Last In, First Out" basis. Because the mechanism is old, you track the trays using a dynamic list where every tray is physically linked to the one below it.
+
+You receive a series of instructions from the kitchen manager:
+
+1. Instruction Type 1 (Restock): The dishwasher brings a clean tray with a specific ID number and places it on top of the stack.
+
+2. Instruction Type 2 (Serve): A customer arrives to eat. You must remove the tray currently at the very top of the stack and hand it to them (print the 
+tray ID).
+
+If a customer asks for a tray but the dispenser is completely empty, you must signal that no trays are available by reporting -1
+
+
+Input:
+
+First line of input contains number of test cases(no. of shifts).
+--First line of each test case contains an integer Q denoting the number of instructions.
+
+The instructions follows (e.g., 1 50 means add tray 50, 2 means hand out the top tray).
+
+
+Output:
+
+--The output for each test case will be space separated integers having -1 if the dispenser was empty else print the ID of every tray handed out.
+
+Sample Input
+
+1
+8
+1 3 2 1 4 1 2 2 1 6 2 2
+
+Sample Output
+
+3 2 6 4
+
+Explanation
+
+First instructions is push 3,
+then pop will print 3,
+3rd instructions is push 4,
+then push 2,
+5th instructions is pop which prints 2,
+6th instructions is push 6,
+then pop will print 6 and
+last instructions of pop will print 4.
+
+
+Solution approach:
+
+
+--You are managing a cafeteria tray dispenser.
+
+--The tray dispenser behaves like a stack:
+
+LIFO → Last In, First Out
+
+You will receive Q instructions, each of two types:
+
+Instruction Type 1 → Restock tray
+
+Format:
+
+1 X
+
+
+Meaning:
+
+--Add tray with ID = X to the top of the stack.
+
+
+Instruction Type 2 → Serve tray
+
+Format:
+
+2
+
+
+Meaning:
+
+--Remove the tray at the top of the stack.
+
+--Print its ID.
+
+--If stack is empty → print -1.
+
+Your job:
+
+--For each test case, print all served tray IDs (or -1) in one line separated by spaces.
+
+
+Sample Input Explained:
+
+1           → 1 test case
+8           → 8 instructions
+1 3         → push 3
+2           → pop → prints 3
+1 4         → push 4
+1 2         → push 2
+2           → pop → prints 2
+1 6         → push 6
+2           → pop → prints 6
+2           → pop → prints 4
+
+
+So output:
+
+3 2 6 4
+
+
+Approach:
+
+1. Create an empty stack.
+
+2. Loop through all Q instructions:
+
+--If instruction is 1 X → push X into stack.
+
+--If instruction is 2:
+
+	If stack empty → output -1
+
+	Else pop top and output tray ID.
+
+--Print answers for each test case on a new line.
+
+
+code:
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int Q;
+        cin >> Q;
+
+        stack<int> st;
+
+        while (Q--) {
+            int type;
+            cin >> type;
+
+            if (type == 1) {
+                int trayID;
+                cin >> trayID;
+                st.push(trayID);
+            }
+            else if(type == 2) { 
+                if (st.empty()) {
+                    cout << -1 << " ";
+                }
+                else {
+                    cout << st.top() << " ";
+                    st.pop();
+                }
+            }
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
+
+
+
+
+Q6. The Action-First Math Processor:
+
+
+You are programming a new type of calculator for a strict professor. This professor believes that you should always state the Action (Operator) before you state the Numbers (Operands).
+
+In normal math, we say: 2+3
+
+In this professor's "Action-First" notation (Prefix), we say: + 2 3 (which means "Add 2 and 3")
+
+The expressions can get complicated. For example, the string * + 1 2 4 means:
+
+--First, resolve + 1 2 (which is 3).
+
+--Then, use that result with the multiplication: * 3 4.
+
+--The final answer is 12.
+
+Your task is to write a program that reads these "Action-First" expressions and calculates the single final result.
+
+Hint for Students:
+
+To solve this easily using a Stack, try reading the expression backwards (from right to left).
+
+--If you see a Number, push it into the stack.
+--If you see an Operator, pop the top two numbers, do the math, and push the result back.
+
+Complete the evalPrefix() function and return the final output.
+
+
+Input Format:
+
+--The first line of input contains an integer T denoting the number of test cases.
+--The next T lines contain a "Action-First" expressions(prefix expressions).
+--An expression form will consist of all digits and following five operators: +, -, *, /, ^
+
+Output Format:
+
+--Print the final output of prefix expression evaluation in new line for each test case.
+
+
+Sample Input:
+
+1
++-*235/^234
+
+Sample Output
+
+3
+
+
+
+Solution approach:
+
+
+--The professor uses Prefix notation (Action-First):
+
+Prefix means:
+
+--Operator appears before the numbers.
+
+--Expression is read from right to left when evaluating.
+
+
+Use a stack and scan from right to left.
+
+Rule 1: If you find a number → push into stack
+Rule 2: If you find an operator →
+
+--Pop top 2 numbers
+
+--Apply the operation
+
+--Push result back
+
+--In the end → stack top = final answer
+
+
+code:
+
+#include <iostream>
+#include <stack>
+#include <cmath>
+using namespace std;
+
+int applyOp(int a, int b, char op) {
+    switch(op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return a / b;  // assume no divide by zero
+        case '^': return pow(a, b);
+    }
+    return 0;
+}
+
+int evalPrefix(string exp) {
+    stack<int> st;
+
+    // read right to left
+    for (int i = exp.length() - 1; i >= 0; i--) {
+        char ch = exp[i];
+
+        if (isdigit(ch)) {
+            st.push(ch - '0'); // char → int
+        }
+        else { // operator
+            int a = st.top(); st.pop();
+            int b = st.top(); st.pop();
+            int result = applyOp(a, b, ch);
+            st.push(result);
+        }
+    }
+
+    return st.top();
+}
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        string exp;
+        cin >> exp;
+        cout << evalPrefix(exp) << endl;
+    }
+
+    return 0;
+}
+
+
+
+
+Q7. Duplicate Flyer Detection
+
+
+In a busy international airport, passenger IDs are logged every time a traveler passes through a security checkpoint. However, due to repeat scans or additional checks, the same flyer may be logged more than once.
+
+Your have to help the airport system identify all duplicate flyer IDs — those that appear more than once in the scanned log.
+
+
+Constraints:
+
+--Number of scanned entries ≤ 10⁵
+--Each ID is an alphanumeric string (e.g., "A123", "XY9KL"), up to 20 characters
+
+Input:
+
+--A list of strings representing passenger IDs scanned at the security checkpoint. Each ID is unique per person, but may appear multiple times in the log.
+
+Output:
+
+--Return a list of duplicate IDs — the IDs that appeared more than once in the input. Each duplicate should appear only once in the output. The order does
+
+Sample Input:
+
+5
+A123 B456 C789 A123 D000
+
+Sample Output:
+
+A123
+
+
+Solution approach:
+
+
+--We are given a list of passenger IDs (strings).
+--Some IDs appear more than once because passengers may get scanned multiple times.
+
+Our task:
+
+--Find all IDs that appear more than once
+--Print each duplicate ID only once
+
+Use a Hash Map (unordered_map)
+
+Steps:
+
+--Create an unordered_map<string, int> to store frequency of each ID.
+
+--Read all IDs and increase their count.
+
+--After processing all IDs:
+
+--Any ID with count ≥ 2 is a duplicate.
+
+--Print all duplicates (one per line).
+
+
+code:
+
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+
+    unordered_map<string, int> freq;
+    vector<string> ids(n);
+
+    // Read all IDs
+    for (int i = 0; i < n; i++) {
+        cin >> ids[i];
+        freq[ids[i]]++;     // count each ID
+    }
+
+    // Print duplicates
+    for (auto &p : freq) {
+        if (p.second > 1) {
+            cout << p.first << endl;
+        }
+    }
+
+    return 0;
+}
+
+
+
+
+Q8. Brand Logo of a company
+
+
+A couple decided to open a footwear company, and for its brand logo they wanted to use a single letter. So, they thought of a very interesting method, i.e. any letter from the wife's name that is present at the minimum index in the husband's name will be selected as their company's logo, and if no letter of wife's name is present in husband's name then they will choose letter 'h'.
+
+Now, given the name of both husband and wife, you have to find the logo for their company as per the above method. For example, given husband's name =
+"nimish" and wife's name = "seema", then two characters (s and m) appears in husband's name, but we will choose 'm' as their company's logo because it appears at minimum index.
+
+Input Format:
+
+The First line of input contains an integer T, denoting the no of test cases.
+--The first line of each test case contains a string, denoting husband name.
+
+The second line of each test case contains a string, denoting wife name.
+
+Output Format:
+
+--For each test case, print the selected brand logo for their company.
+
+Constraints
+1 <= T <= 10
+1 <= length_of(name) <= 10^5
+All the names consist of lowercase English letters only.
+
+
+Sample Input:
+
+2 // Test Cases
+
+nimish
+seema
+naveen
+priti
+
+Sample Output:
+
+m
+h
+
+
+
+Solution approach:
+
+--find each letter of wife name in hushband name.
+
+--which letter comes first at min index that will be the output
+
+--if none of the letter is found then default will be 'h'
+
+Step-by-step approach:
+
+1. For each test case:
+
+2. Store husband's name.
+
+3. For each character in wife's name:
+
+--Search its first occurrence in the husband's name.
+
+--Keep track of the minimum index found.
+
+4. Choose the letter with the smallest index.
+
+5. If no letter is found in the husband's name → answer is 'h'.
+
+
+
+Efficient Trick:
+
+Instead of searching husband's name again and again:
+
+--Loop through the husband’s name once.
+
+--As you scan left to right:
+
+	If this character is in wife’s name → this is automatically the earliest one.
+
+	Return that character immediately.
+
+
+code:
+
+#include <iostream>
+#include <unordered_set>
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        string husband, wife;
+        cin >> husband >> wife;
+
+        // Put wife's letters in a set for fast lookup
+        unordered_set<char> wifeSet(wife.begin(), wife.end());
+
+        char logo = 'h';  // default choice
+        bool found = false;
+
+        // Scan husband's name from left to right
+        for (char ch : husband) {
+            if (wifeSet.count(ch) == 1) {  
+                logo = ch;   // first matching letter
+                found = true;
+                break;        // stop because this is minimum index
+            }
+        }
+
+        cout << logo << endl;
+    }
+    return 0;
+}
+
+
+
+
+Q9. Decode Enemy Message:
+
+
+Turing intercepts an encoded message from the enemy country, and he has cracked the logic to decode that. The decoding logic is as follows:
+
+The encoded string is composed of multiple words which are separated by space, and to decode that, one needs to reverse the words in the string individually, not the whole string.
+
+Turing needs your help in writing an algorithm to decode those intercepted messages.
+
+Complete the function decodeMessage() which takes the string as parameter and reverse the individual words of string and returns it.
+
+
+Input Format:
+
+The first line of input contains an integer N denoting the no. of messages intercepted.
+Next N lines contain a message string each.
+
+
+Output Format:
+
+--For each message string, print its decoded version in a new line.
+
+
+Sample Input
+
+2
+edoC tneitouQ sevoL edoC
+olleH sredoC
+
+Sample Output
+
+Code Quotient Loves Code
+Hello Coders
+
+
+Solution approach:
+
+
+You are given an encoded message.
+
+In the encoded message:
+
+--The message contains multiple words.
+
+--Words are separated by spaces.
+
+--Each word is encoded by reversing the characters of that word only.
+
+--The order of words in the sentence is NOT reversed.
+
+Your job:
+
+For each message:
+
+--Reverse each word individually, and
+--Print the decoded message.
+
+
+Approach:
+
+1. Read the string.
+
+2. Split the string by spaces (word by word).
+
+3. For each word:
+
+--Reverse it.
+
+4. Join reversed words with a space.
+
+5. Print the result.
+
+code:
+
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+string decodeMessage(string s) {
+    string result = "";
+    string word = "";
+
+    for (char ch : s) {
+        if (ch == ' ') {
+            // reverse the collected word
+            reverse(word.begin(), word.end());
+            result += word + " ";
+            word = ""; // reset for next word
+        }
+        else {
+            word += ch;
+        }
+    }
+
+    // reverse the last word
+    reverse(word.begin(), word.end());
+    result += word;
+
+    return result;
+}
+
+int main() {
+    int N;
+    cin >> N;
+    cin.ignore(); // ignore newline after N
+
+    while (N--) {
+        string msg;
+        getline(cin, msg);
+
+        cout << decodeMessage(msg) << endl;
+    }
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
