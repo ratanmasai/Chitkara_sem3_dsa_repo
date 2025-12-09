@@ -1,0 +1,1147 @@
+Q1. The VIP Reversal at the Ice Cream Truck:
+
+
+Imagine a very popular ice cream truck, "The Sweet Stop." Customers line up in a Queue—the first person in line gets the next ice cream.
+
+Concept: Changing the order of the line so the person who arrived last gets served first.
+
+Input (Original Queue): Four friends are in the line:
+
+Friend 1 (First)→Friend 2→Friend 3→Friend 4 (Last)
+(Like the sample: 1, 2, 3, 4)
+
+The Reversal: A special announcement declares that for the next batch of customers, the line must be completely reversed to test a "new customer service flow."
+
+Output (Reversed Queue): The new order of the line, where the original last person is now first:
+
+Friend 4 (First)→Friend 3→Friend 2→Friend 1 (Last)
+(Like the sample: 4, 3, 2, 1)
+
+Your task is to take the original waiting line (the queue) and apply this reversal to get the new order.
+
+The function reverseQueue(queue) takes the queue as input and reverse it.
+
+Input Format:
+
+--The first line of input will contains an integer T denoting the no of test cases. 
+--Then T test cases follow. 
+--Each test case contains a number N followed by N number of elements in order in which they will be inserted in queue.
+
+Output Format:
+
+For each test case, you have to reverse the queue in the array given. You are required to complete the methods given only.
+
+Constraints
+1 <= T <= 10
+1 <= N <= 100
+
+Sample Input
+
+2
+4
+1 2 3 4
+5
+10 20 30 50 40
+
+
+Sample Output
+
+4 3 2 1
+40 50 30 20 10
+
+
+
+Solution Approach:
+------------------
+
+Reversing the queue
+
+method1: Using a stack
+
+Queue: FIFO
+Stack: LIFO
+
+Steps:
+
+1. Pop all elements from queue and push into stack
+
+2. Pop all elements from stack and push back into queue
+
+
+Code:
+
+
+#include <iostream>
+#include <queue>
+#include <stack>
+using namespace std;
+
+void reverseQueue(queue<int> &q) {
+    stack<int> st;
+
+    // Step 1: Move all elements from queue to stack
+    while (!q.empty()) {
+        st.push(q.front());
+        q.pop();
+    }
+
+    // Step 2: Move all elements back to queue from stack
+    while (!st.empty()) {
+        q.push(st.top());
+        st.pop();
+    }
+}
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int N;
+        cin >> N;
+
+        queue<int> q;
+        for (int i = 0; i < N; i++) {
+            int x;
+            cin >> x;
+            q.push(x);
+        }
+
+        reverseQueue(q);
+
+        // Print reversed queue
+        while (!q.empty()) {
+            cout << q.front() << " ";
+            q.pop();
+        }
+        cout << endl;
+    }
+    return 0;
+}
+
+
+
+
+Method2: Using recursive method:
+
+code:
+
+
+void reverseQueue(queue<int> &q) {
+    if (q.empty()) return;
+
+    int front = q.front();
+    q.pop();
+
+    reverseQueue(q);
+
+    q.push(front);
+}
+
+
+
+Q2. Predicting Demand Drops in Inventory Management:
+
+
+Imagine you are an inventory manager at a warehouse that stores various products with fluctuating demand. You have a list of product
+demand levels recorded over several days, and you need to analyze market trends to optimize stock levels. For each day's demand, you
+want to determine when the demand will next decrease in the upcoming days.
+
+
+You have n days of demand data stored in an array demand[ ], where demand[i] represents the demand for a product on the i-th day. Your
+task is to find the next day (to the right) when the demand is lower than the current day's demand. If no such lower demand exists in the upcoming days, print -1 for that day.
+
+Input Format:
+
+--The first line of input contains a single integer T denoting the number of test cases.
+--Then T test cases follow:
+--The first line of each test case contains an integer n denoting the number of days.
+--The next line of each test case contains n distinct integers representing the demand levels for each day.
+
+Output Format:
+
+--For each test case, print the next smaller demand level for each day, separated by a space, in a new line. If no such smaller demand exists
+
+Sample Input:
+
+1
+5
+40 80 50 20 90
+
+Sample Output:
+
+20 50 20 -1 -1
+
+
+
+Solution Approach:
+-------------------
+
+Next Smaller Element to the Right:
+
+--Using stack
+
+
+code:
+
+
+#include <iostream>
+#include <stack>
+#include <vector>
+using namespace std;
+
+vector<int> nextSmallerToRight(vector<int>& arr, int n) {
+    stack<int> st;
+    vector<int> ans(n);
+
+    for (int i = n - 1; i >= 0; i--) {
+
+        while (!st.empty() && st.top() >= arr[i]) {
+            st.pop();
+        }
+
+        // Using normal if-else instead of ternary operator
+        if (st.empty()) {
+            ans[i] = -1;
+        } else {
+            ans[i] = st.top();
+        }
+
+        st.push(arr[i]);
+    }
+
+    return ans;
+}
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int n;
+        cin >> n;
+
+        vector<int> arr(n);
+        for (int i = 0; i < n; i++) cin >> arr[i];
+
+        vector<int> result = nextSmallerToRight(arr, n);
+
+        // Print without trailing space
+        for (int i = 0; i < n; i++) {
+            cout << result[i];
+            if (i != n - 1) cout << " ";  // print space only between values
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
+
+
+
+Q3. Code Compiler Output:
+
+
+You are developing a code compiler, and in that there must be a feature to check whether the parentheses in the code expression are
+balanced or not, i.e.
+
+	1. Open brackets must be closed by the same type of brackets.
+	2. Open brackets must be closed in the correct order.
+
+The following are some examples of code expressions containing the balanced parentheses:
+
+"if(arr(4) > 9) { foo(arr[2]); }"
+"for(i=0; i<a[0]; i++) { a[i]++; }"
+
+In the following examples, parentheses are not balanced:
+
+"while(true) ) { foo( }; )"
+"if(x) {"
+
+Given a code expression, check whether it is containing the balanced parentheses or not, and accordingly print the compiler output as
+"Success" or "Error".
+
+Input Format:
+
+--First line of input contains an integer T, denoting the number of test cases.
+--Each test case contains a string, denoting the code to be compiled.
+
+Output Format:
+
+--For each test case, print the output from compiler, after compiling the given code. 
+
+Sample Input
+
+2  // Test Cases
+if(arr(4) > 9) { foo(arr[2]); }
+if ( arr[ 7 ) ]
+
+Sample Output
+
+Success
+Error 
+Explanation
+
+Test Case 1:
+--The given code expression contains balanced parentheses.
+--Therefore, the compilation output will be "Success".
+
+Test Case 2:
+--In the given code expression, the open brackets are not closed in the correct order.
+--Therefore, the compilation output will be "Error".
+
+
+Solution Approach:
+------------------
+
+--checking balanced parentheses
+
+--Given a code expression string, check if all these brackets are balanced:
+
+()
+
+{}
+
+[]
+
+Rules:
+
+Each opening bracket must match the same type.
+
+They must close in the correct order (stack needed).
+
+Output:
+
+"Success" if balanced
+
+"Error" if not balanced
+
+
+Approach:
+---------
+
+Use stack
+
+Steps:
+
+1. Traverse the string.
+
+2. When you see an opening bracket → push it.
+
+3. When you see a closing bracket:
+
+--If stack empty → Error
+
+--If top is not matching → Error
+
+--Else pop
+
+4. After full scan:
+
+--If stack empty → Success
+
+--Else → Error
+
+
+code:
+
+
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+bool isBalanced(string &s) {
+    stack<char> st;
+
+    for (char ch : s) {
+
+        // Push opening brackets
+        if (ch == '(' || ch == '{' || ch == '[') {
+            st.push(ch);
+        }
+        // For closing brackets
+        else if (ch == ')' || ch == '}' || ch == ']') {
+
+            // If stack empty → no matching opening
+            if (st.empty()) {
+                return false;
+            }
+
+            char top = st.top();
+
+            // Check correct matching
+            if ((ch == ')' && top != '(') ||
+                (ch == '}' && top != '{') ||
+                (ch == ']' && top != '[')) {
+                return false;
+            }
+
+            st.pop();
+        }
+    }
+
+    // After complete traversal,
+    // stack must be empty (all brackets matched)
+    return st.empty();
+}
+
+int main() {
+    int T;
+    cin >> T;
+    cin.ignore(); // To skip newline after T
+
+    while (T--) {
+        string code;
+        getline(cin, code); // read full line including spaces
+
+        if (isBalanced(code)) {
+            cout << "Success" << endl;
+        } else {
+            cout << "Error" << endl;
+        }
+    }
+
+    return 0;
+}
+
+
+
+Q4. Cinema Seat Booking System:
+
+
+A cinema hall has its seating arrangement represented as a 2D array of size R × C (rows × columns).
+
+--Each element in the array represents a seat:
+
+0 → Empty seat
+1 → Booked seat
+
+--A group of friends wants to book K consecutive seats in the same row.
+
+--Write a program to find if there exists at least one block of K consecutive empty seats in any row.
+
+Input Format:
+
+--Read two integers R and C (rows and columns).
+--Read RxC inputs (which will be array elements i.e either 0 or 1 )
+--Read the value of K (the group size).
+
+Output Format:
+
+--Either print the row and starting column of the available seats as:
+--Available at Row X, Starting Column Y
+--Or, if no K consecutive sheets are available then print:
+
+Not Available
+
+Sample Input 1:
+
+5 6              <-- 5 rows, 6 columns
+0 1 0 0 0 1      <-- row 1
+0 0 1 0 1 0      <-- row 2
+1 1 1 1 0 0      <-- row 3
+0 1 0 0 1 0      <-- row 4
+1 0 1 0 1 0      <-- row 5
+3                <-- group size (number of seats to be booked)
+
+Sample Output 1
+
+Available at Row 1, Starting Column 3
+
+
+Sample Input 2:
+
+3 5
+1 1 1 1 1
+0 1 0 1 0
+1 1 1 0 1
+2
+
+Sample Output 2:
+
+Not Available
+
+
+
+Solution approach:
+------------------
+
+Given an R × C seating matrix:
+
+0 → empty
+
+1 → booked
+
+You must find if any row contains K consecutive empty seats.
+
+If yes → print:
+
+Available at Row X, Starting Column Y
+
+If not → print:
+
+Not Available
+
+
+Approach:
+
+For each row:
+
+1. Use a sliding window of size K
+
+2. Count consecutive zeros
+
+3. If the count reaches K → block found
+
+4. Otherwise → continue searching
+
+Stop at the first valid block.
+
+
+
+code:
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    int R, C;
+    cin >> R >> C;
+
+    vector<vector<int>> seats(R, vector<int>(C));
+
+    // Read the seating layout
+    for (int i = 0; i < R; i++) {
+        for (int j = 0; j < C; j++) {
+            cin >> seats[i][j];
+        }
+    }
+
+    int K;
+    cin >> K;
+
+    bool found = false;
+    int finalRow = -1, finalCol = -1;
+
+    // Check each row for K empty seats
+    for (int i = 0; i < R; i++) {
+
+        int consecutive = 0;       // how many empty seats found in a row
+        int startCol = 0;          // start of the empty block
+
+        for (int j = 0; j < C; j++) {
+
+            if (seats[i][j] == 0) {
+
+                // if first empty in this block, mark start
+                if (consecutive == 0) {
+                    startCol = j;
+                }
+
+                consecutive++;
+
+                // found K consecutive seats
+                if (consecutive == K) {
+                    found = true;
+                    finalRow = i + 1;      // convert to 1-based indexing
+                    finalCol = startCol + 1;
+                    break;
+                }
+            }
+            else {
+                // booked seat → reset count
+                consecutive = 0;
+            }
+        }
+
+        if (found) break;
+    }
+
+    if (found) {
+        cout << "Available at Row " << finalRow
+             << ", Starting Column " << finalCol;
+    } else {
+        cout << "Not Available";
+    }
+
+    return 0;
+}
+
+
+
+Q5. Image Pixel Inversion:
+
+
+A digital image can be represented as a 2D array of integers. Each integer corresponds to the brightness of a pixel:
+
+0 → Black
+255 → White
+Any value in between → Gray shade
+
+One common image operation is inversion, where each pixel value is replaced with its opposite brightness. If a pixel has value p, its
+inverted value is calculated as:
+
+newPixel = 255 - p
+
+This creates a "negative" version of the image.
+
+Task:
+
+Write a program to read a 2D array representing an image and create a new inverted image by applying the above formula to every
+pixel. Print the inverted 2D array as output.
+
+Input Format:
+
+First line: Two integers R C → number of rows and columns of the image
+Next R lines: Each line contains C integers (pixel values between 0 and 255)
+
+Output Format:
+
+Print the new inverted 2D array after transformation
+
+
+Sample Input 1:
+
+3 3
+0 255 100
+50 200 150
+255 0 75
+
+Sample Output 1:
+
+255 0 155
+205 55 105
+0 255 180
+
+Sample Input 2:
+
+2 4
+10 20 30 40
+100 150 200 250
+
+Sample Output 2:
+
+245 235 225 215
+155 105 55 5
+
+Explanation:
+
+First pixel = 0 → 255 - 0 = 255
+Second pixel = 255 → 255 - 255 = 0
+Third pixel = 100 → 255 - 100 = 155
+…and so on for all pixels.
+
+
+
+Solution Approach:
+------------------
+
+--You are given a 2D array where each value (0–255) is a pixel brightness.
+
+--To invert it:
+
+newPixel = 255 - oldPixel
+
+--Apply this to every pixel and print the new 2D array.
+
+
+code:
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    int R, C;
+    cin >> R >> C;
+
+    vector<vector<int>> img(R, vector<int>(C));
+
+    // Read the image pixels
+    for (int i = 0; i < R; i++) {
+        for (int j = 0; j < C; j++) {
+            cin >> img[i][j];
+        }
+    }
+
+    // Invert the image pixels
+    for (int i = 0; i < R; i++) {
+        for (int j = 0; j < C; j++) {
+            img[i][j] = 255 - img[i][j];
+        }
+    }
+
+    // Print the inverted image
+    for (int i = 0; i < R; i++) {
+        for (int j = 0; j < C; j++) {
+            cout << img[i][j];
+            if (j != C - 1) cout << " ";   // no space at end
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
+
+
+
+Q6. Heat Wave:
+
+You are given the temperature records of one week (7 days). You need to find out which day of the week was the hottest day.
+
+You are required to accept a 7×4 2D array of integers representing the temperature of a city.
+
+7 rows represent the days of the week
+
+0 → Sunday
+1 → Monday
+2 → Tuesday
+3 → Wednesday
+4 → Thursday
+5 → Friday
+6 → Saturday
+
+4 columns represent the time slots of the day
+
+0 → Morning
+1 → Afternoon
+2 → Evening
+3 → Night
+
+Your task is to calculate the average temperature for each day and then find the day with the maximum average temperature. Finally,
+print the day name (e.g., "Monday").
+
+
+Input Format:
+
+7 lines, each containing 4 integers (temperatures for Morning, Afternoon, Evening, Night).
+
+Output Format:
+
+Print the hottest day of the week in words (e.g., Monday).
+
+Sample Input:
+
+30 35 33 29
+28 34 31 27
+32 36 34 30
+31 33 32 28
+29 35 30 27
+30 34 33 29
+28 32 31 26
+
+Sample Output
+
+Tuesday
+
+
+
+Solution Approach:
+------------------
+
+You receive a 7 × 4 temperature table:
+
+--7 rows → Days (Sunday to Saturday)
+
+--4 columns → Morning, Afternoon, Evening, Night
+
+Steps:
+
+1. Compute average temperature for each day
+
+2. Find the day with the highest average
+
+3. Print the day name
+
+
+
+code:
+
+#include <iostream>
+using namespace std;
+
+int main() {
+
+    int temp[7][4];
+
+    // Read all temperatures
+    for (int i = 0; i < 7; i++) {
+        for (int j = 0; j < 4; j++) {
+            cin >> temp[i][j];
+        }
+    }
+
+    // Names of days
+    string days[] = {
+        "Sunday", "Monday", "Tuesday", "Wednesday",
+        "Thursday", "Friday", "Saturday"
+    };
+
+    double maxAvg = -1;
+    int hottestDay = 0;
+
+    // Calculate average for each day
+    for (int i = 0; i < 7; i++) {
+        int sum = 0;
+
+        for (int j = 0; j < 4; j++) {
+            sum += temp[i][j];
+        }
+
+        double avg = sum / 4.0;
+
+        if (avg > maxAvg) {
+            maxAvg = avg;
+            hottestDay = i;   // store index of day
+        }
+    }
+
+    // Print the hottest day
+    cout << days[hottestDay];
+
+    return 0;
+}
+
+
+
+Q7. Change the letters to save friend
+
+
+Your friend has an homework, in which he got some words and need to make the words fancy such that no adjacent characters in them
+matches. He is about to finish the work but his grandmother called him for some work. He need your help to figure out the minimum
+characters in each word to be replaced so that no adjacent characters will match. If you help him, he can finish the work early.
+
+So complete the function min_chars_change() which will receive a word as input and return an integer denoting the minimum
+characters need to be changed in that word.
+
+
+Input Format:
+
+--The first line contains an integer N i.e. number of words
+--Next N lines each contains an string i.e. word.
+
+Output Format:
+
+Print the minimum characters to be changed for each word in new lines.
+
+Constraints:
+
+1 ≤ N ≤ 10
+1 ≤ length of a word ≤ 10^5
+A word will only contain lowercase english alphabets i.e. from 'a' to 'z'. 
+
+Sample Input
+
+3
+add
+bouke
+heello
+
+Sample Output
+
+1
+0
+2
+
+Explanation:
+d needs to be changed in "add".
+no change is required in "bouke".
+e and l needs to be changed in "heello".
+
+
+Solution Approach:
+------------------
+
+--For each word, count how many characters must be changed so that no two adjacent characters are the same.
+
+--You do NOT need to actually change the characters — only count how many replacements are needed.
+
+
+
+
+
+logic:
+
+Traverse the word:
+
+If word[i] == word[i-1] → we MUST change one of them
+
+→ increase the answer count
+→ move ahead
+
+Example "add"
+
+d == d → 1 change required
+
+Example "heello"
+
+e == e → 1 change
+l == l → 1 change
+
+Total = 2
+
+This is exactly what we need.
+
+
+code:
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int min_chars_change(string word) {
+    int changes = 0;
+    int n = word.length();
+
+    for (int i = 0; i < n - 1; i++) {
+
+        // Compare current character with next character
+        if (word[i] == word[i + 1]) {
+            changes++;   // We must change one character
+            i++;         // Skip the next index to avoid double counting
+        }
+    }
+
+    return changes;
+}
+
+int main() {
+    int N;
+    cin >> N;
+
+    while (N--) {
+        string word;
+        cin >> word;
+
+        cout << min_chars_change(word) << endl;
+    }
+
+    return 0;
+}
+
+
+Q8. Compatibility Test:
+
+
+Rohan and Aditi are about to get married, but before that they wanted to check their compatibility, so they decided to visit an astrologer. The astrologer asked them to think of a string in their mind, now according to him if Rohan's string occurs at the end of Aditi's string, then they are compatible otherwise not.
+
+For example: If Aditi's string = "Face" and Rohan's string = "ace", then they are compatible because the second string occurs at the end of first string.
+
+Complete the function areCompatible(aditi_str, rohan_str) which accepts two strings as parameter and returns 1 if rohan_str occurs at end of aditi_str and 0 otherwise.
+
+Input Format:
+
+--The first line of input contains an integer T denoting the no of test cases . 
+--Then T test cases follow. Each test case contains two strings aditi_str, rohan_str. 
+
+Output Format:
+
+--For each test case, print 0 or 1 in new lines.
+
+Constraints:
+
+1 <= T <= 10
+Given two strings can contain any valid ASCII character.
+
+Sample Input
+
+2
+CodeQuotient ent
+Coding Code
+
+Sample Output
+
+1
+0
+
+
+
+Solution Approach:
+------------------
+
+Given two strings:
+
+aditi_str
+rohan_str
+
+--Check if rohan_str occurs at the end of aditi_str.
+
+Example:
+
+Aditi: "Face"
+Rohan: "ace"
+Result: 1 (because "ace" is the ending of "Face")
+
+
+Otherwise return 0.
+
+Logic:
+
+Let: 
+
+A = aditi_str
+B = rohan_str
+
+
+1. If B is longer than A → return 0 immediately.
+
+2. Compare the last B.length() characters of A with B.
+
+3. If they match → return 1, else 0.
+
+
+code:
+
+int areCompatible(string aditi_str, string rohan_str) {
+    int n1 = aditi_str.length();
+    int n2 = rohan_str.length();
+
+    // If Rohan's string is longer, it can never match at the end
+    if (n2 > n1) {
+        return 0;
+    }
+
+    // Start comparing from the end of both strings
+    int i = n1 - 1;      // end of Aditi's string
+    int j = n2 - 1;      // end of Rohan's string
+
+    while (j >= 0) {
+        if (aditi_str[i] != rohan_str[j]) {
+            return 0;    // mismatch found
+        }
+        i--;
+        j--;
+    }
+
+    return 1; // all characters matched
+}
+
+
+
+Q9. Baseball Game Scoring
+
+You are keeping track of scores in a baseball game with some special rules. You will be given a single string without spaces, which
+contains:
+
+	1. Numbers (0-9) →These are the scores you add.
+	2. C(Cancel) → Cancel the last score (remove the last number from the record).
+	3. D(Double) → Add an extra score that is double the last score.
+	4. +(Sum)→ Add an extra score that is sum of the last two score.
+
+At the end, you sum up all the scores that is entered from the startingly and print the total.
+
+Input Format
+
+A single string without spaces containing numbers and operations.
+
+Output Format
+
+A single integer representing the total score after applying all operations.
+
+Sample Input 1
+
+52C2D+
+
+Sample Output 1
+
+17
+
+Sample Input 2
+
+051CC
+
+Sample Output 2
+
+0
+
+
+
+Solution Approach:
+------------------
+
+Given a string (no spaces), each character means:
+
+Digit (0–9) → Push that score
+
+C → Cancel: remove the last score
+
+D → Double: add 2 × last score
+
++ → Sum: add last score + second last score
+
+Finally, sum all recorded scores.
+
+
+Example 1: 52C2D+
+
+| Char | Action       | Record  |
+| ---- | ------------ | ------- |
+| 5    | push 5       | 5       |
+| 2    | push 2       | 5,2     |
+| C    | remove 2     | 5       |
+| 2    | push 2       | 5,2     |
+| D    | push 4       | 5,2,4   |
+| +    | push 2+4 = 6 | 5,2,4,6 |
+
+
+
+Total = 5+2+4+6 = 17
+
+
+code: using a simple vector
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    string s;
+    cin >> s;
+
+    vector<int> record;  // to store valid scores
+
+    for (char ch : s) {
+        if (isdigit(ch)) {
+            record.push_back(ch - '0');   // convert char digit to int
+        }
+        else if (ch == 'C') {
+            if (!record.empty()) {
+                record.pop_back();        // cancel last score
+            }
+        }
+        else if (ch == 'D') {
+            if (!record.empty()) {
+                record.push_back(record.back() * 2);  // double last score
+            }
+        }
+        else if (ch == '+') {
+            if (record.size() >= 2) {
+                int last = record.back();
+                int secondLast = record[record.size() - 2];
+                record.push_back(last + secondLast);  // sum of last two
+            }
+        }
+    }
+
+    // Sum all scores
+    int total = 0;
+    for (int x : record) {
+        total += x;
+    }
+
+    cout << total;
+
+    return 0;
+}
+
+
+
+
+
+
+
+
