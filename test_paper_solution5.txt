@@ -1,0 +1,1532 @@
+Q1. The Magical Post Office
+
+
+Imagine a magical post office where letters (the characters of the string) are being sorted onto a temporary, vertical conveyor belt (our Stack). The goal is to quickly reverse the order of a mailing label (the input string).
+
+The Task:
+
+The clerk takes the label's characters one by one, from left to right, and pushes them onto the conveyor belt (Push operation).
+
+1. Since the conveyor belt is designed to be Last-In, First-Out (LIFO), the last character pushed on is the first one available at the top.
+2. The clerk then reads the characters off the top of the conveyor belt (Pop operation) and prints them to create the new, reversed label.
+
+This LIFO mechanism of the Stack is what ensures the string is perfectly reversed.
+
+The function 
+void reverseString() takes the string as input and return the reversed string using stack provided.
+
+Input Format :
+
+The first line of input will contains an integer T denoting the no of test cases. 
+Then T test cases follow :
+Each test case contains the labels to be reversed are provided as strings without spaces.
+
+Output Format :
+
+For each test case, you have to reverse the string in the array given. You are required to complete the methods given only.
+
+Sample Input
+1 // No. of test cases
+2 // No. of strings
+CodeQuotient
+Code
+
+Sample Output
+
+tneitouQedoC
+edoC 
+
+
+char* reverseString(char* s)
+
+
+
+
+
+
+
+
+
+Solution Approach:
+------------------
+
+--You are given strings (words) and your task is to reverse each string using a Stack.
+
+Stack follows LIFO → Last In, First Out
+
+That means:
+
+--The last character you put in, Comes out first
+
+--This property automatically reverses the string.
+
+
+code using stack:
+----------------
+
+char* reverseString(char* s) {
+
+    stack<char> st;
+
+    // Step 1: Push all characters into stack
+    for (int i = 0; s[i] != '\0'; i++) {
+        st.push(s[i]);
+    }
+
+    // Step 2: Pop characters and put back into string
+    int index = 0;
+    while (!st.empty()) {
+        s[index++] = st.top();
+        st.pop();
+    }
+
+    return s;
+}
+
+code using without stack: using 2 pointer approach
+-------------------------
+
+
+char* reverseString(char* s) {
+
+    int length = 0;
+
+    // Step 1: find length manually
+    while (s[length] != '\0') {
+        length++;
+    }
+
+    int left = 0;
+    int right = length - 1;
+
+    // Step 2: reverse using 2 pointers
+    while (left < right) {
+        char temp = s[left];
+        s[left] = s[right];
+        s[right] = temp;
+
+        left++;
+        right--;
+    }
+
+    return s;
+}
+
+
+
+Q2. Inventory Check System
+
+Imagine you are a quality control inspector checking a long assembly line of products (represented by the string of characters). Your job is to spot the
+very first product that appears a second time as it comes down the line.
+
+The Task:
+As each product (character) passes, you keep track of every product you've already seen by putting its ID into a special, quick-check inventory box
+(our Set or Hash Map).
+
+--When a product arrives, you first check your inventory box.
+--If the product ID is already in the box, it means you've spotted the first repeat! This is the answer, and you stop the line immediately.
+--If the product ID is NOT in the box, you add its ID to the box so you can remember it for the future.
+
+If you reach the end of the line and haven't found any repeat, you report that the line is perfect (no recurring character).
+
+For example, given the string "acbbac", return "b" because in "acbbac" first repeating character is 'b' ( 2nd and 3rd position) . 'a' is repeated at 4th
+position .
+
+Given the string "abcdef", return the pound symbol i.e. #
+
+
+Input Format :
+
+The sequence of products (the strings).
+
+Output Format :
+
+The ID(index) of the first product that repeated, or '#' if no product repeated.
+
+Sample Input 1
+acbabc
+
+Sample Output 1
+a
+
+Sample Input 2
+acbdef
+
+Sample Output 2
+#
+
+
+Solution Approach:
+
+You are given a string of characters.
+
+Your task is to find the first character that appears again while scanning the string from left to right.
+
+If all characters are unique, No repetition → Output #
+
+
+char firstRepeatingChar(string s)
+
+
+
+
+
+Step-by-step approach:
+
+1. Create an array visited[256] initialized to false
+
+2. Traverse the string from left to right
+
+3. For each character:
+
+--If already visited → print that character and stop
+
+--Else → mark it as visited
+
+4. If loop ends → print #
+
+code:
+
+
+char firstRepeatingChar(string s) {
+
+    bool visited[256] = {false};  // ASCII characters
+
+    for (int i = 0; i < s.length(); i++) {
+        char ch = s[i];
+
+        // if already seen
+        if (visited[ch]) {
+            return ch;
+        }
+
+        // mark as seen
+        visited[ch] = true;
+    }
+
+    return '#';  // no repetition
+}
+
+
+Alternative: using unordered_set:
+---------------------------------
+
+char firstRepeatingChar(string s) {
+
+    unordered_set<char> st;
+
+    for (char ch : s) {
+        if (st.count(ch)) {
+            return ch;
+        }
+        st.insert(ch);
+    }
+
+    return '#';
+}
+
+
+
+
+
+Q3. Check on the store manager
+
+
+Suppose, you are the owner of a store and you hired a manager for taking care of your store. Each time a customer buy something from your store,
+you ask manager to keep track of the item sold along with its price. You have an original item name and price list along with you. At the end of day,
+you have to match the entries made by the manager to check his loyalty.
+
+
+Complete the function noOfMismatch() below and return the number of mismatch between your original list and his sale list.
+
+The function takes the below four arguments:
+
+items: an array of n strings, representing the names of items in your original list
+
+rates: an array of n floating numbers, representing the rates of items in your original list
+
+sold_items: an array of m strings, representing the names of items in sold list prepared by manager
+
+sold_rates: an array of m floating numbers, representing the rates of items in sold list prepared by manager
+
+Input Format
+
+--The first line contains an integer n, denoting the size of the items array.
+--The next n lines each contains a string.
+--The next n lines each contains a floating point number for rate of items.
+--The next line contains an integer m, denoting the size of the sold_items array.
+--The next m lines each contains a string.
+--The next m lines each contains a floating point number for sold_rates of items sold.
+
+Output Format
+
+The number of rate mismatch between original list and sold rate lists for corresponding items.
+
+Sample Input
+
+4  // n (no. of items)
+butter
+chips
+oats
+pancake
+26.14
+36.12
+10.39
+15.78
+2  // m (no. of sold items)
+chips
+pancake
+36.24
+15.78
+
+Sample Output
+1
+
+Explanation:
+
+items = ["butter", "chips", "oats"," pancake"]
+rates = [26.14, 36.12, 10.39, 15.78]
+sold_items = ["chips", "pancake"]
+sold_rates = [36.24, 15.78]
+
+The price for chips do not match the original price list, so we return 1 as the number of incorrectly recorded sale prices.
+
+
+Solution Approach:
+------------------
+
+You have:
+
+Original list (correct data):
+
+	items[] → item names
+
+	rates[] → correct prices
+
+Manager’s sold list
+
+	sold_items[] → items sold
+
+	sold_rates[] → prices recorded by manager
+
+
+For each sold item:
+
+--Find the same item in the original list
+
+--Compare its original price with sold price
+
+--If prices are different → mismatch
+
+--Finally, count total mismatches and return it.
+
+
+We only check items that appear in sold_items
+
+--If an item is sold at the wrong price, count 1 mismatch
+
+--If price matches → no issue
+
+
+
+function signature:
+
+int noOfMismatch(string items[], float rates[], int n, string sold_items[], float sold_rates[], int m)
+
+
+
+code: 
+
+
+int noOfMismatch(string items[], float rates[], int n, string sold_items[], float sold_rates[], int m) 
+{
+    int mismatch = 0;
+
+    // loop over sold items
+    for (int i = 0; i < m; i++) {
+
+        // find sold item in original list
+        for (int j = 0; j < n; j++) {
+
+            if (sold_items[i] == items[j]) {
+
+                // compare prices
+                if (sold_rates[i] != rates[j]) {
+                    mismatch++;
+                }
+
+                break; // item found, stop searching
+            }
+        }
+    }
+
+    return mismatch;
+}
+
+
+Time complexity: O(n × m)
+Space: O(1)
+
+
+
+Optamized approach: using Hashing:
+----------------------------------
+
+Store original item → price in a hash table
+
+For each sold item:
+
+--Lookup original price
+
+--Compare prices
+
+here 
+
+--We store data as key → value
+
+--Key = item name
+--Value = item price
+
+Example:
+
+"butter"   → 26.14
+"chips"    → 36.12
+"oats"     → 10.39
+"pancake"  → 15.78
+
+
+So if someone asks:
+
+“What is the price of chips?”
+
+--We get it immediately, no searching.
+
+
+Step 1: Create a hash map
+
+	unordered_map<string, float> priceMap;
+
+Step 2: Store original list in map
+
+	priceMap[items[i]] = rates[i];
+
+Step 3: Traverse sold list
+
+For each sold item:
+
+--Get original price from map
+
+--Compare with sold price
+
+--If different → mismatch++
+
+
+
+code:
+
+int noOfMismatch(string items[], float rates[], int n, string sold_items[], float sold_rates[], int m) 
+{
+    unordered_map<string, float> priceMap;
+
+    // Step 1: store original items and prices
+    for (int i = 0; i < n; i++) {
+        priceMap[items[i]] = rates[i];
+    }
+
+    int mismatch = 0;
+
+    // Step 2: check sold items
+    for (int i = 0; i < m; i++) {
+        string item = sold_items[i];
+        float soldPrice = sold_rates[i];
+
+        // original price lookup in O(1)
+        if (priceMap[item] != soldPrice) {
+            mismatch++;
+        }
+    }
+
+    return mismatch;
+}
+
+
+
+
+Q4. The Train Conductor Reroute
+
+Imagine a train (our Doubly Linked List) made up of carriages (the Nodes). Each carriage has a unique number (the Data). Because it's a Doubly
+Linked List, each carriage is physically connected to the one in front of it and the one behind it, making it easy to move both ways.
+
+The Task:
+
+You are the Train Conductor. You receive a special instruction to swap the position of two specific carriages (the two given keys, e.g., Carriage '3'
+and Carriage '5'). Crucially, you must physically unhook and re-hook the carriages and their neighbors so that the entire train remains a single,
+continuous, and functional unit.
+
+Note: Do not read any input from stdin/console. Each test case calls the swapNodes method individually and passes it the head of a list.
+
+Input:
+
+The function swapNodes() takes the head node of a linked list and two data elements as parameters and swap these two nodes.
+First line contains an integer denoting number of test cases.
+Each test case has 4 lines. First line contains the number of elements in list, Second line contains the list elements separated by space.
+Third and Fourth lines contains the node numbers to be swapped.
+
+Output
+
+Print the integer data for each element of the modified linked list separated by space.
+
+Sample Input
+1
+6
+1 2 3 4 5 6
+3
+5
+
+Sample Output
+1 2 5 4 3 6
+
+
+Solution Approach:
+-------------------
+
+You are given a Doubly Linked List.
+
+Each node has:
+
+1.data
+2. prev pointer (to previous node)
+3. next pointer (to next node)
+
+You are given two values (keys), say x and y.
+
+--Your task is to swap the actual nodes, NOT just their data, while keeping the list properly connected.
+
+Example:
+
+Input list:
+
+1 ⇄ 2 ⇄ 3 ⇄ 4 ⇄ 5 ⇄ 6
+
+
+Swap 3 and 5
+
+Output list:
+
+1 ⇄ 2 ⇄ 5 ⇄ 4 ⇄ 3 ⇄ 6
+
+
+Important Rules:
+
+If x == y → nothing to swap, just return the original head
+
+2. If either x or y is not present → return list as it is
+
+3. While swapping:
+
+--Maintain prev and next links
+
+--Update head if required
+
+
+
+Node* swapNodes(Node* head, int x, int y) 
+
+
+
+
+code:
+
+
+#include <iostream>
+using namespace std;
+
+/* ---------------- NODE STRUCTURE ---------------- */
+class Node {
+
+private:
+
+    int data;
+    Node* prev;
+    Node* next;
+
+public:
+    Node(int d) {
+        data = d;
+        prev = NULL;
+        next = NULL;
+    }
+};
+
+/* ---------------- INSERT AT END ---------------- */
+Node* insertAtEnd(Node* head, int value) {
+
+    Node* newNode = new Node(value);
+
+    // if list is empty
+    if (head == NULL)
+        return newNode;
+
+    Node* temp = head;
+
+    // move to last node
+    while (temp->next != NULL)
+        temp = temp->next;
+
+    temp->next = newNode;
+    newNode->prev = temp;
+
+    return head;
+}
+
+/* ---------------- SWAP TWO NODES ---------------- */
+Node* swapNodes(Node* head, int x, int y) {
+
+    // if both values are same, no swap needed
+    if (x == y)
+        return head;
+
+    Node* nodeX = head;
+    Node* nodeY = head;
+
+    // find node with value x
+    while (nodeX != NULL && nodeX->data != x)
+        nodeX = nodeX->next;
+
+    // find node with value y
+    while (nodeY != NULL && nodeY->data != y)
+        nodeY = nodeY->next;
+
+    // if either node not found
+    if (nodeX == NULL || nodeY == NULL)
+        return head;
+
+    /* --------- FIX PREVIOUS LINKS --------- */
+
+    // if nodeX is not head
+    if (nodeX->prev != NULL)
+        nodeX->prev->next = nodeY;
+    else
+        head = nodeY;   // nodeX was head
+
+    // if nodeY is not head
+    if (nodeY->prev != NULL)
+        nodeY->prev->next = nodeX;
+    else
+        head = nodeX;   // nodeY was head
+
+    /* --------- FIX NEXT LINKS --------- */
+
+    if (nodeX->next != NULL)
+        nodeX->next->prev = nodeY;
+
+    if (nodeY->next != NULL)
+        nodeY->next->prev = nodeX;
+
+    /* --------- SWAP prev POINTERS --------- */
+    Node* temp = nodeX->prev;
+    nodeX->prev = nodeY->prev;
+    nodeY->prev = temp;
+
+    /* --------- SWAP next POINTERS --------- */
+    temp = nodeX->next;
+    nodeX->next = nodeY->next;
+    nodeY->next = temp;
+
+    return head;
+}
+
+/* ---------------- PRINT LIST ---------------- */
+void printList(Node* head) {
+
+    Node* temp = head;
+
+    while (temp != NULL) {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+/* ---------------- MAIN FUNCTION ---------------- */
+int main() {
+
+    int t;
+    cin >> t;   // number of test cases
+
+    while (t--) {
+
+        int n;
+        cin >> n;
+
+        Node* head = NULL;
+
+        // read list elements
+        for (int i = 0; i < n; i++) {
+            int val;
+            cin >> val;
+            head = insertAtEnd(head, val);
+        }
+
+        int x, y;
+        cin >> x >> y;
+
+        head = swapNodes(head, x, y);
+
+        printList(head);
+    }
+
+    return 0;
+}
+
+
+
+
+
+Q5. The Double-Deal Merge
+
+
+Imagine you are playing a game with a special deck of numbered cards (our Doubly Linked List), where the cards are linked front-to-back. The cards
+are laid out in a row, with their positions numbered starting from 1 (the head card).
+
+The Task:
+
+Your goal is to perform a two-step "Double-Deal" rearrangement:
+
+Separate the Piles: You must mentally separate the entire row of cards into two distinct, smaller rows:
+
+--The VIP Row: Contains all the cards from the Even Positions (2nd, 4th, 6th, etc.).
+--The Standard Row: Contains all the cards from the Odd Positions (1st, 3rd, 5th, etc.).
+--Crucially: The cards in the VIP Row must maintain their original relative order, and the cards in the Standard Row must maintain theirs.
+--The Final Link: You must then take the entire VIP Row and physically link its last card to the first card of the Standard Row, forming a
+single, continuous, new row. This is achieved by manipulating the double-sided connections (prev and next pointers) between the cards.
+
+Complete the function rearrangeList(), which takes the head node of a doubly linked list as a parameter, and returns the head of updated list after
+rearranging it.
+
+Input Format:
+
+First line will contain the number of test cases i.e. T.
+Each test case consists of two lines. In first line total number of nodes is given and in second line the node values are provided.
+
+Note: Do not read any input from stdin/console. Each test case calls the rearrangeList() method individually and passes it the head of a list.
+
+Output Format:
+
+Print the integer data for each element of the rearranged linked list separated by space.
+
+Constraints:
+1 <= no. of testcases <= 10
+0 <= no. of nodes <= 10^5
+0 <= node data <= 10^6
+
+Sample Input
+1  // testcases
+7                // no. of nodes (TC-1)
+1 3 5 7 9 11 13  // node's data
+
+Sample Output
+3 7 11 1 5 9 13
+
+Explanation:
+In the given list: head -> 1 -> 3 -> 5 -> 7 -> 9 -> 11 -> 13
+3, 7 and 11 are at positions 2, 4 and 6
+1, 5, 9 and 13 are at positions 1, 3, 5 and 7
+
+
+
+Solution Approach:
+------------------
+
+You are given a doubly linked list.
+
+Each node has:
+
+1. data
+
+2. next pointer
+
+3. prev pointer
+
+--The positions of nodes start from 1 (head is position 1).
+
+
+You must rearrange the linked list in two steps:
+
+Step 1: Split the list by positions
+
+--Even position nodes (2nd, 4th, 6th, …) → go into one list
+
+--Odd position nodes (1st, 3rd, 5th, …) → go into another list
+
+--Order must remain the same within each group
+
+Step 2: Merge the lists
+
+--First place all even-position nodes
+
+--Then attach all odd-position nodes after them
+
+--Do this by changing next and prev pointers, not by creating new nodes
+
+
+
+Example
+
+Original list: 
+
+1 → 3 → 5 → 7 → 9 → 11 → 13
+
+Position: 
+
+1   2   3   4   5   6   7
+
+Even positions → 3 → 7 → 11
+
+Odd positions → 1 → 5 → 9 → 13
+
+Final rearranged list:
+
+3 → 7 → 11 → 1 → 5 → 9 → 13
+
+
+Node* rearrangeList(Node* head)
+
+
+
+code:
+
+#include <iostream>
+using namespace std;
+
+// Doubly Linked List Node
+class Node {
+
+private:
+
+    int data;
+    Node* prev;
+    Node* next;
+
+public: 
+
+    Node(int x) {
+        data = x;
+        prev = NULL;
+        next = NULL;
+    }
+};
+
+// Function to rearrange the list
+Node* rearrangeList(Node* head) {
+
+    // If list is empty or has only one node
+    if (head == NULL || head->next == NULL)
+        return head;
+
+    Node* evenHead = NULL;
+    Node* evenTail = NULL;
+    Node* oddHead = NULL;
+    Node* oddTail = NULL;
+
+    Node* curr = head;
+    int position = 1;
+
+    // Traverse the original list
+    while (curr != NULL) {
+
+        Node* nextNode = curr->next;
+
+        // Disconnect current node
+        curr->next = NULL;
+        curr->prev = NULL;
+
+        // Even position
+        if (position % 2 == 0) {
+
+            if (evenHead == NULL) {
+                evenHead = evenTail = curr;
+            } else {
+                evenTail->next = curr;
+                curr->prev = evenTail;
+                evenTail = curr;
+            }
+
+        }
+        // Odd position
+        else {
+
+            if (oddHead == NULL) {
+                oddHead = oddTail = curr;
+            } else {
+                oddTail->next = curr;
+                curr->prev = oddTail;
+                oddTail = curr;
+            }
+        }
+
+        position++;
+        curr = nextNode;
+    }
+
+    // If there are no even position nodes
+    if (evenHead == NULL)
+        return oddHead;
+
+    // Merge even list with odd list
+    evenTail->next = oddHead;
+    oddHead->prev = evenTail;
+
+    // New head is evenHead
+    return evenHead;
+}
+
+// Helper function to print list
+void printList(Node* head) {
+    Node* temp = head;
+    while (temp != NULL) {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+// Helper function to create list
+Node* createList(int arr[], int n) {
+    if (n == 0) return NULL;
+
+    Node* head = new Node(arr[0]);
+    Node* curr = head;
+
+    for (int i = 1; i < n; i++) {
+        Node* newNode = new Node(arr[i]);
+        curr->next = newNode;
+        newNode->prev = curr;
+        curr = newNode;
+    }
+    return head;
+}
+
+// Main function (for testing)
+int main() {
+
+    int arr[] = {1, 3, 5, 7, 9, 11, 13};
+    int n = 7;
+
+    Node* head = createList(arr, n);
+
+    head = rearrangeList(head);
+
+    printList(head);
+
+    return 0;
+}
+
+
+
+
+
+Q6. The Merry-Go-Round Maintenance
+
+Imagine a continuous, looping track for a small merry-go-round (our Circular Linked List). The ride has several small, numbered carts (the Nodes)
+linked together end-to-end, where the last cart is always linked back to the very first cart.
+
+The Task:
+
+You are the Ride Mechanic, responsible for adding new carts to this continuous loop. You have two specific ways to add a new cart:
+
+Insert at Beginning (insertBeg()): You must add a new cart right before the current starting cart (the Head). The new cart becomes the new
+starting cart, but you must also ensure the old last cart is re-linked to this new starting cart to maintain the continuous circle.
+
+Insert at End (insertEnd()): You must add a new cart right after the current last cart. This requires unlinking the last cart from the head,
+linking the last cart to the new cart, and then linking the new cart back to the head to complete the circle.
+
+Input
+
+The functions insertBeg() & insertEnd() takes the head node of a linked list and the data to be inserted as parameters insert the specified node and
+return the new head.
+
+Note: Do not read any input from stdin/console. Each test case calls the insertBeg & insertEnd method individually and passes it the head of a list.
+
+Output
+
+Print the integer data for each element of the linked list separated by space.
+
+Sample Input :
+1
+6
+10
+20
+30
+40
+50
+60
+
+Sample Output :
+40 20 10 30 50 60
+
+
+Solution Approach:
+------------------
+
+--In a Circular Linked list we need to perform following 2 operations:
+
+1. Node* insertBeg(Node* head, int data)
+
+2. Node* insertEnd(Node* head, int data) 
+
+
+Node Structure:
+
+class Node {
+
+public:
+    int data;
+    Node* next;
+
+    Node(int d) {
+        data = d;
+        next = NULL;
+    }
+};
+
+
+
+code: 
+
+
+#include <iostream>
+using namespace std;
+
+// Node structure
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int d) {
+        data = d;
+        next = NULL;
+    }
+};
+
+// Insert node at beginning of circular linked list
+Node* insertBeg(Node* head, int data) {
+
+    Node* newNode = new Node(data);
+
+    // Case 1: Empty list
+    if (head == NULL) {
+        newNode->next = newNode; // point to itself
+        return newNode;
+    }
+
+    // Case 2: Non-empty list
+    Node* temp = head;
+
+    // Reach last node
+    while (temp->next != head) {
+        temp = temp->next;
+    }
+
+    // Adjust pointers
+    temp->next = newNode;
+    newNode->next = head;
+    head = newNode;
+
+    return head;
+}
+
+// Insert node at end of circular linked list
+Node* insertEnd(Node* head, int data) {
+
+    Node* newNode = new Node(data);
+
+    // Case 1: Empty list
+    if (head == NULL) {
+        newNode->next = newNode;
+        return newNode;
+    }
+
+    // Case 2: Non-empty list
+    Node* temp = head;
+
+    // Reach last node
+    while (temp->next != head) {
+        temp = temp->next;
+    }
+
+    temp->next = newNode;
+    newNode->next = head;
+
+    return head;
+}
+
+// Print circular linked list
+void printList(Node* head) {
+
+    if (head == NULL)
+        return;
+
+    Node* temp = head;
+
+    do {
+        cout << temp->data << " ";
+        temp = temp->next;
+    } while (temp != head);
+
+    cout << endl;
+}
+
+// Driver code (for understanding / testing)
+int main() {
+
+ Node* head = NULL;
+
+    // Creating list to match sample output
+    head = insertEnd(head, 20);
+    head = insertEnd(head, 10);
+    head = insertEnd(head, 30);
+    head = insertEnd(head, 50);
+    head = insertEnd(head, 60);
+
+    // Insert at beginning
+    head = insertBeg(head, 40);
+
+    printList(head);   // Output: 40 20 10 30 50 60
+
+    return 0;
+
+}
+
+
+
+
+
+
+Q7. Shop in Candy Store
+
+Mr. Amit visited a candy store that sells candies of N different types. The prices of all these N candies are provided. The store has an attractive offer:
+when Amit purchases one candy, he can get up to K additional candies (each of a different type) for free with that purchase. The offer applies every
+time he makes a purchase. In other words, for each candy that he buys, he is allowed to pick up to K more candies (if available) at no extra cost.
+
+Amit wants to know:
+
+1. The minimum amount of money he must spend to buy all N candies while using the offer optimally.
+2. The maximum amount of money he may spend to buy all N candies while using the offer optimally.
+
+Note:
+
+--If there are at least K candies available (that haven’t been obtained yet) when he makes a purchase, he must take exactly K free candies with
+that purchase.
+
+--If fewer than K candies are available, he must take all the remaining candies for free.
+
+--Although the offer mentions buying one candy and getting up to K free candies, Amit’s overall goal is to obtain all N candies. Therefore, he may have to make multiple purchases, and only the purchased candies add to the total cost.
+
+Input Format:
+
+--The first line contains an integer K, the number of free candies Amit can get with each purchase.
+--The second line contains an integer N, the total number of candies.
+--The third line contains N space-separated integers, representing the prices of the candies.
+
+Output Format:
+
+--Print two integers separated by a space — the minimum and maximum amounts of money Amit has to spend, respectively.
+
+Constraints:
+0 ≤ K < N
+1 ≤ N ≤ 10^5
+1 ≤ price[i] ≤ 10000
+
+Sample Input:
+2
+4
+3 2 1 4
+
+Sample Output:
+3 7
+
+Explanation:
+
+Minimum Cost Strategy:
+--Buy the candy priced 1 and get the candies priced 3 and 4 for free.
+--Then, buy the candy priced 2.
+--Total cost = 1 + 2 = 3.
+
+Maximum Cost Strategy:
+--Buy the candy priced 4 and get the candies priced 1 and 2 for free.
+--Then, buy the candy priced 3.
+--Total cost = 4 + 3 = 7.
+
+
+
+Solution Approach:
+------------------
+
+Amit went to a candy shop, 
+
+There are n types of candies are available with different prices
+
+The offer is:
+
+--On the purchare of 1 candy he gets k different types of candies free.
+
+--Amit wants to get all the n candies 
+
+Goal:
+
+1. Minimum money Amit has to spend
+
+2. Maximum money Amit may have to spend
+
+
+Example:
+
+K = 2
+N = 4
+Prices = [3, 2, 1, 4]
+
+Buy 1 and get 2 free, total candies are 4
+
+Minimum cost:
+
+--buy the chepest candy and get the costliest candies free,
+
+1. buy: candy with price 1, get 2 costly candies 3 and 4 free
+
+2. now candy with cost 2 is remaining, amit must purchage it.
+
+Total cost: 1+2 = 3
+
+Maximum cost:
+
+--buy the costliest candy and get the cheapest candies free,
+
+1. buy: candy with price 4, get 2 cheapest candies 1 and 2 free
+
+2. now candy with cost 3 is remaining, amit must purchage it.
+
+Total cost: 4+3 = 7
+
+
+Step by step approach:
+----------------------
+
+Step 1: Sort the price array
+
+--Ascending order helps manage cheap & expensive candies.
+
+Step 2: Minimum Cost Calculation
+
+--Start from cheapest candy
+
+--After buying 1 candy, skip K candies from the end
+
+--Repeat until all candies are taken
+
+Step 3: Maximum Cost Calculation
+
+--Start from most expensive candy
+
+--After buying 1 candy, skip K candies from the start
+
+--Repeat until all candies are taken
+
+
+
+code:
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main() {
+
+    int k, n;
+    cin >> k;
+    cin >> n;
+
+    int price[n];
+    for (int i = 0; i < n; i++) {
+        cin >> price[i];
+    }
+
+    // Step 1: Sort prices
+    sort(price, price + n);
+
+    // ---------------- Minimum Cost ----------------
+    int minCost = 0;
+    int j = n - 1;   // last index
+
+    for (int i = 0; i <= j; i++) {
+        minCost += price[i];   // buy cheapest
+        j -= k;                // take k expensive for free
+    }
+
+    // ---------------- Maximum Cost ----------------
+    int maxCost = 0;
+    j = 0;   // first index
+
+    for (int i = n - 1; i >= j; i--) {
+        maxCost += price[i];   // buy costliest
+        j += k;                // take k cheapest for free
+    }
+
+    cout << minCost << " " << maxCost;
+
+    return 0;
+}
+
+
+
+
+Q8.  The Two-List Inventory Merge
+
+Imagine you are managing the inventory for a warehouse, and you have two separate, already-sorted lists of product serial numbers (our two Sorted Arrays, a[] and b[]). Each list is in perfect numerical order.
+
+The Task:
+
+Your job is to combine these two lists into one single, master list (the final Merged Array) while ensuring that the new master list remains perfectly sorted from the smallest serial number to the largest.
+
+Input Format:
+
+First two lines contain the size N and N elements of 1st array.
+Next two lines contain the size N and N elements of 2nd array.
+
+Output Format :
+
+The final master inventory list, containing all serial numbers from both original lists in a single, perfectly sorted sequence.
+
+Sample Input
+4 // Size of 1st array
+1 2 3 6 // Elements of 1st array
+3 // Size of 2nd array
+4 5 7 // Elements of 2nd array
+
+Sample Output
+1
+2
+3
+4
+5
+6
+7
+
+
+Solution approach:
+------------------
+
+
+You are given two arrays:
+
+--Both arrays are already sorted
+
+--You must merge them into one sorted array
+
+--The final array should contain all elements in increasing order
+
+
+Example:
+
+Array A: 1 2 3 6
+Array B: 4 5 7
+
+
+Output:
+
+1 2 3 4 5 6 7
+
+
+
+vector<int> merge(vector<int>& arr1, vector<int>& arr2) 
+
+
+
+
+
+code:
+
+#include <vector>
+using namespace std;
+
+vector<int> merge(vector<int>& arr1, vector<int>& arr2) {
+
+    vector<int> result;
+
+    int i = 0, j = 0;
+
+    // Step 1: Compare elements of both arrays
+    while (i < arr1.size() && j < arr2.size()) {
+
+        if (arr1[i] <= arr2[j]) {
+            result.push_back(arr1[i]);
+            i++;
+        } else {
+            result.push_back(arr2[j]);
+            j++;
+        }
+    }
+
+    // Step 2: Copy remaining elements of arr1
+    while (i < arr1.size()) {
+        result.push_back(arr1[i]);
+        i++;
+    }
+
+    // Step 3: Copy remaining elements of arr2
+    while (j < arr2.size()) {
+        result.push_back(arr2[j]);
+        j++;
+    }
+
+    return result;
+}
+
+
+
+
+
+
+
+
+Q9.  Nth Roll Number
+
+In a school, whenever a new admission takes place, that student is assigned a unique roll no. based on the following pattern:
+
+The first student who took admission has roll no. equals to 2, the second student has roll no. 3, the third student has roll no. 5, and the i'th student will get the roll no. equals to i'th prime number.
+
+Given a number N, determine the roll no. for the Nth student who took admission in the school.
+
+Input Format:
+
+The first line of input contains an integer T, denoting the number of test cases.
+Then T lines follow, each line contains an integer N.
+
+Constraints:
+1 ≤ T ≤ 100
+1 ≤ N ≤ 10^4
+
+Output Format:
+
+For each test case, print the roll no. of Nth student, in new line.
+
+Sample Input
+2 // No. of testcases
+4
+9
+
+Sample Output
+7
+23
+
+
+
+
+Solution Approach:
+-------------------
+
+Given N
+
+Find the Nth prime number
+
+return it.
+
+
+What is a Prime Number?
+
+A number:
+
+--Greater than 1
+
+--Divisible only by 1 and itself
+
+Examples:
+
+Prime: 2, 3, 5, 7, 11
+
+Not prime: 4, 6, 8, 9
+
+
+
+
+
+
+code:
+
+#include <iostream>
+using namespace std;
+
+// Function to check whether a number is prime
+bool isPrime(int num) {
+
+    if (num <= 1)
+        return false;
+
+    for (int i = 2; i < num; i++) {
+        if (num % i == 0)
+            return false;
+    }
+
+    return true;
+}
+
+// Function to find Nth prime number
+int nthPrime(int N) {
+
+    int count = 0;
+    int number = 2;
+
+    while (true) {
+        if (isPrime(number)) {
+            count++;
+
+            if (count == N) {
+                return number;
+            }
+        }
+        number++;
+    }
+}
+
+int main() {
+
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int N;
+        cin >> N;
+
+        cout << nthPrime(N) << endl;
+    }
+
+    return 0;
+}
+
+
+
+
+Note: the above isPrime() function will take O(n)
+
+optamized isPrime() function: with O(√n)
+
+
+bool isPrime(int num) {
+
+    if (num <= 1)
+        return false;
+
+    for (int i = 2; i * i <= num; i++) {
+        if (num % i == 0)
+            return false;
+    }
+
+    return true;
+}
+
+
+
+
+
+
