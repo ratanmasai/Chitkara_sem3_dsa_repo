@@ -1,0 +1,1307 @@
+Q1. Quality Check
+
+The "Digital Die Factory" produces custom dice for board games. Each die face is engraved with a single number. For a new, highly regulated game, the customer has a strict requirement: they must know the exact count of dice with Even numbers and the count of dice with Odd numbers being packaged in every box.
+
+The factory's automated scanner reads the face-up numbers of a batch of dice as they are loaded into a crate. This sequence of numbers is passed to the Quality Control (QC) software.
+
+You are tasked with writing the core QC analysis function, void count(int a[], int T), for the factory's software. This function must process the batch of numbers, determine the parity (even or odd) of each number, and report the two counts.
+
+
+Input Format:
+
+--First line contains an integer t denoting the total number of dice.
+--Second line contains t integers representing the face-up numbers of the dice.
+
+Output Format:
+
+--Print the count of even and odd numbers space-separated.
+
+Sample Input
+4
+1 3 5 8
+
+Sample Output
+1 3
+
+Explanation
+Elements 1,  and 5 are odd and 8 is even.
+
+
+
+Solution Approach:
+------------------
+
+// Function to count even and odd numbers
+void count(int a[], int T)
+
+
+
+Q2.  The Daily Loss Counter
+
+
+Sarah, the owner of "The Local Bookstore," is trying to get a quick handle on her store's financial health. She keeps a detailed record of her Daily Net Financial Performance for the month. This performance is an integer that represents the total profit or loss for that day:
+
+--A positive number means the store made a profit.
+--A negative number means the store incurred a loss (expenses exceeded revenue).
+--Zero means the store broke even.
+
+Sarah doesn't need the total profit or loss; she simply wants to know: "On how many days did the bookstore incur a loss?"
+
+You are tasked with writing a small analysis utility for Sarah's accounting software. You need to implement a function, int count(int a[], int T), that processes her daily performance data and returns the specific count of loss days.
+
+A "loss day" is defined as any day where the net performance value is strictly less than 0.
+
+Input Format:
+
+--First line contains an integer t denoting the total number of days.
+--Second line contains t integers representing the daily net performance figures.
+
+Output Format:
+
+--Print the total number of days that resulted in a financial loss.
+
+Sample Input
+4
+1 2 3 -5
+
+Sample Output
+1
+
+
+
+
+Solution Approach:
+------------------
+
+You are given:
+
+t → total number of days
+
+An array of t integers:
+
+Positive → profit day
+
+Zero → break-even day
+
+Negative → loss day
+
+Your task is to count how many days had a loss, i.e., numbers strictly less than 0.
+
+
+
+// Function to count loss days
+int count(int a[], int T) 
+
+
+
+Q3. Count the total reward points Clone
+
+Let us suppose that each of the digits from 0 to 9 are associated with the reward points, as given below:
+
+1, 2, 3, 5, and 7 = 0 points.
+0, 4, 6, and 9 = 1 points.
+8 = 2 points.
+
+Your task is that given a number, find out the total reward points that you will get from all the digits in it.
+
+For example, the number 928 can earn you 3 reward points.
+
+Complete the function countPoints(), which takes an integer as argument and return an integer denoting the total number of reward points.
+
+Your solution must be optimized otherwise you may get an error "Time Limit Exceeded".
+
+Input Format:
+
+--First line contains the number of test cases i.e. T, and next T lines containing the number as test case each.
+
+Output Format:
+
+--Print the number of reward points that you can earn for each given number in the new line.
+
+Constraints:
+1 ≤ num ≤ 10^9
+
+
+Sample Input
+2   // Test Cases
+515
+928
+
+Sample Output
+0
+3
+
+Explanation:
+
+For 515, add the reward points for each digit, 5, 1 and 5. Return 0 + 0 + 0 = 0.
+
+For 928, add the reward points for each digit, 9, 2 and 8. Return 1 + 0 + 2 = 3
+
+
+Solution Approach:
+------------------
+
+Each digit gives reward points:
+
+0 points → 1, 2, 3, 5, 7
+
+1 point → 0, 4, 6, 9
+
+2 points → 8
+
+You are given a number.
+
+You must:
+
+--Check each digit
+
+--Add its reward points
+
+--Return the total
+
+
+Example: 
+
+Number = 928
+
+9: 1 point
+2: 0 point
+8: 2 point
+
+Total: 1+0+2 = 3 points
+
+
+
+int countPoints(int num)
+
+
+0 points → 1, 2, 3, 5, 7
+
+1 point → 0, 4, 6, 9
+
+2 points → 8
+
+
+string s = to_string(num)
+
+
+
+
+
+
+Approach1:
+
+--Convert the number to the string 
+
+--Scan each charecter(digit)
+
+--Add the points
+
+Function signature:
+
+int countPoints(int num)
+
+converting the number to the string:
+
+string s = to_string(num)
+
+
+code:
+
+
+int countPoints(int num) {
+ 
+    string s = to_string(num);
+    int points = 0;
+
+    for (char ch : s) {
+        if (ch == '0' || ch == '4' || ch == '6' || ch == '9')
+            points += 1;
+        else if (ch == '8')
+            points += 2;
+
+        // remaining digits 0 points
+    }
+
+    return points;
+}
+
+ 
+Time: O(number of digits)
+
+Space: O(number of digits) → due to string conversion
+
+
+
+Approach 2:
+
+--We do NOT loop from 0 to the number, that causes TLE
+
+Instead:
+
+--Extract the last digits using % 10
+
+--Remove digit using / 10
+
+--Decide points using simple if-else or switch
+
+This works in O(digits)
+
+
+code:
+
+int countPoints(int num) {
+ 
+   int points = 0;
+
+    while (num > 0) {
+        int digit = num % 10;
+
+        if (digit == 0 || digit == 4 || digit == 6 || digit == 9)
+            points += 1;
+        else if (digit == 8)
+            points += 2;
+
+        num /= 10;
+    }
+
+    return points;
+}
+
+
+Time: O(number of digits)
+
+Space: O(1)
+
+
+
+Q4. Evaluate the postfix expression using Stack
+
+Dr. Emily Carter, a professor of computer science, is running a challenging lab session. Her students are learning about data structures, specifically Stacks, and how they are used to process mathematical expressions. She has given them a series of expressions written in Reverse Polish Notation (RPN), also known as Postfix notation.
+
+In Postfix notation, unlike standard algebra (Infix), the operator comes after the operands. For example, the standard expression 3 + 4 is written as 3 4 +. Evaluating these expressions is a classic application of a Stack.
+
+Input Format:
+
+--The first line of input contains an integer T denoting the number of test cases. 
+--The next T line contains a postfix expression.
+--An expression in postfix form will consist of all digits and following five operators: +, -, *, /, ^
+
+Output Format:
+
+--Print the final output of postfix expression evaluation in new line for each test case.
+
+Sample Input
+2  // Testcases
+8425+-*
+546+*493/+*
+
+Sample Output
+-24
+350
+
+
+Solution Approach:
+------------------
+
+Evaluating the Postfix expression (RPN)
+
+
+
+Approach (Stack-Based Solution)
+
+1. Create an empty stack.
+
+2. Traverse each character in the postfix string:
+
+--If digit → convert to number → push to stack
+
+--If operator → pop two numbers → apply operation → push result
+
+After full string → stack top = final answer
+
+
+code:
+
+#include <iostream>
+#include <stack>
+#include <cctype>
+#include <cmath>
+
+using namespace std;
+
+// Function to apply the operator on two values
+int applyOp(int a, int b, char op) {
+    switch(op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return a / b;   // assume no divide by zero
+        case '^': return pow(a, b);
+    }
+    return 0; 
+}
+
+// Function to evaluate a postfix expression
+int evaluatePostfix(string exp) {
+    stack<int> st;
+
+    for (char ch : exp) {
+        if (isdigit(ch)) {
+            st.push(ch - '0');   // convert char digit to int
+        }
+        else {  
+            int val2 = st.top(); st.pop();
+            int val1 = st.top(); st.pop();
+            int result = applyOp(val1, val2, ch);
+            st.push(result);
+        }
+    }
+    return st.top();
+}
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        string exp;
+        cin >> exp;
+
+        int result = evaluatePostfix(exp);
+        cout << result << endl;
+    }
+
+    return 0;
+}
+
+
+
+
+Q5. Flip the odd elements of queue Clone
+
+Write a function flipHalfQueue() that takes a queue of integers and reverses the order of the elements at odd-numbered positions (positions 1, 3, 5, 7, …).
+
+Position counting starts from 0. Elements at even positions (0, 2, 4, 6, …) must remain unchanged. Only one stack may be used as auxiliary storage.
+
+Example:
+
+Original queue
+
+Index: 0 1 2 3 4 5 6 7
+Values: 5 7 6 2 9 18 11 15
+
+Odd-indexed values:
+(7, 2, 18, 15)
+
+After reversing → (15, 18, 2, 7)
+
+Final queue:
+5 15 6 18 9 2 11 7
+
+Input Format:
+
+Line 1: Integer n (number of elements)
+Line 2: n space-separated integers (queue from front to back)
+
+Output Format
+
+Print the queue after reversing all values at odd positions.
+
+Example
+
+Input:
+8
+5 7 6 2 9 18 11 15
+
+Output:
+5 15 6 18 9 2 11 7
+
+
+Solution Approach:
+------------------
+
+
+You are given a queue of integers.
+
+--Queue positions start from index 0
+
+--Even positions (0, 2, 4, …) → must remain unchanged
+
+--Odd positions (1, 3, 5, …) → must be reversed among themselves
+
+--You are allowed to use only one stack
+
+
+Example:
+
+Original Queue
+
+Index:   0  1  2  3  4  5  6  7
+Values:  5  7  6  2  9 18 11 15
+
+
+Odd-indexed elements:
+
+7, 2, 18, 15
+
+
+After reversing odd elements:
+
+15, 18, 2, 7
+
+
+Final Queue:
+
+5 15 6 18 9 2 11 7
+
+
+Idea:
+----
+
+--If we push all odd-position elements into a stack,
+--popping them will automatically give them in reverse order
+
+
+
+void flipHalfQueue(queue<int>& q)
+
+
+
+
+Step by step approach:
+----------------------
+
+1. Traverse the queue once using its size:
+
+--If index is odd, push the element into the stack.
+
+--Push every element back into the queue to keep order.
+
+2. Traverse the queue again:
+
+--If index is odd, replace the element with stack.top() and pop.
+
+--If index is even, keep the element unchanged.
+
+3. Print the queue — odd-position elements are reversed, even ones stay same.
+
+
+
+
+
+
+
+
+
+code:
+
+#include <iostream>
+#include <queue>
+#include <stack>
+using namespace std;
+
+void flipHalfQueue(queue<int>& q) {
+    stack<int> st;
+    int n = q.size();
+
+    // Step 1: Push odd-index elements into stack
+    for (int i = 0; i < n; i++) {
+        int val = q.front();
+        q.pop();
+
+        if (i % 2 == 1) {
+            st.push(val);
+        }
+
+        q.push(val);
+    }
+
+    // Step 2: Replace odd-index elements with reversed ones
+    for (int i = 0; i < n; i++) {
+        int val = q.front();
+        q.pop();
+
+        if (i % 2 == 1) {
+            q.push(st.top());
+            st.pop();
+        } else {
+            q.push(val);
+        }
+    }
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    queue<int> q;
+    for (int i = 0; i < n; i++) {
+        int x;
+        cin >> x;
+        q.push(x);
+    }
+
+    flipHalfQueue(q);
+
+    // Print final queue
+    while (!q.empty()) {
+        cout << q.front() << " ";
+        q.pop();
+    }
+
+    return 0;
+}
+
+
+
+Q6. Buy the tickets at counter
+
+You are going to a PVR to watch a movie with your friends. The ticket counter have one queue to buy tickets and they sell only 1 ticket at a time (to avoid any brokers in between with bulk of tickets). Given your position in ticket queue and number of tickets you need find out how much time you need to buy them all. (One transaction will be counted as 1 time unit). For example,
+
+If ticket requirements are [1, 3, 6] and your position is 1 (means 3 tickets required), Then the queue and bought tickets will be as below:
+
+
+Time   Tickets needed 	Tickets bought 	Queue front to rear
+t=0 	1 | 3 | 6 	0 | 0 | 0 	0, 1, 2
+t=1 	0 | 3 | 6 	1 | 0 | 0 	1, 2
+t=2 	0 | 2 | 6 	1 | 1 | 0 	2, 1
+t=3 	0 | 2 | 5 	1 | 1 | 1 	1, 2
+t=4 	0 | 1 | 5 	1 | 2 | 1 	2, 1
+t=5 	0 | 1 | 4 	1 | 2 | 2 	1, 2
+t=6 	0 | 0 | 4 	1 | 3 | 2 	2, 1
+t=7 	0 | 0 | 3 	1 | 3 | 3 	2
+
+Means you have all required tickets in t=6 time units.
+
+Write the function howMuchToWait() which accepts the required tickets array and your position in the array, and return the total time required to you for buying the tickets.
+
+Input Format:
+
+--The first line contains an integer n, the size of the array tickets.
+--The next n lines each contain an element tickets[i] where 0 ≤ i < n.
+--The next line contains an integer p denoting your position in line.
+
+Output Format:
+
+--Print the time units required to buy tickets
+
+Sample Input
+3
+1
+3
+6
+1
+
+Sample Output
+6
+
+
+Solution Approach:
+-----------------
+
+There is one ticket counter and people are standing in a queue.
+Each person needs a certain number of tickets, and only one ticket is sold at a time.
+
+Rules:
+
+--A person buys one ticket per turn.
+
+--If they still need more tickets, they go to the back of the queue.
+
+--If they finish buying all tickets, they leave the queue.
+
+You are given:
+
+--An array tickets[] showing how many tickets each person needs.
+
+--Your position p in the queue (0-based index).
+
+Find how many time units it takes for you to finish buying all your tickets.
+(1 ticket purchase = 1 time unit)
+
+
+int howMuchToWait(int tickets[], int n, int p) 
+
+
+
+1. Queue based approach:
+------------------------
+
+1. Store each person’s index in a queue.
+
+2. Keep track of how many tickets each person still needs.
+
+3. Initialize time = 0.
+
+4. Repeat:
+
+--Take the person at the front of the queue.
+
+--Sell one ticket to that person.
+
+--Increase time by 1.
+
+--If that person still needs tickets:
+
+	Push them back into the queue.
+
+--If the person is you and your tickets become 0:
+
+	Stop and return time.
+
+
+
+code:
+------
+
+#include <iostream>
+#include <queue>
+using namespace std;
+
+int howMuchToWait(int tickets[], int n, int p) {
+    queue<int> q;
+
+    // Put all people (by index) into the queue
+    for (int i = 0; i < n; i++) {
+        q.push(i);
+    }
+
+    int time = 0;
+
+    while (!q.empty()) {
+        int person = q.front();
+        q.pop();
+
+        // Sell one ticket
+        tickets[person]--;
+        time++;
+
+        // If this is YOU and tickets are finished
+        if (person == p && tickets[person] == 0) {
+            return time;
+        }
+
+        // If person still needs tickets, go back to queue
+        if (tickets[person] > 0) {
+            q.push(person);
+        }
+    }
+
+    return time;
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    int tickets[n];
+    for (int i = 0; i < n; i++) {
+        cin >> tickets[i];
+    }
+
+    int p;
+    cin >> p;
+
+    cout << howMuchToWait(tickets, n, p);
+    return 0;
+}
+
+
+
+
+2. Another simple approach: without Queue:
+------------------------------------------
+
+--Each ticket purchase = 1 time unit
+
+--People before or at your position will get tickets as many times as you do
+
+--People after your position will get tickets one less time than you
+
+--Add the minimum possible ticket purchases for each person.
+
+--The sum of all such purchases gives the total time.
+
+
+Example:
+
+tickets = [1, 3, 6]
+p = 1
+
+
+Calculation:
+
+Person 0 → min(1,3) = 1
+Person 1 → min(3,3) = 3
+Person 2 → min(6,2) = 2
+
+Total Time = 1 + 3 + 2 = 6
+
+
+
+
+
+Time Complexity: O(n)
+
+Space Complexity: O(1)
+
+
+
+
+
+steps:
+
+
+Calculate total time
+
+	Initialize time = 0
+
+Loop through each person i:
+
+	If i <= p
+
+		→ add min(tickets[i], tickets[p])
+
+	Else
+		→ add min(tickets[i], tickets[p] - 1)
+
+
+
+code:
+
+
+int howMuchToWait(int tickets[], int n, int p) {
+ 
+   int time = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (i <= p) {
+            time += min(tickets[i], tickets[p]);
+        } else {
+            time += min(tickets[i], tickets[p] - 1);
+        }
+    }
+
+    return time;
+}
+
+
+
+
+
+
+Q7. Reverse Alternate K nodes of Linked List Clone
+
+Given the head of a singly linked list and an integer K, reverse every alternate K nodes of the list in-place.
+
+Complete the function revAltKNodes() which takes the head node of a linked list & an integer K as parameters and return the head of modified list after reversing all alternative K nodes of the list.
+
+Input Format
+
+First line contains an integer T, the number of test cases.
+
+For each test case:
+
+    First line: an integer N, the number of nodes in the linked list.
+    Second line: N space-separated integers, the values of the nodes.
+    Third line: an integer K.
+
+Output Format
+
+For each test case, print the node values of the modified linked list in a single line, separated by spaces.
+
+Sample Input
+2            // Test Cases
+6            // no. of nodes (TC 1)
+1 2 3 4 5 6  // node's data (TC 1)
+2            // K (TC 1)
+8
+1 2 3 4 5 6 7 8
+3  
+
+Sample Output
+2 1 3 4 6 5
+3 2 1 4 5 6 8 7
+
+Explanation:
+
+Test Case 1:
+K = 2
+Reverse first 2 nodes → 2 1
+Skip next 2 nodes → 3 4
+Reverse next 2 nodes → 6 5
+Result → 2 1 3 4 6 5
+
+Test Case 2: 
+K = 3
+Reverse first 3 nodes → 3 2 1
+Skip next 3 nodes → 4 5 6
+Reverse next 2 nodes → 8 7
+Result → 3 2 1 4 5 6 8 7
+
+
+Solution Approach:
+------------------
+
+You are given:
+
+--The head of a singly linked list
+
+--An integer K
+
+Your task is to:
+
+--Reverse the first K nodes
+
+--Skip (do not reverse) the next K nodes
+
+--Again reverse the next K nodes
+
+--Continue this process until the end of the list
+
+
+The reversal must be done in-place (no new list).
+
+
+Example:
+
+List: 1 → 2 → 3 → 4 → 5 → 6
+K = 2
+
+Process:
+
+--Reverse first 2 → 2 1
+
+--Skip next 2 → 3 4
+
+--Reverse next 2 → 6 5
+
+
+Output:
+
+2 1 3 4 6 5
+
+
+Function signature:
+-------------------
+
+Node* revAltKNodes(Node* head, int k) 
+
+
+
+Step-by-Step Approach1:
+-----------------------
+
+1. If the list is empty or K <= 1, return the head.
+
+2. Reverse the first K nodes using the standard linked-list reverse logic.
+
+3. Connect the last node of the reversed block to the next node.
+
+4. Skip the next K nodes (just move the pointer).
+
+5. Recursively repeat the process for the remaining list.
+
+6. Return the new head.
+
+
+
+code:
+
+
+
+#include <iostream>
+using namespace std;
+
+// Node structure
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int d) {
+        data = d;
+        next = NULL;
+    }
+};
+
+// Function to reverse alternate K nodes
+Node* revAltKNodes(Node* head, int k) {
+    if (head == NULL || k <= 1)
+        return head;
+
+    Node* curr = head;
+    Node* prev = NULL;
+    Node* next = NULL;
+    int count = 0;
+
+    // Step 1: Reverse first K nodes
+    while (curr != NULL && count < k) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+        count++;
+    }
+
+    // head is now the last node of reversed block
+    head->next = curr;
+
+    // Step 2: Skip next K nodes
+    count = 0;
+    while (curr != NULL && count < k - 1) {
+        curr = curr->next;
+        count++;
+    }
+
+    // Step 3: Recur for remaining list
+    if (curr != NULL)
+        curr->next = revAltKNodes(curr->next, k);
+
+    // prev is the new head after reversal
+    return prev;
+}
+
+// Utility function to print list
+void printList(Node* head) {
+    while (head != NULL) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int N;
+        cin >> N;
+
+        Node* head = NULL;
+        Node* tail = NULL;
+
+        for (int i = 0; i < N; i++) {
+            int x;
+            cin >> x;
+            Node* newNode = new Node(x);
+
+            if (head == NULL) {
+                head = tail = newNode;
+            } else {
+                tail->next = newNode;
+                tail = newNode;
+            }
+        }
+
+        int K;
+        cin >> K;
+
+        head = revAltKNodes(head, K);
+        printList(head);
+    }
+
+    return 0;
+}
+
+
+
+
+Approach 2: without recursion:
+------------------------------
+
+
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int d) {
+        data = d;
+        next = NULL;
+    }
+};
+
+Node* revAltKNodes(Node* head, int k) {
+    if (head == NULL || k <= 1)
+        return head;
+
+    Node* curr = head;
+    Node* prevTail = NULL;
+    Node* newHead = NULL;
+
+    bool reverse = true;
+
+    while (curr != NULL) {
+        int count = 0;
+
+        if (reverse) {
+            // Reverse K nodes
+            Node* prev = NULL;
+            Node* start = curr;
+
+            while (curr != NULL && count < k) {
+                Node* next = curr->next;
+                curr->next = prev;
+                prev = curr;
+                curr = next;
+                count++;
+            }
+
+            // Set new head once
+            if (newHead == NULL)
+                newHead = prev;
+
+            // Connect previous block
+            if (prevTail != NULL)
+                prevTail->next = prev;
+
+            prevTail = start;  // tail of reversed block
+        }
+        else {
+            // Skip K nodes
+            while (curr != NULL && count < k) {
+                prevTail = curr;
+                curr = curr->next;
+                count++;
+            }
+        }
+
+        reverse = !reverse; // toggle
+    }
+
+    return newHead;
+}
+
+
+
+
+Q8. Move the Smallest and largest to head and tail of list Clone
+
+Given a pointer to the head node of a linked list, find the smallest and largest of this list. Now move the smallest node to the front and move the largest node to the end of the list.
+
+Input Format:
+
+--First line contains one integer denoting the number of test cases.
+--For each test case, first line contains the total number of nodes in list i.e. N and next N lines contains the elements of nodes.
+
+--The function shiftSmallLarge() takes the head node of a linked list as a parameter and returns the head pointer after doing both shifts. 
+
+
+Note: Do not read any input from stdin/console. Each test case calls the shiftSmallLarge method individually and passes it the head of a list.
+
+Output Format:
+
+Print the integer data for each element of the linked list separated by space.
+
+Sample Input
+1
+7
+12
+8
+6
+20
+1
+50
+16
+
+Sample Output
+1 12 8 6 20 16 50
+
+
+
+Solution approach:
+------------------
+
+You are given a singly linked list.
+
+Your task is to:
+
+1. Find the smallest value node in the list and move it to the front (head).
+
+2. Find the largest value node in the list and move it to the end (tail).
+
+3. The relative order of the remaining nodes must remain unchanged.
+
+Important:
+
+--You must not read input inside the function.
+
+--The function receives the head pointer and must return the modified head
+
+
+Example:
+
+12 → 8 → 6 → 20 → 1 → 50 → 16
+
+Smallest value = 1
+
+Largest value = 50
+
+Output:
+
+1 → 12 → 8 → 6 → 20 → 16 → 50
+
+
+
+Edge cases:
+
+--Smallest node is already at head
+
+--Largest node is already at tail
+
+--List has only one node
+
+
+code:
+
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int d) {
+        data = d;
+        next = NULL;
+    }
+};
+
+Node* shiftSmallLarge(Node* head) {
+    if (head == NULL || head->next == NULL)
+        return head;
+
+    Node *minNode = head, *maxNode = head;
+    Node *prevMin = NULL, *prevMax = NULL;
+    Node *curr = head, *prev = NULL;
+
+    // Step 1: Find smallest and largest nodes
+    while (curr != NULL) {
+        if (curr->data < minNode->data) {
+            minNode = curr;
+            prevMin = prev;
+        }
+        if (curr->data > maxNode->data) {
+            maxNode = curr;
+            prevMax = prev;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
+
+    // Step 2: Move smallest node to head
+    if (minNode != head) {
+        prevMin->next = minNode->next;
+        minNode->next = head;
+        head = minNode;
+    }
+
+    // Step 3: Move largest node to tail
+    // Re-find tail because head might have changed
+    Node* tail = head;
+    while (tail->next != NULL)
+        tail = tail->next;
+
+    if (maxNode != tail) {
+        prevMax->next = maxNode->next;
+        tail->next = maxNode;
+        maxNode->next = NULL;
+    }
+
+    return head;
+}
+
+
+Q9. Split the Circular Linked List in two parts Clone
+
+A circular linked list is a list in which the last node points back to the first node. It creates a kind of loop in the list hence it is called circular list.
+
+Now, given a pointer to the head node of a circular linked list with even number of nodes, cut it from middle and return the two lists as two separate circular linked lists.
+
+Complete the function listCut() which takes the head node of a circular linked list, so you need to cut the list in two parts and return the pointer to second half of list. The first part will remain in the pointer head.
+
+Input Format:
+
+--First line will contain an integer denoting number of test cases.
+--Each test case will have 2 lines, In first line total number of nodes is written and in 2nd line the node values are given.
+
+Output Format:
+
+Print the nodes of two circular lists separated by space on two lines.
+
+Sample Input
+1
+4
+1 2 3 4
+
+Sample Output
+1 2
+3 4
+
+
+
+Solution Approach:
+------------------
+
+To split the circular list:
+
+--Use the slow and fast pointer technique
+
+--When fast completes one round:
+
+--slow will be at the middle
+
+--Break the list at the middle
+
+--Re-connect pointers to keep both lists circular
+
+
+
+
+code:
+
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int d) {
+        data = d;
+        next = NULL;
+    }
+};
+
+// Function to split circular linked list
+Node* listCut(Node* head) {
+    if (head == NULL || head->next == head)
+        return NULL;
+
+    Node* slow = head;
+    Node* fast = head;
+
+    // Find middle using slow & fast pointers
+    while (fast->next != head && fast->next->next != head) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    // For even number of nodes, move fast to last node
+    if (fast->next->next == head)
+        fast = fast->next;
+
+    // Second half head
+    Node* head2 = slow->next;
+
+    // Make first half circular
+    slow->next = head;
+
+    // Make second half circular
+    fast->next = head2;
+
+    return head2;
+}
+

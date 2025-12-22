@@ -1,0 +1,1593 @@
+Q1. Check number is square or not using functions:
+
+
+The "TileArranger" company specializes in packaging and shipping square floor tiles. To ensure efficient packing and storage, they need a quick way to determine if a given total quantity of tiles (N) can be arranged in a perfect, solid square (e.g., 2×2, 5×5, 10×10).
+
+You have been tasked with creating a simple verification function, isSquare(int n), that takes the total tile count (N) and reports whether a perfect square arrangement is possible.
+
+If the square root is an integer (i.e., no fractional part), n is a perfect square, and the function prints "yes". Otherwise, it prints "no".
+
+Input Format
+
+First line contains an integer.
+
+Output Format
+
+Print yes or no depending on the number.
+
+Sample Input
+4
+
+Sample Output
+yes
+
+
+Solution Approach:
+------------------
+
+--You are given an integer N representing the total number of tiles.
+--Your task is to check whether N can form a perfect square arrangement.
+
+A number is a perfect square if its square root is an integer.
+
+
+Example1:
+
+Input: 4
+Output: yes
+
+
+Explanation: √4 = 2 → integer → perfect square
+
+
+Example2:
+
+Input: 8
+Output: no
+
+
+Explanation: √8 = 2.82 → not an integer → Not perfect square
+
+
+// Function to check if number is perfect square
+void isSquare(int n)
+
+
+
+
+Approach:
+
+
+1. Find the square root of n in integer
+
+int root = sqrt(n);
+
+2. then check:
+
+root * root == n
+
+--If true print: "yes"
+--If false print: "no"
+
+
+code1: with sqrt() function
+
+
+// Function to check if number is perfect square
+void isSquare(int n) {
+    int root = sqrt(n);
+
+    if (root * root == n)
+        cout << "yes";
+    else
+        cout << "no";
+}
+
+
+TC: O(1)
+SC: O(1)
+
+
+
+code2: without sqrt() function:
+
+
+// Function to check perfect square without sqrt
+void isSquare(int n) {
+    for (int i = 1; i * i <= n; i++) {
+        if (i * i == n) {
+            cout << "yes";
+            return;
+        }
+    }
+    cout << "no";
+}
+
+
+TC: O(√N)
+SC: O(1)
+
+
+
+code3: Furtur optamized using Binary Search:
+--------------------------------------------
+
+For any number N:
+
+	Square root lies between 1 and N/2 (for N > 1)
+
+
+Step1:
+
+If N < 0 → print "no"
+
+Step2: 
+
+Set: 
+
+	low = 1
+	high = n
+
+Step3: While low <= high:
+
+	mid = (low + high) / 2
+
+	If mid * mid == n → print "yes"
+
+	If mid * mid < n → search right side
+
+	If mid * mid > n → search left side
+
+Step4: If not found → print "no"
+
+
+code:
+
+
+void isSquare(int n) {
+
+    if (n < 0) {
+        cout << "no";
+        return;
+    }
+
+    int low = 1, high = n;
+
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        int sq = mid * mid;
+
+        if (sq == n) {
+            cout << "yes";
+            return;
+        }
+        else if (sq < n) {
+            low = mid + 1;
+        }
+        else {
+            high = mid - 1;
+        }
+    }
+
+    cout << "no";
+}
+
+
+TC: O(log N)
+SC: O(1)
+
+
+
+
+
+Q2. Create Magical Wands
+
+Assume, you are in a magical world, where N wooden sticks are present in a box. Now, to create a magic wand out of them, exactly 2 sticks need to be connected together such that the sum of their length is divisible by K. Your target is to create (N / 2) magic wands.
+
+Given an array, denoting the length of N wooden sticks. Check whether it is possible to achieve the target or not. Assume, N will always be a even number.
+
+Input Format
+
+First line will contain an integer T, denoting the number of test cases.
+
+For each test case:
+  First line will contain an integer N, denoting the number of sticks.
+  Second line will contain N space separated integers, denoting the length of sticks.
+  Third line contains an integer K.
+
+Output Format
+
+For each test case, print YES if the target can be achieved, else print NO, in new lines.
+
+Constraints
+1 <= T <= 10
+1 <= N <= 10^5
+1 <= length[i] <= 10^5
+1 <= K <= 10^5
+
+Sample Input
+2         // Test Cases
+4         // N (test case 1)
+12 23 32 21  // length[]
+10        // K
+4         //N (test case 2)
+8 5 4 7   // length[]
+6         // K
+
+Sample Output
+NO
+YES
+
+Explanation:
+N = 4, K = 6
+Out of the four given sticks, 2 magic wands can be created as follows:
+(8, 4) and (5, 7) whose sum is 12, which is divisible by 6.
+
+
+Solution Approach:
+------------------
+
+You are given N wooden sticks (N is even).
+To create a magic wand, exactly two sticks must be paired such that the sum of their lengths is divisible by K.
+
+(stick1 + stick2) % K == 0
+
+Check whether it is possible to form N/2 such pairs using all sticks.
+
+--Can we pair ALL sticks into N/2 pairs, such that EVERY pair’s sum is divisible by K?
+
+--Can ALL sticks be paired so that EVERY pair satisfies the condition?
+
+
+
+Every stick must be used
+	Total pairs = N/2
+	Every pair sum % K == 0
+
+If any one condition fails → NO
+
+
+Example1:
+
+N = 4
+Sticks = [12, 23, 32, 21]
+K = 10
+
+Possible pairs:
+
+12 + 23 = 35 No
+
+12 + 21 = 33 No
+
+23 + 32 = 55 No
+
+Output: NO
+
+
+Example2:
+
+N = 4
+Sticks = [8, 5, 4, 7]
+K = 6
+
+Possible pairs:
+
+(8, 4) → 12 Yes
+
+(5, 7) → 12 Yes
+
+Output: Yes
+
+
+Approach:
+
+Key Idea: Remainder Pairing
+
+If:
+
+(a + b) % K == 0
+
+Then:
+
+(a % K + b % K) % K == 0
+
+
+So:
+
+Let r = a % K
+
+It must pair with (K - r) % K
+
+Step1: 
+
+--Create a frequency array/map freq[] of size K
+
+Step2:
+
+--For each stick length x:
+
+	r = x % K
+	freq[r]++
+
+Step3:
+
+Now check:
+
+	freq[0] must be even
+
+	For every r from 1 to K/2:
+
+freq[r] == freq[K - r]
+
+
+If K is even, freq[K/2] must also be even
+
+Step4: 
+
+--If all conditions satisfy → print "YES"
+
+--Otherwise → print "NO"
+
+bool canCreateWands(vector<int>& sticks, int N, int K)
+
+
+Code:
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Function to check if magical wands can be created
+bool canCreateWands(vector<int>& sticks, int N, int K) {
+
+    vector<int> freq(K, 0);
+
+    // Step 1: count remainders
+    for (int i = 0; i < N; i++) {
+        int rem = sticks[i] % K;
+        freq[rem]++;
+    }
+
+    // Step 2: remainder 0 must be even
+    if (freq[0] % 2 != 0)
+        return false;
+
+    // Step 3: check remaining remainders
+    for (int r = 1; r <= K / 2; r++) {
+
+        // Special case when r == K-r (only when K is even)
+        if (r == K - r) {
+            if (freq[r] % 2 != 0)
+                return false;
+        }
+        else {
+            if (freq[r] != freq[K - r])
+                return false;
+        }
+    }
+
+    return true;
+}
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int N;
+        cin >> N;
+
+        vector<int> sticks(N);
+        for (int i = 0; i < N; i++) {
+            cin >> sticks[i];
+        }
+
+        int K;
+        cin >> K;
+
+        // Call function
+        if (canCreateWands(sticks, N, K))
+            cout << "YES\n";
+        else
+            cout << "NO\n";
+    }
+
+    return 0;
+}
+
+
+
+
+
+
+Q3. Next Closest Fibonacci Number
+
+Given an array of integers, determine the smallest non-negative integer (including zero) that needs to be inserted into the array so that the overall sum of the array elements becomes equal to the next Fibonacci number that is greater than or equal to the current sum.
+
+For example, if the array is arr[] = {1, 5, 3}, then inserting 4 results in an overall sum of 13 (1 + 5 + 3 + 4), which is the next Fibonacci number.
+
+Fibonacci Sequence Definition:
+
+The Fibonacci sequence is defined as follows:
+
+	The first two numbers are 0 and 1.
+	Every subsequent number is the sum of the two preceding ones:
+	F(n) = F(n-1) + F(n-2) for n ≥ 2.
+
+
+Input Format
+
+The first line contains an integer N, representing the size of the array.
+The second line contains N space-separated integers, denoting the elements of the array.
+
+Output Format
+
+Print a single integer — the smallest non-negative integer that needs to be inserted so that the sum of the array becomes a Fibonacci number.
+
+Constraints
+1 ≤ N ≤ 10⁵-100 ≤ arr[i] ≤ 10⁹
+
+Sample Input 1
+3
+1 5 3
+
+Sample Output
+4
+
+Explanation:
+Calculate the sum of the array: 1 + 5 + 3 = 9.
+The Fibonacci sequence is: 0, 1, 1, 2, 3, 5, 8, 13, ...  The first Fibonacci number greater than or equal to 9 is 13.
+The required value is: 13 - 9 = 4.
+
+Sample Input 2
+4
+0 1 1 2
+
+Sample Output 2
+1
+
+Explanation:
+Sum of the array: 0 + 1 + 1 + 2 = 4.
+The Fibonacci sequence is: 0, 1, 1, 2, 3, 5, ... The first Fibonacci number greater than or equal to 4 is 5.
+The required value is: 5 - 4 = 1.
+
+Sample Input 3
+5
+2 3 5 8 13
+
+Sample Output 3
+3
+
+Explanation:
+Sum of the array: 2 + 3 + 5 + 8 + 13 = 31.
+The Fibonacci sequence is: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ... The first Fibonacci number greater than or equal to 31 is 34.
+The required value is: 34 - 31 = 3.
+
+
+Solution Approach:
+-----------------
+
+You are given an array of integers.
+
+Find the smallest non-negative integer that must be added to the array so that the total sum becomes a Fibonacci number.
+
+The Fibonacci number chosen must be the first one greater than or equal to the current sum.
+
+
+Fibonacci Sequence:
+
+0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ...
+
+Example1:
+
+Array = {1, 5, 3}
+Sum = 9
+
+
+Greater than 9 the first fibonacci number = 13
+
+13-9 = 4
+
+Output: 4
+
+
+Example2:
+
+Array = {0, 1, 1, 2}
+Sum = 4
+
+Next Fibonacci ≥ 4 = 5
+
+Insert value = 5 - 4 = 1
+
+Output: 1 
+
+
+Example3:
+
+Array = {2, 3, 5, 8, 13}
+Sum = 31
+
+Next Fibonacci ≥ 31 = 34
+
+Insert value = 34 - 31 = 3
+
+Output: 3
+
+
+long long nextFiboInsert(long long arr[], int N)
+
+
+
+
+Step 1: Calculate sum of array
+
+--Use long long because sum can be large
+
+Step 2: Generate Fibonacci numbers
+
+--Start from 0 and 1
+
+Keep generating next Fibonacci number
+
+--Stop when Fibonacci ≥ sum
+
+Step 3: Calculate answer
+
+	answer = fibonacci - sum
+
+
+TC: O(N + log(sum))
+SC: O(1)
+
+
+// Function to print first N Fibonacci numbers
+void printFibonacci(int N)
+
+Rule:
+
+next = previous + second_previous
+
+
+Code:
+
+void printFibonacci(int N) {
+
+    long long a = 0, b = 1;
+
+    // Special case
+    if (N >= 1)
+        cout << a << " ";
+    if (N >= 2)
+        cout << b << " ";
+
+    for (int i = 3; i <= N; i++) {
+        long long c = a + b;
+        cout << c << " ";
+        a = b;
+        b = c;
+    }
+}
+
+
+
+
+
+Final Code:
+
+
+// Function to find the required number to insert
+long long nextFiboInsert(long long arr[], int N) {
+
+    // Step 1: calculate sum
+    long long sum = 0;
+    for (int i = 0; i < N; i++) {
+        sum += arr[i];
+    }
+
+    // Step 2: generate Fibonacci numbers
+    long long a = 0, b = 1;
+
+    while (b < sum) {
+        long long c = a + b;
+        a = b;
+        b = c;
+    }
+
+    // Step 3: return required value
+    return (b - sum);
+}
+
+
+
+Printing Fibonacci series using recursion:
+------------------------------------------
+
+#include <iostream>
+using namespace std;
+
+long long fib(int n) {
+    if (n == 0)
+        return 0;
+    if (n == 1)
+        return 1;
+
+    return fib(n - 1) + fib(n - 2);
+}
+
+int main() {
+    int N;
+    cin >> N;
+
+    for (int i = 0; i < N; i++) {
+        cout << fib(i) << " ";
+    }
+
+    return 0;
+}
+
+
+
+Not recomended because :
+
+TC: O(2^N)  : Same values are calculated again and again
+
+
+
+
+
+Q4.  How many duplicates in array
+
+A small bookstore is conducting an inventory audit. They have a massive list of ISBNs (International Standard Book Numbers) scanned from all the books on their
+shelves. To identify which books they have in stock in a non-unique quantity (i.e., multiple copies of the same book), they need a quick way to count the number of
+distinct ISBNs that appear more than once in their scanned list.
+
+You need to implement the howManyDuplicates() function to process this list of ISBNs (integers). The function should return the total count of unique book titles (distinct ISBNs) that have at least one duplicate copy.
+
+For example, in the array [1, 3, 3, 5, 5, 5], the two 3's are one duplicate and so are the three 5's. So, the number of duplicates is 2.
+
+Input Format:
+
+The first line contains an integer n, the size of the numbers array.
+The next n lines contain an integer describing the value of numbers[i] where 0 ≤ i < n.
+
+Output Format:
+
+Print an integer denoting the number of non-unique (duplicate) values in the numbers array.
+
+Constraints:
+1 ≤ n ≤ 10^5
+1 ≤ numbers[i] ≤ 10^5
+
+Sample Input
+8  // n 
+1 
+4
+1
+9
+5
+6
+5
+1 
+
+Sample Output
+2
+
+Explanation:
+n = 8 and numbers = [1, 4, 1, 9, 5, 6, 5, 1]. The integers 1 and 5 both occur more than once, so we return 2 as our answer.
+
+
+Solution Approach:
+------------------
+
+--You are given an array of integers representing ISBNs.
+
+--Your task is to count how many distinct values appear more than once.
+
+
+Example:
+
+Input:
+[1, 3, 3, 5, 5, 5]
+
+Output:
+2
+
+
+Explanation:
+Only 3 and 5 occur more than once.
+
+
+// Function to count distinct duplicate elements
+int howManyDuplicates(vector<int>& numbers, int n) 
+
+
+
+Approach:
+--------
+
+Step 1:
+
+Create a frequency array (or map)
+freq[x] = how many times x appears
+
+Step 2:
+
+Traverse the array and update frequencies
+
+Step 3:
+
+Traverse the frequency array and count:
+
+	if freq[x] > 1 → duplicate++
+
+
+
+code:
+
+int howManyDuplicates(vector<int>& numbers, int n) {
+
+    unordered_map<int, int> freq;
+
+    // Step 1: count frequency
+    for (int i = 0; i < n; i++) {
+        freq[numbers[i]]++;
+    }
+
+    // Step 2: count distinct duplicates
+    int duplicateCount = 0;
+    for (auto it : freq) {
+        if (it.second > 1) {
+            duplicateCount++;
+        }
+    }
+
+    return duplicateCount;
+}
+
+
+
+TC: O(n)
+SC: O(n)
+
+
+
+
+
+
+Q5. Removal of Duplicates from a Sorted Array
+
+A popular online game maintains a log of all recorded high scores. Due to network latency, the logging system sometimes records the same top score multiple times in quick succession. The daily process involves sorting this raw log by score, resulting in a large array where duplicate scores appear consecutively (e.g., {7, 7, 18, 18, 18, ...}).
+
+Your task is to implement the removeDuplicates() function to efficiently clean this sorted high-score array. The function must modify the array in-place so that it contains only unique scores, ready for publication on the leaderboard.
+
+Suppose the array contains the following values:
+
+{7, 7, 18, 18, 18, 18, 21, 39, 39, 42, 42, 42}
+
+After a call to removeDuplicates(arr, size); , the array should store the following values:
+
+{7, 18, 21, 39, 42}
+
+If the array is empty or does not contain any duplicate values, calling your function should have no effect.
+
+Input Format:
+
+First line contains the number of elements in array N.
+and N integers will follow in next N lines.
+
+Output Format:
+
+Print the non-duplicate elements of array.
+
+Constraints
+  1 <= N <= 10^5
+ -(10^9) <= arr[i] <= 10^9
+
+Sample Input
+5  // No. of elements
+1
+1
+2
+3
+3
+
+Sample Output
+1
+2
+3
+
+
+Solution Approach:
+------------------
+
+
+--You are given a sorted array of integers.
+
+--Remove duplicate elements in-place so that only unique elements remain, and print them.
+
+
+Example:
+
+Input:
+1 1 2 3 3
+
+Output:
+1 2 3
+
+
+// Function to remove duplicates from sorted array
+void removeDuplicates(long long arr[], int N) 
+
+
+Approach: Using Two pointer 
+----------------------------
+
+Step1: 
+
+--If the array is empty(N== 0), there is nothing to remove. Simply return.
+
+Step2: Assume the first element is unique (i=0).
+
+--Use a pointer i to track the position of the last unique element.
+
+Step3:
+
+--Start another pointer j from the second element and move it through the array.
+
+j from 1 to N-1
+
+
+Step4: For each element at index j:
+
+--If arr[j] is different from arr[i], it means we found a new unique value.
+
+arr[j] != arr[i]
+
+--Move i one step forward.
+
+i++
+
+--Copy arr[j] into arr[i].
+
+arr[i] = arr[j]
+
+Step5: After the loop ends:
+
+--The array from index 0 to i contains only unique elements.
+
+--Print these elements.
+
+
+Code:
+
+
+// Function to remove duplicates from sorted array
+void removeDuplicates(long long arr[], int N) {
+
+    if (N == 0)
+        return;
+
+    int i = 0; // index of last unique element
+
+    for (int j = 1; j < N; j++) {
+        if (arr[j] != arr[i]) {
+            i++;
+            arr[i] = arr[j];
+        }
+    }
+
+    // Print unique elements
+    for (int k = 0; k <= i; k++) {
+        cout << arr[k] << endl;
+    }
+}
+
+
+
+TC: O(N)
+SC: O(1)
+
+
+
+
+
+
+Q6.  Remove duplicates from a vector
+
+Imagine you are managing the attendance list for a popular concert. As attendees scan their digital tickets, their unique ID numbers are added to a main list. Due to a faulty scanner, many people are accidentally scanning their tickets multiple times, creating numerous duplicate entries in the list.
+
+Your task is to implement the removeDuplicates() function to process this raw attendance list (a vector of integer IDs). The function must clean the list by ensuring each ID appears only once, but it is crucial to maintain the order in which the first instance of each ID appeared, as this reflects the chronological order of entry into the venue.
+
+You should retain the original relative order of the elements.
+
+For example, if a vector named v stores {24, 10, 12, 19, 24, 17, 12, 10, 10, 19, 26, 26}, the call of removeDuplicates(v) should modify it to store {24, 10, 12, 19, 17,
+26}.
+
+Input Format :
+
+First line should contain the size of vector N.
+Next line contain space-separated N elements of vector.
+
+Output Format :
+
+Space-separates elements of resulted vector.
+
+Sample Input :
+12
+24 10 12 19 24 17 12 10 10 19 26 26
+
+Sample Output:
+24 10 12 19 17 26
+
+
+Solution Approach:
+------------------
+
+
+--You are given a vector of integers that may contain duplicate values.
+
+--Remove duplicates while preserving the order of first occurrence.
+
+
+Example:
+
+Input:
+24 10 12 19 24 17 12 10 10 19 26 26
+
+Output:
+24 10 12 19 17 26
+
+
+// Function to remove duplicates while preserving order
+void removeDuplicates(vector<int>& v)
+
+
+Approach:
+---------
+
+1. Create an empty unordered_set called seen
+
+2. Traverse the vector from left to right
+
+3. For each element:
+
+--If it is not in seen
+
+	Add it to result vector
+
+	Mark it as seen
+
+4. Replace original vector with result vector
+
+5. Print the vector
+
+
+code1: With extra vector
+
+
+void removeDuplicates(vector<int>& v) {
+
+    unordered_set<int> seen;
+    vector<int> result;
+
+    for (int i = 0; i < v.size(); i++) {
+        // If element is not seen before
+        if (seen.find(v[i]) == seen.end()) {
+            result.push_back(v[i]);
+            seen.insert(v[i]);
+        }
+    }
+
+    // Copy result back to original vector
+    v = result;
+}
+
+
+TC: O(N)
+SC: O(N)
+
+
+
+
+code2: Without using extra vector (IN-PLACE)
+
+
+void removeDuplicates(vector<int>& v) {
+
+    unordered_set<int> seen;
+    int idx = 0;   // position to place next unique element
+
+    for (int i = 0; i < v.size(); i++) {
+        // If element not seen before
+        if (seen.find(v[i]) == seen.end()) {
+            seen.insert(v[i]);
+            v[idx] = v[i];  // overwrite in-place
+            idx++;
+        }
+    }
+
+    // Remove extra elements from vector
+    v.resize(idx);
+}
+
+
+TC: O(N)
+SC: O(N)
+
+
+
+
+
+Q7.  Add Two Numbers Represented by Lists
+
+An n-digit number can be expressed using a linked list of n nodes, where each node can be used to represent a digit.
+
+Now given two numbers represented by two singly linked lists, compute the sum of these numbers, provided that the digits are stored in reverse order, such that the digit of 1’s place is at the head of the list.
+
+Example 1:
+
+number 254 will be represented as: head -> 4 -> 5 -> 2 -> NULL
+number 71 will be represented as:  head -> 1 -> 7 -> NULL
+Their sum 325 is represented as:   head -> 5 -> 2 -> 3 -> NULL
+
+Example 2:
+number 86 will be represented as: head -> 6 -> 8 -> NULL
+number 37 will be represented as: head -> 7 -> 3 -> NULL
+Their sum 123 is represented as:  head -> 3 -> 2 -> 1 -> NULL
+
+Complete the function addListNumbers() which takes the head nodes of two linked lists as parameters, and return the head of the list which contains the computed sum.
+
+Input Format:
+
+First line contains an integer denoting the number of test cases.
+Each test cases has 4 lines:
+	First line contains the digit count of first number and second line contains the digits.
+  	Third line contains the digit count of second number and fourth line contains the digits.
+
+Output Format:
+Print the integer data for each element of the sum list separated by space.
+
+Constraints:
+1 <= no. of test cases <= 10
+0 <= no. of nodes <= 1000
+0 <= node data <= 9  
+
+Sample Input
+2  // Test Cases
+3     // testcase 1
+4 1 5
+3
+5 9 2
+3     // testcase 2
+3 1 3
+2
+2 1
+
+Sample Output
+9 0 8
+5 2 3
+
+Explanation:
+For first two numbers, they are 514 and 295 so the sum will be 809
+For second two numbers, they are 313 and 12 so the sum will be 325
+
+
+
+Solution Approach:
+------------------
+
+--You are given two singly linked lists representing two non-negative numbers.
+
+--Digits are stored in reverse order.
+
+--Add the two numbers and return the head of a linked list representing the sum, also in reverse order.
+
+
+Example:
+
+
+Input:
+4 → 5 → 2   (254)
+1 → 7       (71)
+
+Output:
+5 → 2 → 3   (325)
+
+
+Node* addListNumbers(Node* head1, Node* head2) 
+
+
+
+Approach:
+--------
+
+
+1. Create a dummy node to help build the result list
+
+2. Maintain a carry = 0
+
+3. While at least one list is not empty OR carry exists:
+
+	Take digit from list1 (if exists)
+
+	Take digit from list2 (if exists)
+
+	sum = digit1 + digit2 + carry
+
+	newDigit = sum % 10
+
+	carry = sum / 10
+
+	Create a new node with newDigit
+
+4. Return dummy->next as head of result list
+
+
+code:
+
+
+#include <iostream>
+using namespace std;
+
+// Node structure
+class Node {
+
+private:
+
+    int data;
+    Node* next;
+
+public:
+    Node(int d) {
+        data = d;
+        next = NULL;
+    }
+};
+
+// Function to add two numbers represented by linked lists
+Node* addListNumbers(Node* head1, Node* head2) {
+
+    Node* dummy = new Node(0);   // dummy node
+    Node* tail = dummy;
+    int carry = 0;
+
+    while (head1 != NULL || head2 != NULL || carry != 0) {
+
+        int sum = carry;
+
+        if (head1 != NULL) {
+            sum += head1->data;
+            head1 = head1->next;
+        }
+
+        if (head2 != NULL) {
+            sum += head2->data;
+            head2 = head2->next;
+        }
+
+        carry = sum / 10;
+        int digit = sum % 10;
+
+        tail->next = new Node(digit);
+        tail = tail->next;
+    }
+
+    return dummy->next;
+}
+
+// Helper function to print list
+void printList(Node* head) {
+    while (head != NULL) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int n1;
+        cin >> n1;
+
+        Node* head1 = NULL;
+        Node* tail1 = NULL;
+
+        for (int i = 0; i < n1; i++) {
+            int x;
+            cin >> x;
+            Node* newNode = new Node(x);
+            if (head1 == NULL)
+                head1 = tail1 = newNode;
+            else {
+                tail1->next = newNode;
+                tail1 = newNode;
+            }
+        }
+
+        int n2;
+        cin >> n2;
+
+        Node* head2 = NULL;
+        Node* tail2 = NULL;
+
+        for (int i = 0; i < n2; i++) {
+            int x;
+            cin >> x;
+            Node* newNode = new Node(x);
+            if (head2 == NULL)
+                head2 = tail2 = newNode;
+            else {
+                tail2->next = newNode;
+                tail2 = newNode;
+            }
+        }
+
+        Node* result = addListNumbers(head1, head2);
+        printList(result);
+    }
+
+    return 0;
+}
+
+
+
+Q8.  Rotate the Doubly Linked List by K elements
+
+A company schedules its shift managers using a doubly linked list, where each node represents a manager's ID. At the end of a work cycle, the entire rota needs to be shifted so that the last K managers are moved to the front. This is a clockwise (right) rotation.
+
+You are tasked with implementing the rotateByK() function. It takes the list of managers and a shift amount K and efficiently rotates the list to the right
+by K positions.
+
+Input:
+Implement the function rotateByK(). The function should rotate the list clockwise (to the right) by k nodes and return the new head of the modified list.
+If k is greater than the number of nodes, perform rotation using k % n. 
+
+Note:
+Do not read any input from stdin/console. 
+Each test case calls the rotateByK method individually and passes it the head of a list.
+
+Output
+Print the integer data of the rotated doubly linked list, separated by spaces.
+There should be no space after the last element.
+
+Sample Input
+1 // No. of test cases
+7 // No. of elements 
+1
+2
+3
+4
+5
+6
+ 7
+4 // Value of k
+
+Sample Output
+4 5 6 7 1 2 3 // List after rotating counter-clockwise by 4 nodes
+
+
+
+
+Solution Approach:
+------------------
+
+
+--You are given a doubly linked list.
+
+--Rotate the list to the right (clockwise) by K nodes and return the new head.
+
+--If K is greater than the number of nodes n, rotate by K % n.
+
+
+Example:
+
+List: 1 2 3 4 5 6 7
+K = 4
+
+Output:
+4 5 6 7 1 2 3
+
+
+Node* rotateByK(Node* head, int K) 
+
+
+Idea:
+
+For right rotation by K:
+
+--The new head will be the (n - K)th node
+
+--The node before it becomes the new tail
+
+
+Approach:
+---------
+
+1. If list is empty, has one node, or K == 0 → return head
+
+2. Traverse the list to:
+
+	find the length n
+
+	reach the last node (tail)
+
+3. Compute:
+
+	K = K % n
+
+
+	If K == 0, return head
+
+4. Find the node at position (n - K)
+
+--This node will become the new head
+
+5. Break the list at (n - K)
+
+6. Connect:
+
+	old tail → old head
+
+	fix prev and next pointers
+
+7. Return new head
+
+
+
+code:
+
+
+#include <iostream>
+using namespace std;
+
+// Doubly Linked List Node
+class Node {
+
+private:
+
+    int data;
+    Node* prev;
+    Node* next;
+
+public:
+
+    Node(int d) {
+        data = d;
+        prev = NULL;
+        next = NULL;
+    }
+};
+
+// Function to rotate doubly linked list by K (right rotation)
+Node* rotateByK(Node* head, int K) {
+
+    if (head == NULL || head->next == NULL || K == 0)
+        return head;
+
+    // Step 1: find length and last node
+    Node* tail = head;
+    int n = 1;
+
+    while (tail->next != NULL) {
+        tail = tail->next;
+        n++;
+    }
+
+    // Step 2: reduce K
+    K = K % n;
+    if (K == 0)
+        return head;
+
+    // Step 3: find new head (n - K)th node
+    Node* newTail = head;
+    for (int i = 1; i < n - K; i++) {
+        newTail = newTail->next;
+    }
+
+    Node* newHead = newTail->next;
+
+    // Step 4: break and reconnect
+    newTail->next = NULL;
+    newHead->prev = NULL;
+
+    tail->next = head;
+    head->prev = tail;
+
+    return newHead;
+}
+
+// Helper function to print list
+void printList(Node* head) {
+    Node* temp = head;
+    while (temp != NULL) {
+        cout << temp->data;
+        if (temp->next != NULL)
+            cout << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+
+
+
+
+
+
+Q9.  Rotate a linked List
+
+A company uses a digital display board to show product advertisements. The advertisements are stored in a simple linked list, and they need to cycle through them continuously. Every time a certain amount of time passes, they want to shift the first k advertisements to the end of the list. This action is called a left rotation.
+
+Your task is to implement the rotateList() function, which takes the advertisement list (linked list head) and the rotation count (k) and rearranges the list to reflect this left rotation, efficiently moving the initial k nodes to the tail.
+
+Explanation:
+
+After rotating the list left by k nodes, the first k nodes are moved to the end of the list.
+
+Example:
+
+If the given list is:
+
+1 → 2 → 3 → 4 → 5 → 6
+
+and k = 4, then the rotated list will be:
+
+5 → 6 → 1 → 2 → 3 → 4
+
+Note:
+If k is greater than the size of the list, leave the list unchanged.
+Your solution must be optimized, otherwise it may result in Time Limit Exceeded.
+
+Input Format:
+
+The first line contains an integer n, the size of the linked list.
+The second line contains n space-separated integers representing the linked list nodes.
+The third line contains an integer k.
+
+Output Format:
+Print the node values of the rotated list separated by spaces.
+
+Constraints:
+0 ≤ n ≤ 10^5
+0 ≤ k ≤ 10^6
+
+Sample Input:
+6            // n
+1 2 3 4 5 6  // linked list nodes
+4            // k
+
+Sample Output:
+5 6 1 2 3 4
+
+Solution Approach:
+------------------
+
+--You are given a singly linked list.
+
+--Rotate the list to the left by k nodes, i.e., move the first k nodes to the end of the list.
+
+--If k is greater than the size of the list, leave the list unchanged.
+
+
+
+Example:
+
+Input:
+List: 1 2 3 4 5 6
+k = 4
+
+Output:
+5 6 1 2 3 4
+
+
+// Function to rotate linked list left by k nodes
+Node* rotateList(Node* head, int k) 
+
+
+Idea:
+
+--For left rotation by k:
+
+--The (k+1)th node becomes the new head
+
+--The kth node becomes the new tail
+
+
+
+code:
+
+
+#include <iostream>
+using namespace std;
+
+// Singly Linked List Node
+class Node {
+
+private:
+
+    int data;
+    Node* next;
+
+public:
+
+    Node(int d) {
+        data = d;
+        next = NULL;
+    }
+};
+
+// Function to rotate linked list left by k nodes
+Node* rotateList(Node* head, int k) {
+
+    if (head == NULL || head->next == NULL || k == 0)
+        return head;
+
+    // Step 1: find length and tail
+    Node* tail = head;
+    int n = 1;
+
+    while (tail->next != NULL) {
+        tail = tail->next;
+        n++;
+    }
+
+    // Step 2: if k > n, do nothing
+    if (k > n)
+        return head;
+
+    // Step 3: find kth node
+    Node* curr = head;
+    for (int i = 1; i < k; i++) {
+        curr = curr->next;
+    }
+
+    // Step 4: rotate
+    Node* newHead = curr->next;
+    curr->next = NULL;
+    tail->next = head;
+
+    return newHead;
+}
+
+// Helper function to print list
+void printList(Node* head) {
+    while (head != NULL) {
+        cout << head->data;
+        if (head->next != NULL)
+            cout << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    Node* head = NULL;
+    Node* tail = NULL;
+
+    for (int i = 0; i < n; i++) {
+        int x;
+        cin >> x;
+        Node* newNode = new Node(x);
+        if (head == NULL)
+            head = tail = newNode;
+        else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+
+    int k;
+    cin >> k;
+
+    head = rotateList(head, k);
+    printList(head);
+
+    return 0;
+}
