@@ -1,0 +1,1494 @@
+Q1.  Energy Required for Insertion Sort
+
+
+A shopkeeper has N products kept on his shelf. He assigns a unique rank to each product based on its annual sales. Now the shopkeeper wants to sort all the products in the increasing order of their ranks, but because his products are a bit heavy, so he needs to know how much of his energy will be spent on sorting all the N products using the Insertion Sort algorithm.
+
+Assume that shifting any product from its place requires 4 units of energy.
+
+Note: If any product is moved from its position, then it will be considered as a shift.
+
+Given an array, denoting the current order and rank of N products. Your task is to find how much energy will be required to sort them using Insertion Sort.
+
+Input Format:
+
+First line of each input will contain an integer T = number of test cases. 
+Each test case will contain two lines:
+First line will contain a number N = no. of products on the shelf.
+Next line will contain N space separated numbers, denoting the rank of each product.
+
+Output Format:
+
+For each test case, print on a new line, the energy required to sort the products in increasing order using Insertion sort.
+
+Constraints:
+
+1 <= T <= 10
+1 <= N <= 50
+1 <= ranks[i] <= 10^4
+
+Sample Input
+3    // No. of test cases
+5
+2 4 1 3 5
+10
+10 9 8 7 6 5 4 3 2 1
+5
+1 2 3 4 5
+
+Sample Output
+20
+216
+0
+
+Explanation
+
+Test Case 1: Apply Insertion Sort
+First Iteration:  2,4,1,3,5 => 2,4,1,3,5 (0 shifts)
+Second Iteration: 2,4,1,3,5 => 1,2,4,3,5 (3 shifts - any change in position is a shift) 
+Third Iteration:  1,2,4,3,5 => 1,2,4,3,5 (0 shifts)
+Fourth Iteration: 1,2,4,3,5 => 1,2,3,4,5 (2 shifts)
+Fifth Iteration:  1,2,3,4,5 => 1,2,3,4,5 (0 shifts)
+Total 5 shifts, therefore the energy required is (5 * 4) = 20 units
+
+
+Solution Approach:
+------------------
+
+--You are given an array representing the ranks of products.
+--You need to sort the array using Insertion Sort and calculate the total energy required.
+
+--Every shift operation costs 4 units of energy
+
+--Any movement of an element from its position is considered a shift
+
+
+Example: see the above explaination
+
+
+Array: 2 4 1 3 5
+
+
+1. 2 and 4 is already sorted, so 0 shift
+2. to insert 1, 
+
+	4: shift
+	2: shift
+	1: insert
+total 3 shift: 
+
+after that: 1 2 4 3 5
+
+3. insert 3,
+
+	4: shift
+	3: insert
+
+total 2 shift:
+
+after that: 1 2 3 4 5
+
+remaining 5 is already sorted
+
+Total shift= 3+2= 5 and Energy 4 each shift 
+
+Output: 5*4= 20
+
+
+
+// Function to calculate energy required using Insertion Sort
+int energyRequired(int arr[], int n) 
+
+
+
+Approach Steps:
+--------------
+
+1. Use Insertion Sort
+
+2. For each element:
+
+--Compare it with elements on its left
+
+--Shift all larger elements one position to the right
+
+3. Each shift = 1
+
+3. Keep counting total shifts
+
+4. Multiply total shifts by 4 
+
+
+Code:
+
+
+
+// Function to calculate energy required using Insertion Sort
+int energyRequired(int arr[], int n) {
+    int shifts = 0;
+
+    // Insertion Sort logic
+    for (int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+
+        // Shift elements greater than key
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            shifts++;   // count each shift
+            j--;
+        }
+        arr[j + 1] = key;
+    }
+
+    // Each shift costs 4 units of energy
+    return shifts * 4;
+}
+
+
+
+
+
+TC: O(N²) (Insertion Sort)
+SC: O(1)
+
+
+
+
+Q2.  Energy Required in Selection Sort
+
+
+A shopkeeper has N products kept on his shelf. He assigns a unique rank to each product based on its annual sales. Now the shopkeeper wants to sort all the products in the increasing order of their ranks, but because his products are a bit heavy, so he needs to know how much of his energy will be spent on sorting all the N products using the Selection Sort algorithm.
+
+Assume that swapping any two products requires 3 units of energy.
+
+Given an array, denoting the current order and rank of N products. Your task is to find how much energy will be required to sort them using Selection Sort.
+
+Input Format:
+
+First line of each input will contain an integer T = number of test cases. 
+Each test case will contain two lines:
+First line will contain a number N = no. of products on the shelf.
+Next line will contain N space separated integers, denoting the rank of each product.
+
+Output Format:
+
+For each test case, print on a new line, the energy required to sort the products in increasing order using Selection sort.
+
+Constraints:
+1 <= T <= 10
+1 <= N <= 50
+1 <= ranks[i] <= 1000
+
+Sample Input
+2 // No. of test cases
+3
+4 2 5
+5
+10 11 8 7 1
+
+Sample Output
+3
+9
+
+Explanation
+
+Test Case 1: 
+ranks[] = {4, 2, 5}
+In the first iteration of Selection sort: (4, 2) will be swapped, and the array will get sorted.
+Therefore, the total energy required is (1 * 3) = 3 units
+
+Test Case 2: 
+ranks[] = {10, 11, 8, 7, 1}
+In the first iteration of Selection sort: (10, 1) will be swapped, and the array will become = {1, 11, 8, 7, 10}
+In the second iteration: (11, 7) will be swapped, and the array will become = {1, 7, 8, 11, 10}
+In the third and fourth iteration, No swapping will happen.
+In the fifth iteration: (11, 10) will be swapped, and the array will get sorted.
+Therefore, the total energy required is (3 * 3) = 9 units
+
+
+
+Solution Approach:
+------------------
+
+--You are given an array representing product ranks.
+--You must sort the array using Selection Sort and calculate the total energy consumed.
+
+--Each swap operation costs 3 units of energy
+
+--Only count energy when a swap actually happens
+
+IDEA:
+
+--In selection sort, for each element i, find the minimum element in the unsorted part, if the minimum element != i then swap the element.
+
+
+Example:
+
+Array: 10 11 8 7 1
+
+Selection Sort Steps:
+
+Iteration 1:
+
+Min = 1
+
+Swap (10, 1)
+
+{1, 11, 8, 7, 10}
+
+Iteration 2:
+
+Min = 7
+
+Swap (11, 7)
+
+{1, 7, 8, 11, 10}
+
+Iteration 3:
+
+Min = 8 → already at correct position
+
+No swap
+
+Iteration 4:
+
+Min = 10
+
+Swap (11, 10)
+
+{1, 7, 8, 10, 11}
+
+Total swaps = 3
+
+Energy = 3 × 3 = 9
+
+Output: 9
+
+
+// Function to calculate energy required using Selection Sort
+int energyRequiredSelectionSort(int arr[], int n) 
+
+
+Aproach step by step:
+---------------------
+
+1. Use Selection Sort
+
+2. For each index i:
+
+--Find the minimum element in the unsorted part
+
+3. If minimum index ≠ i:
+
+--Swap elements
+
+--Increase swap count
+
+4. Final energy = swapCount × 3
+
+
+code:
+
+
+int energyRequiredSelectionSort(int arr[], int n) {
+    int swaps = 0;
+
+    for (int i = 0; i < n - 1; i++) {
+        int minIndex = i;
+
+        // Find index of minimum element
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[minIndex]) {
+                minIndex = j;
+            }
+        }
+
+        // Swap only if needed
+        if (minIndex != i) {
+            swap(arr[i], arr[minIndex]);
+            swaps++;
+        }
+    }
+
+    // Each swap costs 3 units of energy
+    return swaps * 3;
+}
+
+
+
+Q3. Energy Required in Bubble Sort
+
+A shopkeeper has N products kept on his shelf, each assigned a unique rank based on annual sales. He wants to sort them in increasing order of rank. Since the products are heavy, he needs to determine how much energy will be required to sort them using Bubble Sort.
+
+Assume that swapping any two products requires 5 units of energy.
+
+Given an array, denoting the current order and rank of N products. Your task is to find how much energy will be required to sort them using Bubble Sort.
+
+Input Format:
+
+First line of each input will contain an integer T = number of test cases. 
+Each test case will contain two lines:
+First line will contain a number N = no. of products on the shelf.
+Next line will contain N space separated numbers, denoting the rank of each product.
+
+Output Format:
+
+For each test case, print on a new line, the energy required to sort the products in increasing order using Bubble sort.
+
+Constraints:
+
+1 <= T <= 10
+1 <= N <= 50
+1 <= ranks[i] <= 1000
+
+Sample Input
+3    // No. of test cases
+5
+2 1 4 6 3
+10
+123 21 34 45 25 675 23 44 55 900
+1
+23
+
+Sample Output
+15
+80
+0
+
+Explanation
+
+Test Case 1: 
+ranks[] = {2, 1, 4, 6, 3}
+In the first iteration of Bubble sort: (2, 1) and (6, 3) will be swapped.
+Now the array will become = {1, 2, 4, 3, 6}
+In the second iteration: (4, 3) will be swapped, and the array will get sorted.
+Therefore, the total energy required is (3 * 5) = 15 units
+
+
+Solution Approach:
+------------------
+
+
+--You are given an array representing product ranks.
+--You must sort the array using Bubble Sort and calculate the total energy consumed.
+
+--Each swap operation costs 5 units of energy
+
+--Only adjacent swaps are allowed (Bubble Sort rule)
+
+Example:
+
+Array: 2 1 4 6 3
+
+
+Bubble Sort Steps:
+
+Iteration 1:
+
+(2,1) → swap
+
+(4,6) → no swap
+
+(6,3) → swap
+
+Array becomes:
+
+1 2 4 3 6
+
+Swap count : 2
+
+Iteration 2:
+
+(4,3) → swap
+
+Array becomes:
+
+1 2 3 4 6
+
+Swap count: 1
+
+Total swap: 2+1= 3
+
+Energy : 3*5 = 15
+
+
+
+// Function to calculate energy required using Bubble Sort
+int energyRequiredBubbleSort(int arr[], int n)
+
+
+
+
+Approach step by step:
+---------------------
+
+1. Use Bubble Sort
+
+2. Compare adjacent elements
+
+3. If arr[j] > arr[j+1]:
+
+--Swap them
+
+--Increase swap count
+
+4. Final energy = swapCount × 5
+
+
+code:
+
+
+int energyRequiredBubbleSort(int arr[], int n) {
+    int swaps = 0;
+
+    for (int i = 0; i < n - 1; i++) {
+        bool swapped = false;
+
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                swap(arr[j], arr[j + 1]);
+                swaps++;
+                swapped = true;
+            }
+        }
+
+        // If no swaps happened, array is already sorted
+        if (!swapped)
+            break;
+    }
+
+    // Each swap costs 5 units of energy
+    return swaps * 5;
+}
+
+
+
+
+Q4.  Forest Research
+
+
+There are N trees of various species present in the forest. Each species is assigned a unique positive number, and all the trees belonging to a particular species are represented by that same number. Now, a scientist is trying to analyze the pattern in which the trees are grown in that forest. He found out that for all the species in the forest, an even number of trees were available except two species for which odd number of trees were there.
+
+Given an array containing N elements, where each element denotes a tree in the forest. Find the two species with the odd number of trees, and print them in the ascending order.
+
+For Example: arr[] = {4, 2, 2, 3, 1, 1, 4, 4, 1, 1}
+
+In this given forest, the species with number 3 and 4 are having odd number of trees. Therefore, the answer will be 3 4.
+
+Input:
+
+The first line contains a number N, denoting the total number of trees in the forest.
+The second line contains N space separated integers, each representing a tree.
+
+Output:
+
+Print the two species with the odd number of trees, separated by space in ascending order.
+
+Constraints:
+
+1 <= N < 10^5
+1 <= arr[i] <= 10^7
+
+Sample Input:
+4        // N
+3 1 2 1  // arr[]
+
+Sample Output:
+2 3
+
+Explanation:
+
+1 is occurring two times, whereas 2 and 3 occurs only once.
+
+
+Solution Approach:
+------------------
+
+--You are given an array of size N representing tree species in a forest.
+
+--All species occur an even number of times except exactly two species, which occur an odd number of times.
+
+Your task is to:
+
+--Find those two species
+
+--Print them in ascending order
+
+Example1:
+
+arr = {4, 2, 2, 3, 1, 1, 4, 4, 1, 1}
+
+
+Count:
+
+1 → 4 times (even)
+2 → 2 times (even)
+3 → 1 time (odd)
+4 → 3 times (odd)
+
+Odd species = 3 and 4
+
+Output: 3 4
+
+
+Example2:
+
+arr = {3, 1, 2, 1}
+
+Count:
+
+1 → 2 times (even)
+2 → 1 time (odd)
+3 → 1 time (odd)
+
+Output: 2 3
+
+
+// Function to find two odd occurring species without XOR
+void findOddSpecies(int arr[], int n)
+
+
+
+Approach step-by-step:
+-----------------------
+
+1. Create a map to store frequency of each species
+
+2. Traverse the array and update counts
+
+3. Traverse the map and collect species with odd frequency
+
+4. Sort the two odd species
+
+5. Print them
+
+
+
+code:
+
+
+void findOddSpecies(int arr[], int n) {
+    map<int, int> freq;
+
+    // Step 1: Count frequency of each species
+    for (int i = 0; i < n; i++) {
+        freq[arr[i]]++;
+    }
+
+    int first = -1, second = -1;
+
+    // Step 2: Find species with odd count
+    for (auto it : freq) {
+        if (it.second % 2 != 0) {
+            if (first == -1)
+                first = it.first;
+            else
+                second = it.first;
+        }
+    }
+
+    // Step 3: Print in ascending order
+    if (first < second)
+        cout << first << " " << second;
+    else
+        cout << second << " " << first;
+}
+
+
+
+
+Q5.  Kth distinct element
+
+A security operations center (SOC) uses an automated Server Log Anomaly Detector to flag unique or rare events in a stream of log entries. The log entries are processed in the order they arrive (left to right in the array).
+
+The system is configured to search for a specific, rare type of event: an event that has occurred exactly once in the entire batch of logs—what is called a "distinct element."
+
+The security analyst needs to find the Kth distinct event in the order of appearance. This helps them quickly locate a pattern of rare activity after the system has already identified K−1 other single-occurrence events. If the total number of single-occurrence events is less than K, it signifies that the rare activity threshold hasn't been met, and the system reports 0.
+
+Example: arr[] = {6, 11, 4, 11, 9, 4}, K = 2
+
+The only distinct elements in the array are 6 and 9.
+
+6 appears first so it the 1st distinct element, and 9 appears second so it the 2st distinct element in the array. Hence, for K=2 the answer is 9.
+
+Input Format:
+
+First line of input contains T = number of test cases.
+Each test case contains three lines:
+  First Line will contain an integer N, denoting the size of the array.
+  Second line contains N integers separated by space, denoting the array elements.
+  Third line contains an integer representing K.
+
+Constraints:
+
+1 <= T <= 10
+1 <= N <= 10^5
+1 <= arr[i] <= 10^5
+1 <= K <= N
+
+Output Format:
+
+Print the Kth distinct element present in the array.
+
+Sample Input 1
+3  // Test Cases
+6             // N (testcase 1)
+6 11 4 11 9 4 // arr[]
+2             // K  
+5             // N (testcase 2)
+7 6 7 3 6     // arr[]
+1             // K
+6             // N (testcase 3)
+8 5 3 5 5 5   // arr[]
+4             // K
+
+Sample Output
+9
+3
+0
+
+Explanation
+
+Testcase 1:
+9 is the 2nd distinct element present in the array from left to right
+
+Testcase 2: 
+3 is the first distinct element present in the array from left to right
+
+Testcase 3:
+Only 2 distinct elements are present in the array, i.e., 8 and 3
+
+Since there are less than 4 distinct elements, therefore the answer is 0
+
+
+
+Solution Approach:
+------------------
+
+
+--You are given an array of integers.
+
+--A distinct element is one that appears exactly once in the array.
+
+--Your task is to find the Kth distinct element, considering the order of appearance (left to right).
+
+--If fewer than K distinct elements exist, return 0.
+
+Example:
+
+Input: 6 11 4 11 9 4 
+K = 2
+
+Output: 9
+
+
+// Function to find Kth distinct element
+int kthDistinctElement(int arr[], int n, int k)
+
+
+
+
+
+Approach step by step:
+----------------------
+
+
+1. Count frequency of each element using a map
+
+2. Traverse the array again from left to right
+
+3. Whenever you find an element with frequency = 1:
+
+--Increase distinct count
+
+4. When distinct count becomes K, return that element
+
+5. If traversal ends and count < K → return 0
+
+
+
+code:
+
+int kthDistinctElement(int arr[], int n, int k) {
+    unordered_map<int, int> freq;
+
+    // Step 1: Count frequency of each element
+    for (int i = 0; i < n; i++) {
+        freq[arr[i]]++;
+    }
+
+    // Step 2: Traverse array to find Kth distinct element
+    int count = 0;
+    for (int i = 0; i < n; i++) {
+        if (freq[arr[i]] == 1) {
+            count++;
+            if (count == k) {
+                return arr[i];
+            }
+        }
+    }
+
+    // If less than K distinct elements exist
+    return 0;
+}
+
+
+
+
+
+Q6.  Find the maximum sum of non adjacent numbers
+
+Maximum Sum of Non-Adjacent Numbers:
+
+Given a list of integers, write a program to determine the largest possible sum that can be generated by adding a subset of these numbers.
+
+The Constraint:
+
+You are not allowed to pick two numbers that are adjacent (next to each other) in the original list.
+
+Examples:
+
+1. Input: [2, 4, 6, 2, 5]
+
+Possible valid subsets: (2, 6, 5), (4, 2), (2, 2), etc.
+
+The maximum sum is 13 (derived from 2 + 6 + 5).
+
+2. Input: [5, 1, 1, 5]
+
+The maximum sum is 10 (derived from 5 + 5). Note that we skip the two 1s in the middle.
+
+Input Format
+
+The first line contains a single integer N, representing the number of elements in the list.
+The second line contains N integers separated by spaces, representing the elements of the list.
+
+Output Format
+
+Print a single integer representing the maximum sum of non-adjacent elements.
+
+Sample Input
+5
+2 4 6 2 5 
+
+Sample Output
+13
+
+
+
+Solution Approach:
+------------------
+
+
+--You are given an array of integers.
+
+--Your task is to find the maximum possible sum such that no two selected numbers are adjacent in the array.
+
+
+Example:
+
+Input: [2, 4, 6, 2, 5]
+
+
+Valid selections (non-adjacent):
+
+(2, 6, 5) → sum = 13
+
+(4, 2) → sum = 6
+
+(2, 2) → sum = 4
+
+Maximum sum = 13
+
+Output: 13
+
+Example2:
+
+Input: [5, 1, 1, 5]
+
+
+Valid selection:
+
+(5, 5) → sum = 10
+
+Output: 10
+
+
+
+// Beginner-friendly optimized solution
+int maxNonAdjacentSum(int arr[], int n)
+
+
+
+
+Step by step approach:
+----------------------
+
+Step1: rule
+
+--You are given a list of numbers.
+--You can choose numbers in such a way that no two chosen numbers are next to each other.
+
+
+Step 2: Start from the left
+
+--We process the array from left to right and keep track of the best sum we can make so far.
+
+
+Step 3: Handle small cases
+
+--If there are no numbers, the answer is 0
+
+--If there is only one number, the answer is that number itself
+
+
+Step 4: Initialize two values
+
+	prevPrev → the best sum using numbers up to two positions before
+
+	prev → the best sum using numbers up to the previous position
+
+For the first two numbers:
+
+	prevPrev = first number
+
+	prev = maximum of first and second number
+
+
+Step 5: Process remaining numbers one by one
+
+For each new number, you have two choices:
+
+1. Take the current number
+
+	Add it to prevPrev
+
+	This ensures we are not taking adjacent numbers
+
+2. Skip the current number
+
+	Keep the value of prev
+
+Choose the larger value of these two options.
+
+
+
+Step 6: Update values
+
+--Move prev into prevPrev
+
+--Store the new maximum sum in prev
+
+Step 7: Final result
+
+--After processing all numbers, the value stored in prev is the maximum possible sum of non-adjacent numbers.
+
+
+Example:
+
+
+arr = [2, 4, 6, 2, 5]
+
+
+prevPrev = arr[i];// 2 // best sum till the first element
+
+prev = max(2,4) = 4 // best sum among the first 2 elements, because we can't take both at once
+
+
+Now:
+
+i = 2 (value = 6)
+
+	take = 2 + 6 = 8
+	skip = 4
+
+	currentBest = 8
+
+update:
+
+	prevPrev = 4
+	prev = 8
+
+
+i = 3 (value = 2)
+
+	take = 4 + 2 = 6
+	skip = 8
+	currentBest = 8
+
+Update:
+
+
+	prevPrev = 8
+	prev = 8
+
+
+i = 4 (value = 5)
+
+	take = 8 + 5 = 13
+	skip = 8
+	currentBest = 13
+
+prev = 13
+
+Final answer: 13
+
+
+
+
+code:
+
+int maxNonAdjacentSum(int arr[], int n) {
+    if (n == 0) return 0;
+    if (n == 1) return arr[0];
+
+    int prevPrev = arr[0];                  // first number
+    int prev = max(arr[0], arr[1]);         // best of first two
+
+    for (int i = 2; i < n; i++) {
+        int take = prevPrev + arr[i];   // take current
+        int skip = prev;                // skip current
+
+        int currentBest = max(take, skip);
+
+        prevPrev = prev;
+        prev = currentBest;
+    }
+
+    return prev;
+}
+
+
+
+TC: O(N)
+SC: O(1)
+
+
+
+
+
+
+Q7.  Swap Two Nodes of Doubly Linked List
+
+Given a pointer to the head node of a doubly linked list and two keys, swap these two nodes of the list (if these nodes exists in the list).
+
+Note: Do not read any input from stdin/console. Each test case calls the swapNodes method individually and passes it the head of a list.
+
+Input
+The function swapNodes() takes the head node of a linked list and two data elements as parameters and swap these two nodes.
+
+First line contains an integer denoting number of test cases.
+
+Each test case has 4 lines. 
+  First line contains the number of elements in list.
+  Second line contains the list elements separated by space.
+  Third and Fourth lines contains the node numbers to be swapped.
+
+Output
+Print the integer data for each element of the modified linked list separated by space.
+
+Sample Input
+1
+6
+1 2 3 4 5 6
+3
+5
+
+Sample Output
+1 2 5 4 3 6
+
+
+Solution Approach:
+------------------
+
+--Given the head of a doubly linked list and two keys x and y,
+
+--swap the nodes containing x and y (not just their data).
+
+--If any node is not present, do nothing
+
+--Return the modified list
+
+
+Example:
+
+List: 1 2 3 4 5 6
+
+Swap nodes: 3 and 5
+
+
+
+Before Swap:
+
+1 <-> 2 <-> 3 <-> 4 <-> 5 <-> 6
+
+
+After Swap:
+
+1 <-> 2 <-> 5 <-> 4 <-> 3 <-> 6
+
+
+Output:
+
+1 2 5 4 3 6
+
+
+
+Node* swapNodes(Node* head, int x, int y)
+
+hint: Always update 4 links (prev & next of both nodes)
+
+
+
+Step by step approach:
+----------------------
+
+1. If x == y → no swap needed
+
+2. Traverse the list to find:
+
+	nodeX (data = x)
+
+	nodeY (data = y)
+
+3. If either node not found → return head
+
+4. Update prev and next pointers of:
+
+	nodeX, nodeY
+
+	their previous and next nodes
+
+5. If swapping involves the head → update head
+
+6. Return updated head
+
+
+
+
+code:
+
+
+Node* swapNodes(Node* head, int x, int y) {
+
+    // If both keys are same, no need to swap
+    if (x == y)
+        return head;
+
+    Node* nodeX = NULL;
+    Node* nodeY = NULL;
+    Node* temp = head;
+
+    // Step 1: Find nodes with data x and y
+    while (temp != NULL) {
+        if (temp->data == x)
+            nodeX = temp;
+        else if (temp->data == y)
+            nodeY = temp;
+
+        temp = temp->next;
+    }
+
+    // If either node not found, return original list
+    if (nodeX == NULL || nodeY == NULL)
+        return head;
+
+    // Step 2: Update previous pointers
+    if (nodeX->prev != NULL)
+        nodeX->prev->next = nodeY;
+    else
+        head = nodeY;   // nodeX was head
+
+    if (nodeY->prev != NULL)
+        nodeY->prev->next = nodeX;
+    else
+        head = nodeX;   // nodeY was head
+
+    // Step 3: Update next pointers
+    if (nodeX->next != NULL)
+        nodeX->next->prev = nodeY;
+
+    if (nodeY->next != NULL)
+        nodeY->next->prev = nodeX;
+
+    // Step 4: Swap prev pointers
+    Node* tempPrev = nodeX->prev;
+    nodeX->prev = nodeY->prev;
+    nodeY->prev = tempPrev;
+
+    // Step 5: Swap next pointers
+    Node* tempNext = nodeX->next;
+    nodeX->next = nodeY->next;
+    nodeY->next = tempNext;
+
+    return head;
+}
+
+
+
+
+
+Q8.  Find the Sorted Union of two lists
+
+Given two linked lists, find the sorted union of two and return the union list.
+
+The functions findUnion() takes the head nodes of two linked list as parameter and return the head of new list i.e. the list of all elements which are in list1 or in list2.
+
+Note: Do not read any input from stdin/console. Each test case calls the findUnion method individually and passes it the head of a list.
+
+Input Format:
+
+First line contains number of test cases T.
+Second line contains the numer of nodes in first list
+Next n lines will contain the nodes of first list
+The next line after the nodes of the first will contain the number of nodes in the second list
+Next m lines will contain the nodes of second list 
+
+Output Format:
+
+Print the integer data for each element of the sorted union linked list separated by space.
+
+Sample Input
+1//No. of testcases
+6//No. nodes in first linkedlist
+7
+1
+2
+3
+4
+5
+4//No. nodes in second linkedlist
+2
+4
+6
+8
+
+Sample Output
+1 2 3 4 5 6 7 8
+
+Explanation
+
+The output for the given lists is 1 2 3 4 5 6 7 8 
+All elements from both linked lists are considered for the union.
+Duplicate elements - like 2 and 4 are included only once.
+The final list is sorted in increasing order.
+
+
+Solution Approach:
+------------------
+
+
+
+Given the heads of two linked lists, create and return a new linked list that contains the sorted union of elements from both lists.
+
+--Include all unique elements from both lists
+
+--Remove duplicates
+
+--Sort the final list in ascending order
+
+
+
+Example:
+
+List1:
+
+7 → 1 → 2 → 3 → 4 → 5
+
+
+List2:
+
+2 → 4 → 6 → 8
+
+
+Union (duplicate removed):
+
+1 2 3 4 5 6 7 8
+
+
+
+Node* findUnion(Node* head1, Node* head2)
+
+
+
+Step by step approach:
+--------------------
+
+1. Create a set to store unique elements because:
+	
+	--set automatically removes duplicates
+
+	--set automatically keeps elements sorted
+
+2. Traverse first linked list and insert elements into the set
+
+3. Traverse second linked list and insert elements into the same set
+
+4. Since a set stores:
+
+	only unique values
+
+	in sorted order
+
+5. Create a new linked list from the set values
+
+6. Return the head of the new list
+
+
+
+code:
+
+
+
+Node* findUnion(Node* head1, Node* head2) {
+
+    // Step 1: Store unique elements in set
+    set<int> s;
+
+    Node* temp = head1;
+    while (temp != NULL) {
+        s.insert(temp->data);
+        temp = temp->next;
+    }
+
+    temp = head2;
+    while (temp != NULL) {
+        s.insert(temp->data);
+        temp = temp->next;
+    }
+
+    // Step 2: Create new sorted linked list from set
+    Node* newHead = NULL;
+    Node* tail = NULL;
+
+    for (int val : s) {
+        Node* newNode = new Node(val);
+
+        if (newHead == NULL) {
+            newHead = newNode;
+            tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+
+    return newHead;
+}
+
+
+
+
+
+
+
+TC: O((N+M) log (N+M))
+
+SC: O(N+M)
+
+
+
+
+
+
+Q9.  Find the sorted Intersection of two lists
+
+Given two linked lists (not necessarily sorted), find their intersection and return a new linked list containing all values that appear in both lists.
+
+The intersection list must contain unique values only, sorted in ascending order.
+
+Complete the function findIntersection() which takes the head nodes of the two linked lists as parameters and returns the head of the new intersection list.
+
+Input Format
+
+First line contains number of test cases T.
+Each test case has 4 lines:
+Number of nodes in 1st list
+Node elements of 1st list
+Number of nodes in 2nd list
+Node elements of 2nd list
+
+Output Format
+
+Print the elements of the sorted intersection list separated by a space.
+If no intersection exists, print nothing.
+
+Sample Input
+1
+6
+7 1 2 3 4 5
+4
+2 4 6 8
+
+Sample Output
+2 4
+
+
+
+Solution Approach:
+------------------
+
+--Given two linked lists (not necessarily sorted), find their intersection and return a new linked list that:
+
+--Contains only elements present in both lists
+
+--Has unique values
+
+--Is sorted in ascending order
+
+
+
+Example:
+
+List1:
+
+7 → 1 → 2 → 3 → 4 → 5
+
+
+List2:
+
+2 → 4 → 6 → 8
+
+
+Common elements:
+
+2, 4
+
+
+Output: Sorted intersection list:
+
+2 4
+
+
+
+Approach Step-by-step:
+--------------------
+
+1. Create a set to store elements of the first list
+
+2. Traverse the second list:
+
+--If an element exists in the first set → it is common
+
+--Store common elements in another set (to keep them unique & sorted)
+
+3. Create a new linked list from the intersection set
+
+4. Return the head of the new list
+
+
+
+code:
+
+Node* findIntersection(Node* head1, Node* head2) {
+
+    set<int> s1, intersection;
+
+    // Step 1: Store elements of first list
+    Node* temp = head1;
+    while (temp != NULL) {
+        s1.insert(temp->data);
+        temp = temp->next;
+    }
+
+    // Step 2: Check elements of second list
+    temp = head2;
+    while (temp != NULL) {
+        if (s1.find(temp->data) != s1.end()) {
+            intersection.insert(temp->data);
+        }
+        temp = temp->next;
+    }
+
+    // Step 3: Create new linked list from intersection set
+    Node* newHead = NULL;
+    Node* tail = NULL;
+
+    for (int val : intersection) {
+        Node* newNode = new Node(val);
+
+        if (newHead == NULL) {
+            newHead = newNode;
+            tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+
+    return newHead;
+}
+
+
+
+TC: O((N+M) log (N+M))
+SC: O(N+M)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
