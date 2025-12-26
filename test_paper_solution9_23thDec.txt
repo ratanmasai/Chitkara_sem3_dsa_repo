@@ -1,0 +1,956 @@
+Q1.  Binary to Decimal Conversion
+
+Ajit is working in IT company and he is getting binary values from computers, as a human he is not able understand binary values, so help Ajit to understand binary values by converting it intodecimal values.
+
+1111 in binary form is represented as 15 in decimal.
+
+Consider the binary number from the last.
+
+
+
+For the above mentioned example,
+1 * 2^0 = 1
+1 * 2^1 = 2
+1 * 2^2 = 4
+1 * 2^3 = 6
+
+Decimal number = 1 + 2 + 4 + 6 = 15,
+
+
+Ajit needs a program which can convert a binary number into a decimal number. Implement this using a function pointer.
+
+Input Explanation
+Input consists of single integer value ( in Binary Format)
+
+Output Explanation
+Output consists of single integer value
+
+Sample input 1 :
+101011
+
+Sample Output 1:
+43
+
+Sample input 2 :
+110110
+
+Sample Output 2:
+54
+
+
+int binaryToDecimal(int binary)
+
+
+
+Solution Approach:
+------------------
+
+What is Binary?
+
+--Binary numbers contain only 0 and 1
+
+--Each digit has a power of 2, starting from the rightmost digit
+
+Example:
+
+101011
+
+
+1 × 2^0 = 1
+1 × 2^1 = 2
+0 × 2^2 = 0
+1 × 2^3 = 8
+0 × 2^4 = 0
+1 × 2^5 = 32
+
+Add them:
+
+1 + 2 + 0 + 8 + 0 + 32 = 43
+
+
+
+IDEA:
+
+1. Read the binary number as an integer
+
+2. Extract digits from right to left
+
+3. Multiply each digit by increasing powers of 2
+
+4. Add to result
+
+
+code:
+
+int binaryToDecimal(int binary) {
+
+    int decimal = 0;
+    int base = 1;   // 2^0
+
+    while (binary > 0) {
+        int lastDigit = binary % 10;
+        decimal += lastDigit * base;
+        base *= 2;
+        binary /= 10;
+    }
+
+    return decimal;
+}
+
+
+
+Q2.  Reverse elements of an array
+
+In a busy school cafeteria, a worker stacks n lunch trays one by one on a spring-loaded dispenser. Each tray has a specific identification number printed on it.Because it is a single stack, the trays are removed from the top. This means the very last tray the worker placed on the stack will be the first one a student picks up. The first tray the worker placed will be at the very bottom and will be picked up last.
+
+Your task is to take the list of tray numbers in the order they were stacked and print them in the order they will be picked up by the students.
+
+Input Format:
+The next n lines contain one integer each — the elements of the array in order.
+
+Output Format :
+Print the elements of the array after reversing, each on a new line.
+
+Sample Input:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+Sample Output:
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+
+
+Solution Approach:
+-----------------
+
+void reverseArray(int arr[], int n)
+
+
+1. Read all numbers into an array
+
+2. Reverse the array
+
+3. Print the reversed array (one number per line)
+
+
+
+code:
+
+void reverseArray(int arr[], int n) {
+
+    int start = 0;
+    int end = n - 1;
+
+    while (start < end) {
+        // swap
+        int temp = arr[start];
+        arr[start] = arr[end];
+        arr[end] = temp;
+
+        start++;
+        end--;
+    }
+}
+
+
+Q3.  Who Failed in Most Subjects
+
+In a school, exam results are declared in a unique manner. Instead of listing who passed or failed for each subject, only a single list of failed student names is published. A student’s name appears once for every subject they failed. This list includes multiple subjects, and names may repeat.
+
+You are to determine how many subjects each student failed in, and print name of student who has failed in most number of subjects. If more than one student has failed in Most subject print the name which comes first in the original list.Complete the function:void printMostFailedStudent(int n, vector<string>& names).Do not read any input from stdin or print to stdout in the function body.
+
+Input Format :
+You are given an integer n followed by n strings. 
+Each string represents a student who failed a subject.
+
+Output Format :
+Print the name of student failed in maximum number of subjects.
+
+Constraints:
+1 ≤ n ≤ 10⁵
+Each name contains only lowercase letters (a–z)
+Maximum length of each name ≤ 64
+
+Sample Input :
+4
+mayank
+parul
+hemant
+mayank
+
+Output:
+mayank
+
+
+void printMostFailedStudent(int n, vector<string>& names)
+
+
+
+
+Solution Approach:
+------------------
+
+You are given a list of student names
+
+Each name appears once for every subject the student failed
+
+So:
+
+--If a name appears 3 times, that student failed 3 subjects
+
+
+Task
+
+1. Count how many times each student name appears
+
+2. Find the student who failed in the maximum number of subjects
+
+3. If more than one student has the same maximum failures:
+
+--Print the name that appears first in the original list
+
+
+Idea: 
+
+--Use a map to count frequency
+
+--Traverse the list again to preserve original order
+
+--First student with maximum frequency is the answer
+
+
+
+code:
+
+void printMostFailedStudent(int n, vector<string>& names) {
+
+    unordered_map<string, int> freq;
+
+    // Step 1: Count frequency of each student
+    for (int i = 0; i < n; i++) {
+        freq[names[i]]++;
+    }
+
+    // Step 2: Find maximum failure count
+    int maxFail = 0;
+    for (auto it : freq) {
+        maxFail = max(maxFail, it.second);
+    }
+
+    // Step 3: Find first student in original list
+    // who has max failure count
+    for (int i = 0; i < n; i++) {
+        if (freq[names[i]] == maxFail) {
+            cout << names[i];
+            return;
+        }
+    }
+}
+
+
+
+Q4.  Convert infix expression to postfix expression
+
+Given an infix expression, convert the infix to postfix expression.
+
+Input Format:
+The first line of input contains an integer T denoting the number of test cases.
+The next T line contains an infix expression. An expression in infix form will consist of all characters and 
+following five operators: +, -, *, /, ^ along with two braces (, ).
+
+The operators have the following properties:
+
+a. Expressions within brackets are always evaluated first.
+
+b. Precedence of Power (^) is highest, then Multiply(*) and Division (/), at last Addition (+) and Subtraction (-) have lowest precedence.
+
+c. All operators have left to right associativity.
+
+Output Format:
+The postfix expression equivalents to given infix expression. Complete the function given below.
+
+Sample Input
+2
+A*(B+C)/D
+(A-(B+C))*D
+
+Sample Output
+ABC+*D/
+ABC+-D*
+
+
+string infixToPostfix(string infix) 
+
+
+
+Solution Approach:
+------------------
+
+Infix:
+
+A + B
+A * (B + C)
+
+
+Postfix:
+
+AB+
+ABC+*
+
+
+code:
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int precedence(char op) {
+    if (op == '^') return 3;
+    if (op == '*' || op == '/') return 2;
+    if (op == '+' || op == '-') return 1;
+    return 0;
+}
+
+string infixToPostfix(string infix) {
+
+    stack<char> st;
+    string postfix = "";
+
+    for (char ch : infix) {
+
+        // Operand
+        if (isalnum(ch)) {
+            postfix += ch;
+        }
+
+        // Opening bracket
+        else if (ch == '(') {
+            st.push(ch);
+        }
+
+        // Closing bracket
+        else if (ch == ')') {
+            while (!st.empty() && st.top() != '(') {
+                postfix += st.top();
+                st.pop();
+            }
+            st.pop(); // remove '('
+        }
+
+        // Operator
+        else {
+            while (!st.empty() &&
+                   precedence(st.top()) >= precedence(ch)) {
+                postfix += st.top();
+                st.pop();
+            }
+            st.push(ch);
+        }
+    }
+
+    // Pop remaining operators
+    while (!st.empty()) {
+        postfix += st.top();
+        st.pop();
+    }
+
+    return postfix;
+}
+
+
+
+
+Q5.  DELETE IN CIRCULAR LINKED LIST
+
+Imagine a group of colleagues sitting around a circular conference table for a meeting. Because the table is circular, the last person is sitting right next to the first person, forming a continuous loop.
+
+The meeting organizer needs to manage the group:
+
+1. Delete from Beginning: The person currently leading the meeting (the "Head") has to leave for another call. The person sitting to their right becomes the new leader.
+
+2. Delete from End: The person who was supposed to speak last (the one sitting just before the leader) finishes early and leaves the circle.
+
+Your task is to update the circular seating arrangement after these people leave.
+
+Input:
+
+The functions deleteBeg() & deleteEnd() takes the head node of a linked list as parameters delete the specified node and return the new head.
+
+Note: Do not read any input from stdin/console. Each test case calls the deleteBeg & deleteEnd method individually and passes it the head of a list.
+
+Output
+Print the integer data for each element of the linked list separated by space.
+
+Sample Input:
+5
+10 20 30 40 50  
+
+Sample Output:
+20 30 40 50 
+20 30 40
+
+
+Solution Approach:
+------------------
+
+
+In a circular linked list:
+
+--The last node points back to the head
+
+--There is no NULL at the end
+
+--Traversal stops when we reach the head again
+
+Example:
+
+10 → 20 → 30 → 40 → 50
+ ↑__________________|
+
+
+
+code:
+
+
+class Node {
+
+private:
+
+    int data;
+    Node* next;
+
+public:
+
+	Node(int val){
+		data = val;
+		next = NULL;
+	}
+
+};
+
+
+Node* deleteBeg(Node* head) {
+
+    // Empty list
+    if (head == NULL)
+        return NULL;
+
+    // Only one node
+    if (head->next == head) {
+        delete head;
+        return NULL;
+    }
+
+    // Find last node
+    Node* last = head;
+    while (last->next != head) {
+        last = last->next;
+    }
+
+    // Move head
+    Node* temp = head;
+    head = head->next;
+    last->next = head;
+
+    delete temp;
+    return head;
+}
+
+
+Node* deleteEnd(Node* head) {
+
+    // Empty list
+    if (head == NULL)
+        return NULL;
+
+    // Only one node
+    if (head->next == head) {
+        delete head;
+        return NULL;
+    }
+
+    Node* prev = NULL;
+    Node* curr = head;
+
+    // Traverse to last node
+    while (curr->next != head) {
+        prev = curr;
+        curr = curr->next;
+    }
+
+    // curr is last, prev is second last
+    prev->next = head;
+    delete curr;
+
+    return head;
+}
+
+
+Q6.  Insert in a sorted circular linked list
+
+A circular linked list is a linked list in which the last node points back to the head node instead of pointing to NULL.
+
+A circular linked list is said to be sorted in non-decreasing (ascending) order if the values of the nodes increase or remain the same while traversing the list.
+
+You are given a pointer to the head node of a sorted circular linked list. Your task is to insert a new element into the list such that the sorted order is preserved, and then return the updated head of the list.
+
+If the list is empty, create a new node and make it point to itself.
+
+Function Description
+
+Complete the function insertSorted() which:
+
+--Takes the head of a sorted circular linked list and an integer value to be inserted
+--Inserts the value at the appropriate position
+--Maintains the sorted (ascending) order of the list
+--Returns the updated head of the circular linked list
+
+Input Format
+The first line contains an integer T, the number of test cases.
+For each test case:
+  The first line contains an integer N, the number of nodes in the circular linked list.
+  The second line contains N space-separated integers representing the elements of the circular linked list in ascending order.
+  The third line contains an integer X, the value to be inserted.
+
+Output Format
+For each test case, print the elements of the updated circular linked list in ascending order, starting from the smallest element, with each element separated by a space.
+
+Sample Input
+1
+5
+1 2 4 5 7
+6
+
+Sample Output
+1 2 4 5 6 7
+
+Explanation
+The given circular linked list is:
+1 → 2 → 4 → 5 → 7 → (back to 1)
+
+After inserting 6, the list becomes:
+
+1 → 2 → 4 → 5 → 6 → 7 → (back to 1)
+
+Printing the list starting from the smallest element gives:
+1 2 4 5 6 7
+
+
+
+Solution Approach:
+------------------
+
+You are given:
+
+head → pointer to a sorted circular linked list
+
+x → value to insert
+
+You must:
+
+--Insert x at the correct position
+
+--Keep the list sorted
+
+--Return the updated head
+
+
+
+Node* insertSorted(Node* head, int x)
+
+
+
+Case 1: Empty List
+
+--Create a new node
+
+--Make it point to itself
+
+--Return it as head
+
+Case 2: Insert Before Head (smallest value)
+
+If:
+
+x <= head->data
+
+
+Steps:
+
+--Find the last node
+
+--Insert new node before head
+
+--Update last node’s next
+
+--New node becomes new head
+
+
+Case 3: Insert Somewhere in the Middle / End
+
+Traverse the list
+
+Find position where:
+
+	current->data <= x <= current->next->data
+
+
+Insert node in between
+
+
+
+code:
+
+
+class Node {
+
+private:
+
+    int data;
+    Node* next;
+
+public:
+
+	Node(int val){
+		data = val;
+		next = NULL;
+	}
+
+};
+
+
+Node* insertSorted(Node* head, int x) {
+
+    Node* newNode = new Node();
+    newNode->data = x;
+
+    // Case 1: Empty list
+    if (head == NULL) {
+        newNode->next = newNode;
+        return newNode;
+    }
+
+    Node* curr = head;
+
+    // Case 2: Insert before head (smallest element)
+    if (x <= head->data) {
+
+        // Find last node
+        while (curr->next != head) {
+            curr = curr->next;
+        }
+
+        curr->next = newNode;
+        newNode->next = head;
+        return newNode;   // new node becomes head
+    }
+
+    // Case 3: Insert in middle or end
+    while (curr->next != head && curr->next->data < x) {
+        curr = curr->next;
+    }
+
+    newNode->next = curr->next;
+    curr->next = newNode;
+
+    return head;
+}
+
+
+
+Q7.  Reverse a given queue
+
+Imagine a group of movie fans standing in a queue at a cinema box office. Suddenly, the manager announces a "Reverse Day" promotion: the person who joined the line last will be served first, and the person who joined first will be served last.
+
+Your task is to take the list of people in the queue (represented by their ID numbers) and reverse their order so the cinema staff knows the new sequence in which to serve them.
+
+Input Format:
+The first line of input will contains an integer T denoting the no of test cases. 
+Then T test cases follow. 
+Each test case contains a number N followed by N number of elements in order in which they will be inserted in queue.
+
+Output Format
+For each test case, you have to reverse the queue in the array given. You are required to complete the methods given only.
+
+Constraints
+1 <= T <= 10
+1 <= N <= 100
+
+Sample Input
+2
+4
+1 2 3 4
+5
+10 20 30 50 40
+
+Sample Output
+4 3 2 1
+40 50 30 20 10
+
+
+void reverseQueue(queue<int> &q) 
+
+
+
+Solution Approach:
+------------------
+
+People are standing in a queue (FIFO – First In First Out)
+
+On “Reverse Day”:
+
+--The last person should come first
+
+--The first person should go last
+
+So we just need to reverse the queue.
+
+
+IDEA:
+
+A queue does not allow direct reverse access.
+To reverse it easily, we use a stack.
+
+Step 1
+
+--Remove all elements from queue
+
+--Push them into a stack
+
+Step 2
+
+--Pop elements from stack
+
+--Push them back into the queue
+
+Queue gets reversed automatically
+
+
+code:
+
+void reverseQueue(queue<int> &q) {
+
+    stack<int> st;
+
+    // Step 1: Move all elements from queue to stack
+    while (!q.empty()) {
+        st.push(q.front());
+        q.pop();
+    }
+
+    // Step 2: Move elements back from stack to queue
+    while (!st.empty()) {
+        q.push(st.top());
+        st.pop();
+    }
+}
+
+
+
+
+Q8.  Merge Student Rows
+
+
+A school has organized an award ceremony for the students who performed exceptionally well in their board examinations. Those students are lined up in two separate rows, and in each row they are standing in the descending order based on their marks. As the ceremony hall was a bit crowded, so teachers decided to merge the students into a single row. But after merging, they should be lined up in a sorted manner only (i.e. in the descending order based on their marks).
+
+Given two arrays, denoting the marks of the respective students in the two rows. Your task is to help teachers, and merge the two arrays to create one single sorted array.
+
+Complete the function mergeStudents() which takes two arrays, marks1 and marks2 as input and returns a new sorted array after merging them.
+
+Example :
+marks1 : {8, 6, 4}
+marks2 : {5, 2}
+
+Merged Array : {8, 6, 5, 4, 2}
+
+Input Format:
+
+First line contains an integer n, denoting the number of students in the first row.
+Second line contains n space separated integers, denoting the marks of first row students.
+Third line contains an integer m, denoting the number of students in the second row.
+Fourth line contains m space separated integers, denoting the marks of second row students.
+
+Output Format
+Print the elements of the merged array, separated by space.
+
+Constraints
+1 <= n, m <= 10^9
+1 <= marks1[i], marks2[i] <= 1000
+
+Sample Input
+4            // Size of 1st array
+6 3 2 1      // Elements of 1st array
+3     // Size of 2nd array
+7 5 4     // Elements of 2nd array
+
+Sample Output
+7 6 5 4 3 2 1
+
+
+
+vector<int> mergeStudents(vector<int>& marks1, vector<int>& marks2)
+
+
+
+
+Solution Approach:
+------------------
+
+--You have two rows of students
+
+--Each row is already sorted in descending order of marks
+
+--You need to merge them into one single row
+
+--The final row must also be in descending order
+
+So this is simply:
+
+--Merge two sorted arrays into one sorted array (descending)
+
+
+
+code:
+
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> mergeStudents(vector<int>& marks1, vector<int>& marks2) {
+
+    vector<int> result;
+    int i = 0, j = 0;
+
+    int n = marks1.size();
+    int m = marks2.size();
+
+    // Merge both arrays
+    while (i < n && j < m) {
+        if (marks1[i] >= marks2[j]) {
+            result.push_back(marks1[i]);
+            i++;
+        } else {
+            result.push_back(marks2[j]);
+            j++;
+        }
+    }
+
+    // Remaining elements of marks1
+    while (i < n) {
+        result.push_back(marks1[i]);
+        i++;
+    }
+
+    // Remaining elements of marks2
+    while (j < m) {
+        result.push_back(marks2[j]);
+        j++;
+    }
+
+    return result;
+}
+
+
+
+
+Q9.  Duplicate the Queue elements
+
+Write a function named doubleQueue() that accepts
+
+--a reference to a queue of integers as a parameter
+
+and replaces every element with two copies of itself.
+
+For example:
+
+if a queue named q stores {11, 12, 13}, the call of doubleQueue(q);
+should change it to store {11, 11, 12, 12, 13, 13}.
+
+Constraints: Do not use any auxiliary collections as storage.
+
+Sample Input:
+5 // Number of elements in queue q
+5 7 2 9 1 // Elements of queue
+
+Sample Output:
+5 5 7 7 2 2 9 9 1 1  // Elements of queue after applying doubleQueue
+
+
+void doubleQueue(queue<int>& q) 
+
+
+
+Solution Approach:
+------------------
+
+--Duplicating each element of a queue WITHOUT using any extra collection
+
+
+You are given a queue of integers.
+
+Your task:
+
+--Replace each element with two copies of itself
+
+--Maintain the same order
+
+--Do NOT use any auxiliary data structure (no stack, vector, array, another queue)
+
+
+
+Idea:
+
+We will use queue rotation.
+
+1. Store the original size of the queue
+
+2. Process only those original elements
+
+3. For each element:
+
+--Remove it
+
+--Push it twice at the back
+
+This works because a queue allows:
+
+pop() from front
+
+push() at back
+
+
+
+code:
+
+void doubleQueue(queue<int>& q) {
+
+    int originalSize = q.size();
+
+    for (int i = 0; i < originalSize; i++) {
+
+        int x = q.front();
+        q.pop();
+
+        // Push the element twice
+        q.push(x);
+        q.push(x);
+    }
+}
+
+
+
+

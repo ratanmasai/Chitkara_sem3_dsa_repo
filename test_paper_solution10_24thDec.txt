@@ -1,0 +1,1304 @@
+Q1. Total ways to complete the client order Clone
+
+A factory owner has 2 machines with different capacity. The first machine creates a single piece in one unit time, and the second machine creates two pieces in the same amount of time. But both cannot be run together, At a time only one machine can operate. Also, because the second machine consumes more power, it cannot be run consecutively twice in a row.
+
+The factory owner has got a client order to make N pieces, and now he wants your help to find out - how many different ways are there for him to complete this order.
+
+For Example: If N = 5, following are the 6 possible ways to complete the order:
+
+1 + 1 + 1 + 1 + 1
+1 + 1 + 1 + 2
+1 + 1 + 2 + 1
+1 + 2 + 1 + 1
+2 + 1 + 1 + 1
+2 + 1 + 2
+
+
+
+Input Format:
+
+First Line will contain an integer T, denoting the number of test cases.
+Each of next T lines will contain an integer N, denoting the number of pieces required to meet the order.
+
+Output Format:
+
+For each test cases, print the total number of ways to complete the order, in a new line.
+
+Constraints
+
+1 <= T <= 10
+1 <= N <= 50
+
+Sample Input
+2   // Test Cases
+4
+2
+
+Sample Output
+4
+2
+
+Solution Approach:
+------------------
+
+A factory has two machines:
+
+Machine-1
+
+--Produces 1 piece in one unit time
+
+--Can be used any number of times
+
+Machine-2
+
+--Produces 2 pieces in one unit time
+
+--Cannot be used two times in a row
+
+Only one machine can run at a time.
+
+
+--Given a number N, find how many different ways the factory owner can produce exactly N pieces by following the rules.
+
+
+Example: N = 5
+
+Valid ways to make 5 pieces:
+
+1 + 1 + 1 + 1 + 1
+1 + 1 + 1 + 2
+1 + 1 + 2 + 1
+1 + 2 + 1 + 1
+2 + 1 + 1 + 1
+2 + 1 + 2
+
+
+Total ways = 6
+
+Invalid example:
+2 + 2 + 1  (machine-2 used consecutively)
+
+
+Key Idea:
+
+--To count the number of ways to make N pieces, think only about the last step.
+
+Case-1: Last step produces 1 piece
+
+--Then before that, N-1 pieces were already made
+
+--Those N-1 pieces can be made in any valid way
+
+
+
+
+
+Case-2: Last step produces 2 pieces
+
+--Machine-2 cannot be used twice in a row
+
+--So before this step:
+
+	Last step must be 1
+
+	Remaining pieces = N-3
+
+
+
+
+N =1	
+Ways
+1
+
+Total: 1
+
+
+N=2
+Ways
+1+1 
+2 
+
+Total: 2
+
+N=3
+Ways
+1+1+1
+2+1
+1+2
+
+Total: 3
+
+So, the best values: 
+
+N	Ways
+1	1
+2	2
+3	3
+
+
+Now, If N= 4
+
+Last step 1:
+
+Ways to make remaining 3 pieces = 3
+
+1+1+1  +1
+1+2    +1
+2+1    +1		
+
+Last step 2:
+
+Ways to make remaining 2 pieces = 1
+
+1+1 +2
+
+becase 2+2 can not be used.
+
+Total: 3+1 = 4 Ways
+
+
+Now, If N = 5
+
+Last step 1:
+
+--Ways to make remaining 4 pieces = 4
+
+Last step 2:
+
+Ways to make 2 pieces (ending with 1) = 2 
+
+1+1  +1+2
+2    +1+2 
+
+Total = 4+2
+
+
+The problem is solved by considering the last machine used.
+
+--If the last step produces 1 piece, the remaining N-1 pieces can be formed in any valid way.
+--If the last step produces 2 pieces, the remaining N-3 pieces must end with 1.
+--Adding both gives the total number of ways.
+
+
+
+Simple Rule:
+
+Ways(N) = Ways(N-1) + Ways(N-3)
+
+
+5 = 4 + 2
+
+3 = 2 + 0
+
+2 = 1 + 0
+
+
+
+code:
+
+#include <iostream>
+using namespace std;
+
+int totalWays(int n) {
+
+    if (n == 1) return 1;
+    if (n == 2) return 2;
+    if (n == 3) return 3;
+
+    int w1 = 1;  // ways for n = 1
+    int w2 = 2;  // ways for n = 2
+    int w3 = 3;  // ways for n = 3
+    int current;
+
+    for (int i = 4; i <= n; i++) {
+        current = w3 + w1; // Ways(N) = Ways(N-1) + Ways(N-3)
+        w1 = w2;
+        w2 = w3;
+        w3 = current;
+    }
+
+    return current;
+}
+
+int main() {
+    int T, N;
+    cin >> T;
+
+    while (T--) {
+        cin >> N;
+        cout << totalWays(N) << endl;
+    }
+    return 0;
+}
+
+
+
+
+
+
+Q2.  Reverse the order of words of a string Clone
+
+Given a string of words, reverse the order of words in the string individually, not the whole string.
+
+Complete the function revWordsOrder(str) that accepts a string as parameter and reverses the order of words of string.
+
+Input
+
+The first line of input contains an integer T denoting the no of test cases . Then T test cases follow. Each test case contains the string str. 
+
+Output
+
+For each test case, print the resultant string in new lines.
+
+Sample Input
+2
+
+Code Quotient Loves Code
+Hello Coders
+
+Sample Output
+Code Loves Quotient Code
+Coders Hello
+
+
+Solution Approach:
+------------------
+
+
+--You are given a string containing multiple words separated by spaces.
+
+--Your task is to reverse the order of words, not the characters of the words.
+
+
+Example:
+
+Hello Coders
+
+
+Output:
+
+Coders Hello
+
+
+void revWordsOrder(string str)
+
+
+Step-by-step Approach:
+
+1. Create an empty string word
+
+2. Traverse the string from end to start
+
+3. When space is found:
+
+	Print the collected word
+
+	Reset the word
+
+4. At the end, print the first word
+
+
+
+
+code:
+
+void revWordsOrder(string str) {
+    string word = "";
+
+    // Traverse string from end
+    for (int i = str.length() - 1; i >= 0; i--) {
+
+        // If space found, print the collected word
+        if (str[i] == ' ') {
+            cout << word << " ";
+            word = "";
+        }
+        else {
+            // Add character at front of word
+            word = str[i] + word;
+        }
+    }
+
+    // Print the first word
+    cout << word << endl;
+}
+
+
+
+
+
+
+
+Q3. Check the strength of virus Clone
+
+A virology student while studying the DNA of a corona virus found that, if a gene x and gene y in its DNA are separated by exactly 3 places anywhere, at least once, then it will be a strong virus. Consider the DNA as a string of characters, where each character denotes a gene.
+
+Now, given the DNA sequence of corona virus, check if its a strong virus or not.
+
+For example, if virus_DNA = "txma yert", then print YES because gene 'x' and gene 'y' are exactly 3 distance apart, therefore it is a strong virus.
+
+Note: The DNA genes are case sensitive.
+
+Input Format:
+
+The first line of input contains an integer T denoting the no of test cases. 
+The second line of input contains a string, denoting the DNA of the virus.
+
+Output Format:
+
+For each test case, print YES if the virus is strong, else print NO.
+
+Sample Input
+3
+txma yert
+BMuxp ioqytB yxurN
+xaxoerylm
+
+Sample Output
+YES
+NO
+YES
+
+
+
+Solution Approach:
+------------------
+
+A virus is considered strong if the genes x and y appear at least once in the DNA string such that there are exactly 3 characters between them.
+
+Example:
+
+DNA = "txma yert"
+
+
+x and y are separated by exactly 3 characters → Strong Virus
+
+Output: YES
+
+
+bool isStrongVirus(string dna)
+
+
+
+Approach:
+
+1. Traverse the string character by character
+
+2. Whenever you find:
+
+	'x' → check 4 positions ahead for 'y' // because 3 characters in between
+
+	'y' → check 4 positions ahead for 'x'
+
+3. If found even once, print YES
+
+4. Otherwise print NO
+
+
+
+code:
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+bool isStrongVirus(string dna) {
+
+    int n = dna.length();
+
+    for (int i = 0; i < n; i++) {
+
+        if (dna[i] == 'x') {
+
+            // Check 4 positions ahead
+            if (i + 4 < n && dna[i + 4] == 'y')
+                return true;
+
+            // Check 4 positions behind
+            if (i - 4 >= 0 && dna[i - 4] == 'y')
+                return true;
+        }
+    }
+
+    return false;  // No valid x-y pair found
+}
+
+int main() {
+    int T;
+    cin >> T;
+    cin.ignore();  // ignore newline
+
+    while (T--) {
+        string dna;
+        getline(cin, dna);
+
+        if (isStrongVirus(dna))
+            cout << "YES" << endl;
+        else
+            cout << "NO" << endl;
+    }
+
+    return 0;
+}
+
+
+
+
+
+Q4. Remove Duplicates from sorted doubly linked list Clone
+
+A sorted doubly linked list is given to you. Your task is to remove the duplicate nodes from this list.
+
+The function removeDupsDLL() takes the head node of a doubly linked list as a parameter, and returns the head of updated list after deleting the duplicate elements from it.
+
+Input Format:
+
+First line will contain the number of test cases i.e. T.
+Each test case consists of two lines. In first line total number of nodes is given and in second line the sorted node values are provided.
+
+Output Format:
+
+Print the integer data for each element of the rearranged linked list separated by space.
+
+Constraints:
+1 <= no. of testcases <= 10
+0 <= no. of nodes <= 10^5
+0 <= node data <= 10^6
+
+Sample Input
+1                        // test Cases
+12                       // no. of nodes (TC-1)
+1 3 3 4 5 5 5 7 9 9 9 9  // node's data
+
+Sample Output
+1 3 4 5 7 9
+
+
+Solution Approach:
+------------------
+
+
+You are given a sorted doubly linked list.
+Since the list is sorted, duplicate elements appear adjacent to each other.
+
+Your task is to remove duplicate nodes such that only one occurrence of each value remains.
+
+
+Example:
+
+1 ↔ 3 ↔ 3 ↔ 4 ↔ 5 ↔ 5 ↔ 5 ↔ 7 ↔ 9 ↔ 9 ↔ 9 ↔ 9
+
+Duplicate values:
+
+3 repeated
+
+5 repeated
+
+9 repeated
+
+Output:
+
+1 ↔ 3 ↔ 4 ↔ 5 ↔ 7 ↔ 9
+
+
+Node* removeDupsDLL(Node* head)
+
+
+Approach:
+
+
+1. Start from the head
+
+2. Compare current node with next node
+
+3. If data is same:
+
+	Remove the next node
+
+	Fix next and prev pointers
+
+4. If data is different:
+
+	Move to next node
+
+5. Continue till end of list
+
+
+
+code:
+
+
+#include <iostream>
+using namespace std;
+
+/* --------- DOUBLY LINKED LIST NODE --------- */
+class Node {
+
+private:
+
+    int data;
+    Node* prev;
+    Node* next;
+
+public:
+
+    Node(int d) {
+        data = d;
+        prev = NULL;
+        next = NULL;
+    }
+};
+
+/* --------- REMOVE DUPLICATES FUNCTION --------- */
+Node* removeDupsDLL(Node* head) {
+
+    if (head == NULL)
+        return head;
+
+    Node* curr = head;
+
+    while (curr->next != NULL) {
+
+        // If duplicate found
+        if (curr->data == curr->next->data) {
+
+            Node* dup = curr->next;
+
+            curr->next = dup->next;
+
+            if (dup->next != NULL)
+                dup->next->prev = curr;
+
+            delete dup;  // remove duplicate node
+        }
+        else {
+            curr = curr->next;  // move forward
+        }
+    }
+
+    return head;
+}
+
+/* --------- PRINT LIST --------- */
+void printList(Node* head) {
+    Node* temp = head;
+    while (temp != NULL) {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+
+
+Q5.  Given list is circular or not
+
+In circular list the last node points to the first node creating a loop of nodes. Now, given a pointer to the head node of a linked list, find out if it is circular or not.
+
+Complete the function isCircular() given in the editor, which takes the head of the list as parameter and returns 1 if the linked list is circular and 0 otherwise.
+
+Note: If the linked list is empty, then consider it as a circular linked list.
+
+Your solution must be optimized otherwise you may get an error "Time Limit Exceeded".
+
+Input
+
+The functions isCircular() takes the head node of a linked list as input.
+
+Output
+
+Return 1 if the given list is circular, else return 0.
+
+Constraints
+0 <= no. of nodes <= 10^5
+0 <= node data <= 10^6
+
+
+Solution Approach:
+-----------------
+
+A linked list is called circular if the last node points back to the first node.
+
+If the list is empty, it is also considered circular.
+
+The task is to check whether the given linked list is circular or not in an optimized way.
+
+
+int isCircular(Node* head)
+
+
+
+code:
+
+#include <iostream>
+using namespace std;
+
+/* --------- LINKED LIST NODE --------- */
+class Node {
+
+private:
+
+    int data;
+    Node* next;
+
+public:
+
+    Node(int d) {
+        data = d;
+        next = NULL;
+    }
+};
+
+/* --------- CHECK CIRCULAR FUNCTION --------- */
+int isCircular(Node* head) {
+
+    // Empty list is considered circular
+    if (head == NULL)
+        return 1;
+
+    Node* temp = head->next;
+
+    // Traverse till we reach NULL or head again
+    while (temp != NULL && temp != head) {
+        temp = temp->next;
+    }
+
+    // If we came back to head, it's circular
+    if (temp == head)
+        return 1;
+
+    return 0;
+}
+
+
+Q6. Count the Number of Nodes in Circular Linked List Clone
+
+In circular list the last node points to the first node creating a loop of nodes. Now, given a pointer to the head node of a circular linked list, count the total number of elements in it.
+
+Complete the function countNodes() which takes the head node of a circular linked list as a parameter and return the number of nodes in the list.
+
+Input Format:
+
+First line will contain the total number of test cases.
+Each test case consists of 2 lines, 
+First line has the number of nodes for generating circular linked list
+Second line contains the node values separated by spaces.
+
+Constraints:
+1 <= Test Cases <= 100
+0 <= no. of nodes <= 10^5
+0 <= node data  <= 10^9
+
+Output Format:
+Print the total number of nodes in circular list using head of the linked list not by the no of nodes given in the 
+input 
+
+Sample Input
+1  // Test Cases
+3      // no. of nodes (TC-1)
+1 2 3  // node's data
+
+Sample Output
+3
+
+
+Solution Approach:
+------------------
+
+
+You are given the head of a circular linked list.
+Your task is to count the total number of nodes in the list by traversing it.
+
+Since the list is circular, traversal stops when the pointer reaches the head again.
+
+
+int countNodes(Node* head) 
+
+
+code:
+
+#include <iostream>
+using namespace std;
+
+/* --------- LINKED LIST NODE --------- */
+class Node {
+
+private:
+
+    int data;
+    Node* next;
+
+public:
+
+    Node(int d) {
+        data = d;
+        next = NULL;
+    }
+};
+
+/* --------- COUNT NODES FUNCTION --------- */
+int countNodes(Node* head) {
+
+    // Empty circular list
+    if (head == NULL)
+        return 0;
+
+    int count = 1;
+    Node* temp = head->next;
+
+    // Traverse until we reach head again
+    while (temp != head) {
+        count++;
+        temp = temp->next;
+    }
+
+    return count;
+}
+
+
+
+
+
+Q7.  Implement Queue using two stacks
+
+Stack and Queues are two popular data structures. Can we implement one of them given the other?
+
+In this question, given two stacks you have to implement a queue using them. In other words, you are allowed to do push and pop on these two stacks only, but the effect outside must come as a FIFO list (queue).
+
+Sample Input
+
+First line of input contains an integer Q denoting the number of queries.
+
+A Query is of 2 Types
+
+(a) 1 item  (a query of this type means insert 'item' into the queue)
+(b) 2    (a query of this type means to delete element from queue and print the deleted element)
+
+The second line of each test case contains Q queries separated by space.
+
+Sample Output
+
+The output for each test case will be space separated integers having -1 if the queue is empty else the element deleted from the queue.
+
+You are required to complete the methods given.
+
+Sample Input
+8
+1 3 2 1 4 1 2 2 1 6 2 2
+
+Sample Output
+3 4 2 6
+
+Explanation
+First query is insert 3, then delete will print 3, 3rd query is insert 4, then insert 2, 5th query is delete which prints 4, 6th query is insert 6, then delete will print 2 and last query of delete will.
+
+
+
+
+
+
+
+Solution Approach:
+-----------------
+
+
+You need to implement a queue (FIFO) using two stacks (LIFO).
+
+	Insertion inserts an element into the queue
+
+	Deletion removes and prints the front element
+
+	If the queue is empty, print -1
+
+Only stack push and pop operations are allowed.
+
+
+Approach:
+--------
+
+
+We use two stacks:
+
+	s1 → for inserting elements
+
+	s2 → for deleting elements
+
+
+Insert Operation (1 x)
+
+	Simply push(x) into s1
+
+
+Delete Operation (2)
+
+1. If s2 empty:
+
+	transfer all the elements of s1 to s2 (this reverses order)
+
+2. Now s2.top() will be the front element of the queue
+
+3. Pop the element and print it.
+
+4. If both stack is empty → print -1
+
+
+code:
+
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+stack<int> s1, s2;
+
+
+10 20 30 40 50
+
+// Insert element into queue
+void enqueue(int x) {
+    s1.push(x);
+}
+
+// Delete element from queue
+int dequeue() {
+
+  
+// If both stacks are empty
+    if (s1.empty() && s2.empty())
+        return -1;
+
+    // If s2 is empty, move elements from s1 to s2
+    if (s2.empty()) {
+        while (!s1.empty()) {
+            s2.push(s1.top());
+            s1.pop();
+        }
+    }
+
+    int frontElement = s2.top();
+    s2.pop();
+    return frontElement;
+
+ 
+
+
+}
+
+int main() {
+    int Q;
+    cin >> Q;
+
+    while (Q--) {
+        int type;
+        cin >> type;
+
+        if (type == 1) {
+            int x;
+            cin >> x;
+            enqueue(x);
+        }
+        else if (type == 2) {
+            int ans = dequeue();
+            if (ans != -1)
+                cout << ans << " ";
+        }
+    }
+
+    return 0;
+}
+
+
+
+
+
+
+Q8. Implement a Stack using two Queues Clone
+
+Stack and Queues are two popular data structures. Can we implement one of them given the other?
+
+In this question, given two queues you have to implement a stack using them. In other words, you are allowed to do insert and delete on these two queues only, but the effect outside must come as a LIFO list (stack).
+
+Input Format:
+
+First line of input contains an integer Q denoting the number of queries. A Query is of 2 Types:
+(a) 1 item (a query of this type means push 'item' onto the stack)
+(b) 2 (a query of this type means to pop element from stack and print the popped element)
+
+Each of next Q lines will contain a query.
+
+Output Format:
+
+The output for each test case will be space separated integers having -1 if the stack is empty else the element popped out from the stack.
+
+Sample Input
+8
+1 3
+2
+1 4
+1 2
+2
+1 6
+2
+2
+
+Sample Output
+3 2 6 4
+
+Explanation:
+First query is push 3, then pop will print 3, 3rd query is push 4, then push 2, 5th query is pop which prints 2, 6th query is push 6, then pop will print 6 and last query of pop will print 4.
+
+
+Solution Approach:
+------------------
+
+queue<int> q1, q2;
+
+
+
+void pushStack(int x);
+
+int pop()
+
+
+
+
+
+
+
+You need to implement a stack (LIFO) using two 
+
+
+	Push inserts an element into the stack
+
+	Pop removes and prints the top element
+
+	If the stack is empty, print -1
+
+Only queue operations are allowed.
+
+
+
+Approach:
+
+
+We use two queues:
+
+	q1 → main queue
+
+	q2 → helper queue
+
+Push Operation (1 x)
+
+	Insert x into q2
+
+	Move all elements from q1 to q2
+
+	Swap q1 and q2
+
+With this letest element will come to the front
+
+Pop Operation (2)
+
+If q1 empty  → -1
+
+Else → pop the  q1.front() and print it.
+
+
+code:
+
+#include <iostream>
+#include <queue>
+using namespace std;
+
+queue<int> q1, q2;
+
+// Push element onto stack
+void push(int x) {
+
+    // Step 1: push into empty q2
+    q2.push(x);
+
+    // Step 2: move all elements from q1 to q2
+    while (!q1.empty()) {
+        q2.push(q1.front());
+        q1.pop();
+    }
+
+    // Step 3: swap q1 and q2
+    swap(q1, q2);
+}
+
+// Pop element from stack
+int pop() {
+
+    // If stack is empty
+    if (q1.empty())
+        return -1;
+
+    int topElement = q1.front();
+    q1.pop();
+    return topElement;
+}
+
+int main() {
+    int Q;
+    cin >> Q;
+
+    while (Q--) {
+        int type;
+        cin >> type;
+
+        if (type == 1) {
+            int x;
+            cin >> x;
+            push(x);
+        }
+        else if (type == 2) {
+            int ans = pop();
+            if (ans != -1)
+                cout << ans << " ";
+        }
+    }
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+Q9.  Find the minimum bracket reversals for balanced expression Clone
+
+Given an expression having only square brackets ‘[‘ and ‘]’. Find the minimum number of brackets reversals required to make the expression balanced. If expression cannot be made balanced, print -1 and if it is already balanced, print 0.
+
+Input
+
+The first line of input contains a single integer T denoting the number of test cases. Then T test cases follow. Each test case contains an expression consisting of square brackets only.
+
+Output
+The output for each test case will be the minimum number of bracket reversals required to make the expression balanced if possible.
+
+Sample Input 1
+2
+[]
+][
+
+Sample Output 1
+0
+2
+
+Explanation 1
+First expression is already balanced, so print 0.
+Second expression requires 2 reversals (both the brackets needs to be changed as []) so prints 2.
+
+Sample Input 2
+1
+[[[[
+
+Sample Output 2
+2
+
+
+Solution Approach:
+------------------
+
+
+You are given a string containing only '[' and ']'.
+You need to find the minimum number of bracket reversals required to make the expression balanced.
+
+If the expression is already balanced → output 0
+
+If it cannot be balanced → output -1
+
+Example1:
+
+[]
+
+Already balanced
+
+Output: 0
+
+Example2:
+
+][
+
+Reversal:
+
+][ → []   (2 reversals)
+
+Output: 2
+
+Example3:
+
+[[[[
+
+Reversal:
+
+[[[[ → [[]]   (2 reversals)
+
+
+Output: 2
+
+
+
+Approach:
+
+Two same brackets can be fixed with one reversal
+
+Example:
+
+"[["  → reverse one '[' → "[]"
+"]]"  → reverse one ']' → "[]"
+
+So:
+
+Every pair of same brackets needs 1 reversal
+
+
+
+int minReversals(string s)
+
+
+
+IDEA:
+
+1. Count how many unmatched '[' are left
+
+2. Count how many unmatched ']' are left
+
+3. For every pair, increase answer by 1
+
+4. If one bracket remains, it also needs 1 reversal
+
+
+Step by step approach:
+---------------------
+
+Step 1: Check Length
+
+--If string length is odd, return -1
+
+Step 2: Remove Balanced Parts Using Stack
+
+--Traverse the string
+
+--Push '['
+
+--For ']':
+
+	If top is '[', pop (balanced)
+
+	Else push ']'
+
+--After this, stack contains only unbalanced brackets
+
+
+Step 3: Count Reversals:
+
+Let:
+
+count = 0
+
+While stack is not empty:
+
+1. Pop one bracket → b1
+
+2. Pop another bracket → b2
+
+3. These two brackets are either:
+
+	"[[ " or "]]" or "]["
+
+4. In all cases, it takes 1 reversal
+
+5. So do:
+
+	count++
+
+Step 4: Return count
+
+
+
+
+Step 1: Check Length of Expression
+
+--A balanced bracket expression must have even length
+
+--If the length of the string is odd, it is impossible to balance it
+
+--If length is odd → return -1
+
+
+
+code:
+
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+int minReversals(string s) {
+
+    int n = s.length();
+
+    // Step 1: Odd length cannot be balanced
+    if (n % 2 != 0)
+        return -1;
+
+    stack<char> st;
+
+    // Step 2: Remove balanced parts
+    for (char ch : s) {
+        if (ch == '[') {
+            st.push(ch);
+        }
+        else { // ch == ']'
+            if (!st.empty() && st.top() == '[')
+                st.pop();   // balanced
+            else
+                st.push(ch);
+        }
+    }
+
+    // Step 3: Count reversals without formula
+    int reversals = 0;
+
+    while (!st.empty()) {
+        char b1 = st.top(); st.pop();
+        char b2 = st.top(); st.pop();
+
+        // Any pair needs exactly 1 reversal
+        reversals++;
+    }
+
+    return reversals;
+}
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        string s;
+        cin >> s;
+        cout << minReversals(s) << endl;
+    }
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
